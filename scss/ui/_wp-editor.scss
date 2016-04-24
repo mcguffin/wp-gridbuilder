@@ -1,0 +1,32 @@
+#postdivrich {
+	.grid-view {
+		display:none;
+	}
+	#grid-toggle-wrap {
+		#edit-content-grid {
+			display:inline-block;
+		}
+		#edit-content-text {
+			display:none;
+		}
+	}
+	&[date-grid-editor-mode="true"] {
+		.grid-view {
+			display:block;
+		}
+//		#grid-toggle-wrap,
+		#post-status-info,
+		#wp-content-wrap {
+			display:none;
+		}
+		#grid-toggle-wrap {
+			#edit-content-grid {
+				display:none;
+			}
+			#edit-content-text {
+				display:inline-block;
+			}
+		}
+	}
+}
+

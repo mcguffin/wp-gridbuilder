@@ -1,0 +1,43 @@
+
+$hover_color_names: "black" "white" !default; 
+$hover_color_values: #000 #fff !default;
+
+$selector_names: ();
+@each $color_name in $hover_color_names {
+	$selector_names: append( $selector_names , "."+$color_name+"-hover" , comma );
+}
+#{$selector_names} {
+	position:absolute;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	@include transition( all 0.5s ease );
+}
+
+@each $color_name in $hover_color_names {
+	$selector: "."+$color_name+"-hover";
+	
+	#{$selector} {
+		background-color:rgba( nth($hover_color_values,index($hover_color_names,$color_name)) , 0 );
+		@for $i from 1 through 10 {
+			&.from-o#{$i}0 {
+				background-color:rgba( nth($hover_color_values,index($hover_color_names,$color_name)) , $i/10);
+			}
+		}
+	}
+
+	*:hover,
+	*:focus { 
+		> #{$selector} {
+			border-color:rgba( nth($hover_color_values,index($hover_color_names,$color_name)) , 1 );
+			background-color:rgba( nth($hover_color_values,index($hover_color_names,$color_name)) , 1 );
+			@for $i from 0 through 10 {
+				&.to-o#{$i}0 {
+					border-color:rgba( nth($hover_color_values,index($hover_color_names,$color_name)) , $i/10);
+					background-color:rgba( nth($hover_color_values,index($hover_color_names,$color_name)) , $i/10);
+				}
+			}
+		}
+	}
+}

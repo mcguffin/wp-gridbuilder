@@ -1,0 +1,8 @@
+[type="file"] {
+	display:none;
+}
+[type="file"] + .filename {
+	display:inline-block;
+	padding:1px 10px 2px 10px;
+	line-height:26px;
+}

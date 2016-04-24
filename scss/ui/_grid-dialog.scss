@@ -1,0 +1,284 @@
+.grid-dialog-title {
+	position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    z-index: 200;
+    margin:0;
+    padding:15px 20px;
+    box-sizing:border-box;
+}
+
+.grid-dialog-content {
+    height: auto;
+    width: auto;
+    margin: 0;
+    overflow: auto;
+    background: #fff;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+
+	position: absolute;
+    top: 50px;
+    left: 0;
+    bottom: 61px;
+    right:0;
+    .sidebar & {
+	    right: 277px;
+	}
+}
+
+.grid-dialog-sidebar {
+	position: absolute;
+    top: 50px;
+    bottom: 61px;
+    right:0;
+    width: 277px;
+    background:#f0f0f0;
+    border-left: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    overflow: auto;
+}
+
+.grid-dialog-toolbar {
+	position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 60px;
+    z-index: 100;
+    padding:15px 20px;
+    box-sizing:border-box;
+    text-align:right;
+}
+.media-modal-prev,
+.media-modal-next {
+	position: absolute;
+    top: 0;
+    width: 50px;
+    height: 50px;
+	z-index: 1000;
+	&:hover {
+		.dashicons:before {
+			color: #00a0d2;
+    	}
+	}
+}
+
+.media-modal-prev {
+    right: 100px;
+}
+.media-modal-next {
+    right: 50px;
+}
+
+
+
+.input-group {
+    border-bottom: 1px solid #ddd;
+	h2 {
+		margin:0;
+		padding:10px;
+		background:#fff;
+	}
+	.inputs {
+		padding:10px;
+	}	
+}
+.input-wrap {
+	margin-bottom:20px;
+	.input-title {
+		font-weight:bold;
+	}
+	&.input-type-textarea {
+		textarea {
+			min-height:(14px * 3 * 1.4) + 6px;
+		}
+	}
+	&.input-type-checkbox {
+		.input {
+			float:left;
+			margin-right:5px;
+		}
+	}
+	&.input-type-media {
+		.thumbnail {
+			border:1px solid #ccc;
+			padding:10px;
+			position:relative;
+			background-color:#fff;
+			border-radius:5px;
+			button.dashicons-dismiss {
+				position:absolute;
+				right:0;
+				top:0;
+				border-style:none;
+				background:transparent;
+				box-shadow:none;
+				cursor:pointer;
+				&:hover {
+					color:$color-wp-blue;
+				}
+			}
+			img {
+				display:block;
+				margin:0 auto;
+			}
+		}
+		[name="media_id"] + .thumbnail {
+			display:none;
+		}
+		[name="media_id"][value] + .thumbnail {
+			display:block;
+		}
+	}
+}
+
+
+
+
+
+
+
+
+.grid-promt-dialog-wrap {
+	position:fixed;
+	left:0;
+	top:0;
+	right:0;
+	bottom:0;
+	z-index:160000;
+	.grid-promt-dialog-inner,
+	&::before {
+		display:inline-block;
+		vertical-align:middle;
+	}
+	&::before {
+		content:'';
+		height:100%;
+		width:0px;
+	}
+	.grid-promt-dialog-inner {
+		width:99%;
+	}
+}
+.grid-promt-dialog {
+	background:#fff;
+	width:360px;
+	margin:0 auto 40px auto;
+}
+.grid-prompt-title {
+    border-bottom: 1px solid #ddd;
+	padding:10px 20px;
+	h2 {
+		margin:0;
+	}
+}
+.grid-prompt-message {
+	padding:10px 20px;
+}
+.grid-prompt-value {
+	padding: 10px 20px;
+}
+.grid-prompt-toolbar {
+	text-align:right;
+	background:#f0f0f0;
+    border-top: 1px solid #ddd;
+    padding: 10px 20px;
+}
+
+
+
+
+
+
+
+.templates-list {
+	box-sizing:border-box;
+	width:25%;
+	float:left;
+	h2 {
+		padding:10px 20px;
+		border-bottom: 1px solid #ddd;
+	}
+	ul {
+		margin:0;
+		padding:0 20px;
+	}
+	li {
+		position:relative;
+		overflow: auto;
+		zoom:1;
+	}
+	[type="text"] {
+		position:absolute;
+		left:0;
+		top:0;
+		right:40px;
+		
+		padding:5px 20px;
+		width:100%;
+		border-color:transparent;
+		background:transparent;
+		box-shadow:none;
+		font-weight:bold;
+		&:focus {
+			background:$color-wp-blue;
+			color:#fff;
+		}
+	}
+	li {
+		&:nth-child( odd ) {
+			background:#f0f0f0;
+		}
+	}
+	.delete {
+		float:right;
+		position:relative;
+		width:45px;
+		&:before {
+			font-size:20px;
+		}
+	}
+}
+
+
+
+
+.input-widget_class {
+	.radiogroup {
+		display:block;
+		width: percentage( 1 / 5 );
+		float:left;
+		padding:10px;
+		box-sizing:border-box;
+
+		label {
+			font-size:16px;
+			display:block;
+			//height:50px;
+			
+			background:#f0f0f0;
+			color:#666;
+			border:1px solid #ccc;
+			padding:10px;
+			box-sizing:border-box;
+			font-weight:bold;
+			//@include vcenter();
+			small {
+				display:block;
+				font-weight:normal;
+			}
+		}
+		[type="radio"] {
+			display:none;
+		}
+		[type="radio"]:checked + label {
+			background:$color-wp-blue;
+			border:1px solid darken( $color-wp-blue, 30% );
+			color:#fff;
+		}
+	}
+}

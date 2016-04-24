@@ -1,0 +1,117 @@
+
+@function sqrt($r) {
+	$x0: 1; // initial value
+	$solution: false;
+
+	@for $i from 1 through 10 {
+		@if abs(2 * $x0) < 0,00000000000001 { // Don't want to divide by a number smaller than this
+			$solution: false;
+		}
+
+		$x1: $x0 - ($x0 * $x0 - abs($r)) / (2 * $x0) !global;
+
+		@if ( abs($x1 - $x0) / abs($x1)) < 0,0000001 { // 7 digit accuracy is desired
+			$solution: true;
+		}
+
+		$x0: $x1;
+	}
+
+	@if $solution == true {
+		// If $r is negative, then the output will be multiplied with <a href="http://en.wikipedia.org/wiki/Imaginary_number">i = √-1</a>
+		// (√xy = √x√y) => √-$r = √-1√$r
+		@if $r < 0 {
+			@return $x1 #{i};
+		} @else {
+			@return $x1;
+		}
+	} @else {
+		@return "No solution";
+	}
+}
+
+
+
+
+@mixin reset-lists( $display: block ) {
+	ul,ol,li {
+		@include list-reset( $display );
+	}
+}
+
+@mixin list-reset( $display: block) {
+	display:$display;
+	padding:0;
+	margin:0;
+	text-indent:0;
+	list-style-type:none;
+}
+
+
+
+
+
+@mixin aspectratio( $w , $h , $name: '' ) {
+	@if $name == '' {
+		$name: "#{$w}x#{$h}";
+	}
+	$selector: "&.aspectratio-#{$name}";
+	#{$selector} {
+		@include aspect( $w , $h );
+	}
+}
+@mixin aspect( $w , $h ) {
+	padding-bottom:percentage(( $h / $w ));
+}
+
+@mixin fixedaspect() {
+	position:relative;
+	overflow:hidden;
+	width:100%;
+	& > * {
+		position:absolute;
+		left:0;
+		top:0;
+		bottom:0;
+		right:0;
+		width:100%;
+		height:100%;
+	}
+}
+
+
+
+@mixin vcenter-container() {
+	/*
+	display:table;
+	/*/
+	//*/
+	width:100%;
+	height:100%;
+}
+@mixin vcenter() {
+	/*
+	display: table-cell;
+	height:100%;
+	/*/
+	white-space: nowrap;
+	&:before {
+		display:inline-block;
+		vertical-align: middle;
+		content:'';
+		height:100%;
+		width:0px;
+	}
+	&>* {
+		display:inline-block;
+		vertical-align: middle;
+		white-space: initial;
+	}
+	//*/
+}
+
+
+.no-js .js,
+.js .no-js {
+	display:none;
+}

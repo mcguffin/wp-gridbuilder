@@ -1,0 +1,111 @@
+$grid-gutter-width: 0px;
+
+@import "bootstrap/bootstrap/variables";
+@import "bootstrap/bootstrap/mixins";
+
+// Row
+//
+// Rows contain and clear the floats of your columns.
+
+.row {
+	@include make-row;
+}
+
+
+// Columns
+//
+// Common styles for small and large grid columns
+
+@include make-grid-columns;
+
+@mixin col-0 {
+  	width:0;
+  	padding:0 !important;
+  	float:left;
+}
+
+.cell {
+	width:100%;
+}
+
+// Extra small grid
+//
+// Columns, offsets, pushes, and pulls for extra small devices like
+// smartphones.
+[data-view-size="xs"],[data-view-size="sm"],[data-view-size="md"],[data-view-size="lg"] {
+	@include make-grid(xs);
+	.col-xs-0 {
+		@include col-0;
+	}
+}
+
+// Small grid
+//
+// Columns, offsets, pushes, and pulls for the small device range, from phones
+// to tablets.
+[data-view-size="sm"],[data-view-size="md"],[data-view-size="lg"] {
+	@include make-grid(sm);
+	.col-sm-0 {
+		@include col-0;
+	}
+}
+
+
+// Medium grid
+//
+// Columns, offsets, pushes, and pulls for the desktop device range.
+[data-view-size="md"],[data-view-size="lg"] {
+	@include make-grid(md);
+	.col-md-0 {
+		@include col-0;
+	}
+}
+
+
+// Large grid
+//
+// Columns, offsets, pushes, and pulls for the large desktop device range.
+[data-view-size="lg"] {
+	@include make-grid(lg);
+	.col-lg-0 {
+		@include col-0;
+	}
+}
+
+
+
+
+
+
+// Responsive visibility
+//
+// Columns, offsets, pushes, and pulls for the large desktop device range.
+
+$screen-sizes: 'xs','sm','md','lg';
+
+.visible-xs,
+.visible-sm,
+.visible-md,
+.visible-lg {
+	opacity:0.2;
+}
+
+@each $screen-size in $screen-sizes {
+	$sel-hidden: '[data-view-size="#{$screen-size}"] .hidden-#{$screen-size}';
+	$sel-visible: '[data-view-size="#{$screen-size}"] .visible-#{$screen-size}';
+	#{$sel-hidden} {
+		opacity: 0.2;
+	}
+	#{$sel-visible} {
+		opacity: 1;
+	}
+}
+
+
+
+
+
+
+
+
+

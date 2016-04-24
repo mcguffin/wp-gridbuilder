@@ -1,0 +1,179 @@
+.vcenter-container {
+	@include vcenter-container();
+	.vcenter {
+		@include vcenter();
+	}
+}
+
+.hcenter {
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
+@if ( $screen-xs ) {
+	@media only screen and (min-width: $screen-xs) {
+		.pull-right-xs {
+		  float: right !important;
+		}
+		.pull-left-xs {
+		  float: left !important;
+		}
+	}
+}
+@if ( $screen-sm ) {
+	@media only screen and (min-width: $screen-sm) {
+		.pull-right-sm {
+		  float: right !important;
+		}
+		.pull-left-sm {
+		  float: left !important;
+		}
+	}
+}
+@if ( $screen-md ) {
+	@media only screen and (min-width: $screen-md) {
+		.pull-right-md {
+		  float: right !important;
+		}
+		.pull-left-md {
+		  float: left !important;
+		}
+	}
+}
+@if ( $screen-lg ) {
+	@media only screen and (min-width: $screen-lg) {
+		.pull-right-lg {
+		  float: right !important;
+		}
+		.pull-left-lg {
+		  float: left !important;
+		}
+	}
+}
+@if ( $screen-xl ) {
+	@if ( $screen-xl ) {
+		@media only screen and (min-width: $screen-xl) {
+			.pull-right-xl {
+			  float: right !important;
+			}
+			.pull-left-xl {
+			  float: left !important;
+			}
+		}
+	}
+}
+$aspect-names:  '',   '',   '',   '',   '',   '',    'cinema', 'din-landscape', 'din-portrait';
+$aspect-w:       1,    2,    3,    3,    4,    16,    2.35,    sqrt(2),         1;
+$aspect-h:       1,    1,    1,    2,    3,     9,    1,       1,               sqrt(2);
+
+$aspect-screen-sizes: (
+	sm: $screen-sm-min, 
+	md: $screen-md-min, 
+	lg: $screen-lg-min,
+	xl: $screen-xl-min, 
+);
+// boxes
+.fixed-aspectratio {
+	@include fixedaspect();
+	@for $i from 1 through length($aspect-names) {
+		$name: nth($aspect-names, $i);
+		$w: nth($aspect-w, $i);
+		$h: nth($aspect-h, $i);
+		@include aspectratio($w,$h, $name);
+
+		@each $size-name, $screen-size in $aspect-screen-sizes {
+			@if $name == '' {
+				$name: "#{$w}x#{$h}";
+			}
+			@media (min-width: $screen-size) {
+				@include aspectratio($w,$h, "#{$size-name}-#{$name}");
+			}
+		}
+	}
+	
+	
+}
+
+.container {
+	&.container-sm {
+		max-width: $container-sm;
+	}
+	&.container-md {
+		max-width: $container-md;
+	}
+	&.container-lg {
+		max-width: $container-lg;
+	}
+}
+// 
+// @media (min-width: $screen-xs-min) {
+// 	.fixed-aspectratio {
+// 		&.aspectratio-xs-1x1 {
+// 			padding-bottom:100%;
+// 		}
+// 		&.aspectratio-xs-2x1 {
+// 			padding-bottom:50%;
+// 		}
+// 	
+// 		&.aspectratio-xs-3x1 {
+// 			padding-bottom:33.33333333%;
+// 		}
+// 	
+// 		&.aspectratio-xs-4x3 {
+// 			padding-bottom:75%;
+// 		}
+// 		&.aspectratio-xs-16x9 {
+// 			padding-bottom:56.25%;
+// 		}
+// 	}
+// }
+// @media (min-width: $screen-sm-min) {
+// 	.fixed-aspectratio {
+// 		&.aspectratio-sm-1x1 {
+// 			padding-bottom:100%;
+// 		}
+// 		&.aspectratio-sm-2x1 {
+// 			padding-bottom:50%;
+// 		}
+// 		&.aspectratio-sm-3x1 {
+// 			padding-bottom:33.33333333%;
+// 		}
+// 		&.aspectratio-sm-4x3 {
+// 			padding-bottom:75%;
+// 		}
+// 		&.aspectratio-sm-16x9 {
+// 			padding-bottom:56.25%;
+// 		}
+// 	}
+// }
+
+.clearfix {
+	@include clearfix();
+}
+
+
+
+
+
+html.no-touch .touch,
+html.touch .no-touch,
+html.no-touchscreen .touchscreen,
+html.touchscreen .no-touchscreen {
+	display:none !important; 
+}
+
+
+
+
+
+@media only screen and (orientation:portrait) {
+	.visible-landscape {
+		display:none !important;
+	}
+}
+@media only screen and (orientation:landscape) {
+	.visible-portrait {
+		display:none !important;
+	}
+}
