@@ -1,6 +1,8 @@
 (function( $, grid ){
 
 	var Prompt, Grid, Container, Row, Cell, Widget,
+		CollectionView, Prompt, Modal,
+		SelectorDisplay, TemplateDisplay,
 		l10n		= gridbuilder.l10n,
 		options		= gridbuilder.options,
 		sizekeys 	= {},
@@ -18,7 +20,7 @@
 	options.screensizes.size_class_template = _.template( 'col-{{screensize}}-{{size}}' );
 	options.screensizes.offset_class_template = _.template( 'col-{{screensize}}-offset-{{size}}' );
 
-	var Prompt = grid.view.Prompt = wp.media.View.extend({
+	Prompt = grid.view.Prompt = wp.media.View.extend({
 		tagName:    'div',
 		className: 'grid-prompt',
 		template: wp.template('grid-prompt'),
@@ -61,7 +63,7 @@
 	});
 
 
-	var SelectorDisplay = wp.media.View.extend({
+	SelectorDisplay = wp.media.View.extend({
 		tagName:    'div',
 		className:  'display-selector',
 		initialize: function( options ) {
@@ -84,7 +86,7 @@
 			return this;
 		}
 	});
-	var TemplateDisplay = wp.media.View.extend({
+	TemplateDisplay = wp.media.View.extend({
 		tagName:    'div',
 		className:  'display-template',
 		initialize: function( options ) {
@@ -103,30 +105,52 @@
 		}
 	});
 
-	var TitleDisplay = wp.media.View.extend({
-		tagName:    'div',
-		className:  'display-title',
-		initialize: function( options ) {
-			this.model = options.model;
-			this.listenTo(this.model,'change',this.render);
+
+	Modal = grid.view.Modal = wp.media.view.Modal.extend({
+		template: wp.template('grid-media-modal'),
+		events: {
+			'click .media-modal-prev': 'prev',
+			'click .media-modal-next': 'next',
+			'click .media-modal-backdrop, .media-modal-close': 'escapeHandler',
+			'keydown': 'keydown'
+		},
+		initialize: function() {
+			var ret = wp.media.view.Modal.prototype.initialize.apply( this, arguments );
+			this.prevnext = ! _.isUndefined( this.options.prev ) && ! _.isUndefined( this.options.next );
+			return ret;
 		},
 		render: function() {
-			var title = this.model.get('title'),
-				subtitle = this.model.get('subtitle'),
-				selector = '';
-
-			if ( !! title ) {
-				selector += title;
+			var ret = wp.media.view.Modal.prototype.render.apply( this, arguments );
+			if ( this.prevnext ) {
+				this.$('.media-modal-prev').prop( 'disabled', ! this.options.prev );
+				this.$('.media-modal-next').prop( 'disabled', ! this.options.next );
+			} else {
+				this.$('.media-modal-prev, .media-modal-next').remove();
 			}
-			if ( !! subtitle ) {
-				selector += ' <small>'+subtitle+'</small>';
-			}
-			this.$el.html(selector);
-
-			return this;
+			return ret;
+		},
+		open: function() {
+			wp.media.view.Modal.prototype.open.apply( this, arguments );
+			// body.modal-open prevetns rte toolbars from rendering
+			$( 'body' ).removeClass( 'modal-open' ).addClass('grid-modal-open');
+			
+		},
+		close: function( options ) {
+			wp.media.view.Modal.prototype.close.apply( this, arguments );
+			// body.modal-open prevetns rte toolbars from rendering
+			$( 'body' ).removeClass( 'grid-modal-open' );
+		},
+		next: function(){
+			this.trigger('next');
+			return false;
+		},
+		prev: function(){
+			this.trigger('prev');
+			return false;
 		}
 	});
-	var CollectionView = wp.media.View.extend({
+
+	CollectionView = grid.view.CollectionView = wp.media.View.extend({
 		initialize: function( options ) {
 			var self = this, template;
 			
@@ -244,49 +268,6 @@
 		},
 		hasChanged: function() {
 			this.closest(Grid).hasChanged( );
-		}
-	});
-	Modal = grid.view.Modal = wp.media.view.Modal.extend({
-		template: wp.template('grid-media-modal'),
-		events: {
-			'click .media-modal-prev': 'prev',
-			'click .media-modal-next': 'next',
-			'click .media-modal-backdrop, .media-modal-close': 'escapeHandler',
-			'keydown': 'keydown'
-		},
-		initialize: function() {
-			var ret = wp.media.view.Modal.prototype.initialize.apply( this, arguments );
-			this.prevnext = ! _.isUndefined( this.options.prev ) && ! _.isUndefined( this.options.next );
-			return ret;
-		},
-		render: function() {
-			var ret = wp.media.view.Modal.prototype.render.apply( this, arguments );
-			if ( this.prevnext ) {
-				this.$('.media-modal-prev').prop( 'disabled', ! this.options.prev );
-				this.$('.media-modal-next').prop( 'disabled', ! this.options.next );
-			} else {
-				this.$('.media-modal-prev, .media-modal-next').remove();
-			}
-			return ret;
-		},
-		open: function() {
-			wp.media.view.Modal.prototype.open.apply( this, arguments );
-			// body.modal-open prevetns rte toolbars from rendering
-			$( 'body' ).removeClass( 'modal-open' ).addClass('grid-modal-open');
-			
-		},
-		close: function( options ) {
-			wp.media.view.Modal.prototype.close.apply( this, arguments );
-			// body.modal-open prevetns rte toolbars from rendering
-			$( 'body' ).removeClass( 'grid-modal-open' );
-		},
-		next: function(){
-			this.trigger('next');
-			return false;
-		},
-		prev: function(){
-			this.trigger('prev');
-			return false;
 		}
 	});
 
@@ -430,12 +411,26 @@
 		
 		initialize: function(){
 			CollectionView.prototype.initialize.apply( this, arguments );
+
 			var self = this;
+
 			this.listenTo( this.model.items, 'update', this.adjustCellSize, this );
+			this.listenTo( this.model.items, 'update', this.bindCellListeners, this );
+			
+			this.cellListeners = [];
+			
+			return this;
+		},
+		bindCellListeners: function(){
+			var self = this;
+			// unbind old listeners
+			_.each(this.cellListeners, function( cell ) {
+				self.stopListening( cell );
+			});
+			// bind current listeners
 			this.model.items.each( function( item ) {
 				self.listenTo( item.items, 'update', self.adjustCellSize, self );
 			});
-			
 			return this;
 		},
 		render: function(){
@@ -468,12 +463,10 @@
 		},
 		initialize: function() {
 			CollectionView.prototype.initialize.apply( this, arguments );
-			this.titleDisplay = new TitleDisplay({ model: this.model });			
 			return this;
 		},
 		render: function(){
 			CollectionView.prototype.render.apply( this, arguments );
-			this.$el.prepend( this.titleDisplay.render().$el );
 			this.setCollapsed( this.model.get('collapsed') );
 			return this;
 		},
@@ -829,16 +822,16 @@
 		},
 		_addItem: function( itemClass, parent, data ) {
 
-			var current = this.getSelected(),
+			var current = this.getSelected() || this,
 				data = data || {},
 				itemModel = new grid.model.GridObject( data ),
 				item = new itemClass({
 					controller:	this.controller,
 					model:		itemModel,
 					parent:		parent
-				});
-			if ( ! current )
-				current = this;
+				}),
+				$collection, after;
+
 			after = current.closest( itemClass );
 
 			// add DOM elements
@@ -852,7 +845,6 @@
 
 			// add to model
 			parent.model.items.add( itemModel );
-
 
 			$collection.trigger('sort');
 

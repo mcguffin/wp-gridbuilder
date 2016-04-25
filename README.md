@@ -16,3 +16,7 @@ ToDo:
 	- [ ] Filter Docs
  - [ ] Future
 	- [ ] Make compatible with ACF Widgets
+ - [ ] Delete item: select parent item
+ - [ ] Bugs:
+	- [x] Add Cell > Add widget: row cells don't get resized
+	- [ ] Clone Widget -> Move to another cell: clones still exist (Nott reproducable)
