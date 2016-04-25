@@ -325,7 +325,7 @@
 			} );
 			_.each( offsetkeys, function( offsetkey, viewSize ) {
 				var offset = self.model.get( offsetkey );
-				if ( !! offset ) {
+				if ( typeof offset !== 'undefined' ) {
 					self.setOffsetClass( offset, viewSize );
 				}
 			} );
