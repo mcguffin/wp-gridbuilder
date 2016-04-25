@@ -5,7 +5,7 @@ if ( ! defined('ABSPATH') )
 
 ?>
 	<script type="text/html" id="tmpl-grid-view">
-		<div class="grid-toolbar affix">
+		<div class="grid-toolbar">
 			<div class="toolbar-row">
 				<div class="toolbar-left">
 					<div class="btn-group add">
@@ -40,16 +40,16 @@ if ( ! defined('ABSPATH') )
 			<hr />
 			<div class="toolbar-row">
 				<div class="btn-group viewswitcher toolbar-left"></div>
-				<div class="btn-group set-visibility toolbar-center item-action hidden">
+				<div class="btn-group set-visibility toolbar-center item-action">
 					<?php _e( 'Visibility:', 'wp-gridbuilder' ) ?>
 
-					<input type="radio" value="" name="set-visibility" id="sogrid-visibility-none" />
+					<input disabled="disabled" type="radio" value="" name="set-visibility" id="sogrid-visibility-none" />
 					<label for="sogrid-visibility-none"><?php _e( 'Default', 'wp-gridbuilder' ) ?></label>
 
-					<input type="radio" value="visible" name="set-visibility" id="sogrid-visibility-visible" />
+					<input disabled="disabled" type="radio" value="visible" name="set-visibility" id="sogrid-visibility-visible" />
 					<label for="sogrid-visibility-visible"><?php _e( 'Visible', 'wp-gridbuilder' ) ?></label>
 
-					<input type="radio" value="hidden" name="set-visibility" id="sogrid-visibility-hidden" />
+					<input disabled="disabled" type="radio" value="hidden" name="set-visibility" id="sogrid-visibility-hidden" />
 					<label for="sogrid-visibility-hidden"><?php _e( 'Hidden', 'wp-gridbuilder' ) ?></label>
 				</div>
 				<div class="toolbar-right">

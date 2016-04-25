@@ -695,7 +695,7 @@
  			gridView.$('.create-template').prop( 'disabled', item.is( Grid ) );
  			gridView.$('.update-template').prop( 'disabled', item.is( Grid ) || ! item.model.get( 'template' ) );
 
- 			gridView.$('.set-visibility').toggleClass( 'hidden', item.is( Grid ) );
+ 			gridView.$('[name="set-visibility"]').prop( 'disabled', item.is( Grid ) );
 
  			this.trigger( 'select' );
 

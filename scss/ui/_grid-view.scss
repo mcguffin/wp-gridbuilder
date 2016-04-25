@@ -25,6 +25,9 @@ body {
 	.containers {
 		padding:5px 10px;
 	}
+	.grid-toolbar[data-sticky="true"] + .containers {
+		margin-top:91px;
+	}
 	.widgets {
 		padding:25px 20px 5px 10px;
 	}
