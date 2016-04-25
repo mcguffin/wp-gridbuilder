@@ -118,7 +118,14 @@ class Gridbuilder {
 			// container wrap
 			$container_wrap_attr = array(
 				'id'	=> $container['attr_id'],
-				'class'	=> implode(' ', array_merge( array('container-wrap', $container['attr_class'] ), $this->mk_visibility_classes( $container ) ) ),
+				'class'	=> implode(' ', array_merge( 
+					array(
+						'container-wrap', 
+						$container['attr_class'] ), 
+						$this->mk_visibility_classes( $container ),
+						$this->mk_background_classes( $container )
+					) 
+				),
 				'style'	=> $this->background_style_attr( $container ),
 			);
 			$container_wrap_attr = apply_filters( 'gridbuilder_container_wrapper_attr', $container_wrap_attr, $container );
@@ -147,7 +154,14 @@ class Gridbuilder {
 				$row = wp_parse_args( $row, $bg_defaults );
 				$row_attr = array(
 					'id'	=> $row['attr_id'],
-					'class'	=> implode(' ', array_merge( array( 'row', $row['attr_class'] ), $this->mk_visibility_classes( $row ) ) ),
+					'class'	=> implode(' ', array_merge( 
+						array( 
+							'row', 
+							$row['attr_class'] ), 
+							$this->mk_visibility_classes( $row ),
+							$this->mk_background_classes( $row )
+						) 
+					),
 					'style'	=> $this->background_style_attr( $row ),
 				);
 				$row_attr = apply_filters( 'gridbuilder_row_attr', $row_attr, $row, $container );
@@ -158,14 +172,20 @@ class Gridbuilder {
 					$cell = wp_parse_args( $cell, $bg_defaults );
 					$cell_attr = array(
 						'id'	=> $cell['attr_id'],
-						'class'	=> implode( ' ',array_merge(  array( 'cell', $cell['attr_class'] ), $this->mk_visibility_classes( $cell ) ) ),
+						'class'	=> implode( ' ',array_merge(  
+							array( 
+								'cell', 
+								$cell['attr_class'] 
+							), 
+							$this->mk_visibility_classes( $cell ),
+							$this->mk_cell_grid_classes( $cell ),
+							$this->mk_background_classes( $cell )
+						)),
 						'style'	=> $this->background_style_attr( $cell ),
 					);
-					$cell_classes = implode( ' ', array_merge( array( 'cell', $cell_attr['class'] ), $this->mk_cell_grid_classes( $cell ) ) );
-					$cell_attr['class'] = $cell_classes;
+
 					$cell_attr = apply_filters( 'gridbuilder_cell_attr', $cell_attr, $cell, $row, $container );
 					$output .= sprintf( '<div %s>', $this->mk_attr( $cell_attr ) );
-
 
 					foreach ( $cell['items'] as $widget ) {
 						$widget = wp_parse_args( $widget, $attr_defaults );
@@ -175,7 +195,11 @@ class Gridbuilder {
 						if ( isset( $wp_widget_factory->widgets[ $widget['widget_class'] ] ) ) {
 							$wp_widget = $wp_widget_factory->widgets[ $widget['widget_class'] ];
 							$widget_classes = array( 'widget', 'widget-'.$wp_widget->id_base, $widget['attr_class'] );
-							$widget_classes = implode(' ', array_merge( $widget_classes, $this->mk_visibility_classes( $widget ) ) );
+							$widget_classes = implode(' ', array_merge( 
+								$widget_classes, 
+								$this->mk_visibility_classes( $widget ) ,
+								$this->mk_background_classes( $widget )
+							) );
 							$widget_attr = array(
 								'id'	=> $row['attr_id'],
 								'class'	=> $widget_classes,
@@ -243,7 +267,7 @@ class Gridbuilder {
 		$prev_offset = 0;
 		foreach ( array_keys( $screensizes['sizes'] ) as $size ) {
 			$size_prop = 'size_'.$size;
-			if ( isset( $cell[ $size_prop ] ) && $prev_size != $cell[ $size_prop ] ) {
+			if ( isset( $cell[ $size_prop ] ) && is_numeric( $cell[ $size_prop ] )  && $prev_size != $cell[ $size_prop ] ) {
 				$classes[] = str_replace( 
 					array( '{{screensize}}', '{{size}}' ), 
 					array( $size, $cell[ $size_prop ]), 
@@ -253,7 +277,7 @@ class Gridbuilder {
 			}
 
 			$offset_prop = 'offset_'.$size;
-			if ( isset( $cell[ $offset_prop ] ) && $prev_offset != $cell[ $offset_prop ] ) {
+			if ( isset( $cell[ $offset_prop ] ) && is_numeric( $cell[ $offset_prop ] ) && $prev_offset != $cell[ $offset_prop ] ) {
 				$classes[] = str_replace( 
 					array( '{{screensize}}', '{{size}}' ), 
 					array( $size, $cell[ $offset_prop ] ), 
@@ -262,6 +286,24 @@ class Gridbuilder {
 				$prev_offset = $cell[ $offset_prop ];
 			}
 
+		}
+		return $classes;
+	}
+
+	/**
+	 *	@private
+	 *	@param array $item any item data
+	 */
+	private function mk_background_classes( $item ) {
+		$classes = array();
+		if ( $item['background_image'] ) {
+			$classes[] = 'background-image';
+		}
+		if ( $item['background_video'] ) {
+			$classes[] = 'background-video';
+		}
+		if ( $item['background_color'] ) {
+			$classes[] = 'background-color';
 		}
 		return $classes;
 	}
