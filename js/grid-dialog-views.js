@@ -51,7 +51,7 @@
 				case 'color':
 					this.$('input.color-picker').wpColorPicker({
 						hide:true,
-						palettes: false
+						palettes: self.options.settings.palettes
 					});
 					break;
 				case 'media':

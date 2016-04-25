@@ -17,7 +17,7 @@ function gridbuilder_widget_templates() {
 }
 
 function _gridbuilder_attributes_settings() {
-	return array(
+	$settings = array(
 		'attr_id'	=> array(
 			'title' => __('ID', 'wp-gridbuilder'),
 			'type' => 'text',
@@ -36,21 +36,23 @@ function _gridbuilder_attributes_settings() {
 			'priority' => 15,
 		),
 	);
+	return apply_filters( 'gridbuilder_attributes_settings', $settings );
 }
 function _gridbuilder_background_settings() {
-	return array(
+	$settings = array(
 		'background_color'		=> array(
-			'title' => __('Background Color', 'wp-gridbuilder'),
-			'type' => 'color',
-			'priority' => 5,
+			'title'		=> __('Background Color', 'wp-gridbuilder'),
+			'type'		=> 'color',
+			'priority'	=> 5,
+			'palettes'	=> false,
 		),
 		'background_opacity'	=> array(
-			'title' => __('Background Color Opacity', 'wp-gridbuilder'),
-			'type' => 'range',
-			'min' => 0,
-			'max' => 1,
-			'step' => 0.01,
-			'priority' => 10,
+			'title'		=> __('Background Color Opacity', 'wp-gridbuilder'),
+			'type'		=> 'range',
+			'min'		=> 0,
+			'max'		=> 1,
+			'step'		=> 0.01,
+			'priority'	=> 10,
 		),
 		'background_image'		=> array(
 			'title' => __('Background Image', 'wp-gridbuilder'),
@@ -79,6 +81,7 @@ function _gridbuilder_background_settings() {
 			'priority' => 25,
 		),
 	);
+	return apply_filters( 'gridbuilder_background_settings', $settings );
 }
 
 function gridbuilder_container_settings() {

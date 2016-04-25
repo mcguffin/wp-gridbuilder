@@ -10,8 +10,9 @@ ToDo:
 -----
  - [ ] Plugin Settings
 	- [ ] Option enqueue bootstrap in frontend
- - [ ] Make compatible with ACF Widgets
  - [ ] Releasing
 	- [ ] PHP docblocks
 	- [ ] JS docblocks
 	- [ ] Filter Docs
+ - [ ] Future
+	- [ ] Make compatible with ACF Widgets
