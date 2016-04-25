@@ -769,7 +769,7 @@
 			var current	= this.getSelected(),
 				parent	= current.closest(Row),
 				template = $(e.target).is('select') ? grid.templates.get( 'cell', $(e.target).val() ) : false,
-				val = template ? template.get('data') : { size_sm: 12 };
+				val = template ? template.get('data') : { size_xs: 12 };
 
 			if ( template ) {
 				$(e.target).val('');

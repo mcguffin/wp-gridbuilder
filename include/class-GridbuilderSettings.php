@@ -10,7 +10,7 @@ class GridbuilderSettings {
 	 * 
 	 * Possible values: general | writing | reading | discussion | media | permalink
 	 */
-	private $optionset = 'general'; // writing | reading | discussion | media | permalink
+	private $optionset = 'reading';
 
 	/**
 	 * Getting a singleton.
@@ -29,7 +29,7 @@ class GridbuilderSettings {
 	private function __construct() {
 		add_action( 'admin_init' , array( &$this , 'register_settings' ) );
 		
-		add_option( 'gridbuilder_setting_1' , 'Default Value' , '' , False );
+		add_option( 'gridbuilder_frontend_enqueue_bootstrap' , false , '' , False );
 	}
 
 	/**
@@ -46,50 +46,32 @@ class GridbuilderSettings {
 	 */
 	function register_settings() {
 		$settings_section = 'gridbuilder_settings';
+		
+		add_settings_section( $settings_section, __( 'WP-Gridbuilder',  'wp-gridbuilder' ), '__return_empty_string', $this->optionset );
+		
+		$setting_name = 'gridbuilder_frontend_enqueue_bootstrap';
 		// more settings go here ...
-		register_setting( $this->optionset , 'gridbuilder_setting_1' , array( &$this , 'sanitize_setting_1' ) );
+		register_setting( $this->optionset, $setting_name, 'intval' );
 
-		add_settings_section( $settings_section, __( 'Section #1',  'wp-gridbuilder' ), array( &$this, 'section_1_description' ), $this->optionset );
 		// ... and here
 		add_settings_field(
-			'gridbuilder_setting_1',
-			__( 'Setting #1',  'wp-gridbuilder' ),
-			array( $this, 'setting_1_ui' ),
+			$setting_name,
+			__( 'Enqueue Bootstrap CSS and JS',  'wp-gridbuilder' ),
+			array( $this, 'setting_checkbox_ui' ),
 			$this->optionset,
-			$settings_section
+			$settings_section,
+			$setting_name
 		);
-	}
-
-	/**
-	 * Print some documentation for the optionset
-	 */
-	public function section_1_description() {
-		?>
-		<div class="inside">
-			<p><?php _e( 'Section 1 Description.' , 'wp-gridbuilder' ); ?></p>
-		</div>
-		<?php
 	}
 	
 	/**
 	 * Output Theme selectbox
 	 */
-	public function setting_1_ui(){
-		$setting_name = 'gridbuilder_setting_1';
-		$setting = get_option($setting_name);
-		?><input type="text" name="<?php echo $setting_name ?>" value="<?php esc_attr_e( $setting ) ?>" /><?php
+	public function setting_checkbox_ui( $setting_name ){
+		$setting = get_option( $setting_name );
+		?><input type="checkbox" name="<?php echo $setting_name ?>" <?php checked(intval($setting),1) ?> value="1" /><?php
 	}
-	
 
-	/**
-	 * Sanitize value of setting_1
-	 *
-	 * @return string sanitized value
-	 */
-	function sanitize_setting_1( $value ) {	
-		// do sanitation here!
-		return $value;
-	}
 }
 
 GridbuilderSettings::instance();

@@ -31,6 +31,24 @@ body {
 
 	.container,
 	.row,
+	.cell,
+	.widget,
+	.containers,
+	.rows,
+	.cells,
+	.widgets {
+	    display: block;
+		box-sizing:border-box;
+	}
+	.containers,
+	.rows,
+	.cells,
+	.widgets {
+	    clear:both;
+	}
+
+	.container,
+	.row,
 	.cell {
 		min-height:100px;
 		margin-top:5px;
@@ -149,9 +167,7 @@ body {
 		background:rgba($color-wp-blue,0.2);
 		margin-top:5px;
 		margin-bottom:5px;
-		position:relative;
 		border:1px solid rgba($color-wp-blue,0.7);
-		box-sizing:border-box;
 		.widgets {
 			padding-bottom:15px;
 		}

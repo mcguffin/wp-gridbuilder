@@ -110,6 +110,7 @@
 			position:relative;
 			background-color:#fff;
 			border-radius:5px;
+			padding-bottom:33px;
 			button.dashicons-dismiss {
 				position:absolute;
 				right:0;
@@ -125,6 +126,19 @@
 			img {
 				display:block;
 				margin:0 auto;
+			}
+			.filename {
+				position:absolute;
+				left:0;
+				bottom:0;
+				right:0;
+				background:#ccc;
+				display:block;
+				text-align:center;
+				font-weight:bold;
+				padding:5px;
+				font-size:13px;
+				line-height:1em;
 			}
 		}
 		[name="media_id"] + .thumbnail {

@@ -108,6 +108,7 @@
 						var attachment = new wp.media.model.Attachment({id:value}), 
 							self = this;
 						attachment.once('change',function() {
+							var _filename, url
 							if ( !! attachment.get('sizes') ) {
 								try {
 									url = attachment.get('sizes').thumbnail.url;
@@ -118,6 +119,9 @@
 							} else {
 								url = attachment.get('icon');
 							}
+							_filename = new wp.media.View( { tagName:'span', className: 'filename' } );
+							_filename.$el.text( attachment.get('title') );
+
 							self.$('.thumbnail').append( 
 
 								$('<img />').attr('src',url), 
@@ -127,12 +131,14 @@
 									click: function(){
 										self.setValue(null);
 									}
-								}).$el.addClass('dashicons dashicons-dismiss')
+								}).$el.addClass('dashicons dashicons-dismiss'),
+
+								_filename.$el
 
 							);
 							delete( attachment );
 						});
-						attachment.fetch()
+						attachment.fetch();
 					} else {
 						this.$('[name="media_id"]').removeAttr( 'value' );
 					}

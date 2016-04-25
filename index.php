@@ -398,6 +398,7 @@ class Gridbuilder {
 		delete_option( 'gridbuilder_row_templates' );
 		delete_option( 'gridbuilder_cell_templates' );
 		delete_option( 'gridbuilder_widget_templates' );
+		delete_option( 'gridbuilder_frontend_enqueue_bootstrap' );
 	}
 
 }
