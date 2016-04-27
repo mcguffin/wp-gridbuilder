@@ -204,6 +204,12 @@
 			});
 			return this;
 		},
+		hasMCE: function(){
+			return this.getMCE().length > 0;			
+		},
+		getMCE: function(){
+			return this.$('[id^="wp-"][id$="-editor-container"] textarea');
+		},
 		getValue: function() {
 			var ret = {};
 			_.each( this.$el.serializeArray(), function( val ) {
@@ -217,6 +223,10 @@
 		},
 		dismiss: function() {
 			$(document).trigger( {type:'widget-removed',target: this.$widget } ); // necessary for tinymce widget
+			var $mce = this.getMCE();
+			if ( $mce.length ) {
+				$(document).trigger( {type:'deactivate-tinymce',target: $mce } ); // necessary for tinymce widget
+			}
 			return this;
 		}
 	} );
@@ -391,7 +401,7 @@
 		template:  wp.template('grid-edit-dialog'),
 		className: 'edit-dialog sidebar',
 		events: {
-			'click .apply' : 'applyChanges'
+			'click .apply' : 'done'
 		},
 		initialize: function( options ) {
 			var self = this;
@@ -445,7 +455,10 @@
 					self.model.set( input.options.settings.name, input.getValue() );
 				} );
 			});
-
+			return this;
+		},
+		done: function(){
+			this.applyChanges();
 			this.trigger( 'done' );
 			return false;
 		},

@@ -924,12 +924,14 @@
 					dialog.dismiss();
 				})
 				.on('next',function( e ) {
+					dialog.applyChanges();
 					self.hasChanged();
 					modal.close();
 					self.setSelected( next );
 					self.editItem( e );
 				})
 				.on('prev',function( e ) {
+					dialog.applyChanges();
 					self.hasChanged();
 					modal.close();
 					self.setSelected( prev );
@@ -950,7 +952,7 @@
 			current.remove();
 			parent.model.items.remove( current.model );
 
-			this.setSelected(this);
+			this.setSelected( parent );
 
 			this.hasChanged();
 

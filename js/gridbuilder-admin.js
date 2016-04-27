@@ -66,6 +66,11 @@
 
 			toggleGridEditor( gridState );
 
+			// Support Black Studio Tinymce Widget plugin
+			if ( typeof bstw_data !== 'undefined') {
+				bstw_data.deactivate_events.push( 'deactivate-tinymce' );
+			}
+
 		})
 		.on('click','.toggle-grid-editor',function( e ) {
 			toggleGridEditor();
