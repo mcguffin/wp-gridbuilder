@@ -39,6 +39,12 @@ class GridbuilderTools {
 		add_action( "load-{$page_hook}" , array( &$this , 'enqueue_admin_page_assets' ) );
 		add_action( "load-{$page_hook}" , array( &$this , 'handle_import_export' ) );
 	}
+
+	/**
+	 * 	Show succes message
+	 *
+	 *	@action	admin_notices
+	 */
 	function admin_notices__success() {
 		?><div class="notice notice-success is-dismissible">
     	    <p><?php 
@@ -50,6 +56,12 @@ class GridbuilderTools {
 	    	    ?></p>
 	    </div><?php
 	}
+
+	/**
+	 * 	Show error message
+	 *
+	 *	@action	admin_notices
+	 */
 	function admin_notices__error() {
 		if ( is_wp_error( $this->last_error ) ) {
 			?><div class="notice notice-error is-dismissible">
@@ -57,6 +69,7 @@ class GridbuilderTools {
 			</div><?php
 		}
 	}
+
 	/**
 	 * 	Add Admin page to menu
 	 *
@@ -219,6 +232,7 @@ class GridbuilderTools {
 			</form>
 		</div><?php
 	}
+
 	/**
 	 * 	Add Admin page to menu
 	 *
