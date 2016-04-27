@@ -35,7 +35,7 @@ class GridbuilderTools {
 	 *	@action	admin_menu
 	 */
 	function add_admin_page() {
-		$page_hook = add_management_page( __( 'WP GridBuilder (management)' , 'wp-gridbuilder' ), __( 'WP GridBuilder' , 'wp-gridbuilder' ), 'manage_options', $this->tool_page_name, array( &$this , 'render_management_page' ) );
+		$page_hook = add_management_page( __( 'WP GridBuilder' , 'wp-gridbuilder' ), __( 'GridBuilder' , 'wp-gridbuilder' ), 'manage_options', $this->tool_page_name, array( &$this , 'render_management_page' ) );
 		add_action( "load-{$page_hook}" , array( &$this , 'enqueue_admin_page_assets' ) );
 		add_action( "load-{$page_hook}" , array( &$this , 'handle_import_export' ) );
 	}
@@ -182,7 +182,7 @@ class GridbuilderTools {
 			$count_templates += count( get_option( "gridbuilder_{$type}_templates" ) );
 		}
 		?><div class="wrap">
-			<h2><?php _e( 'GridBuilder Tools' , 'wp-gridbuilder' ); ?></h2>
+			<h2><?php _e( 'GridBuilder Import / Export' , 'wp-gridbuilder' ); ?></h2>
 			<form method="post" enctype="multipart/form-data">
 				<?php if ( $count_templates ) { ?>
 				<div class="card">

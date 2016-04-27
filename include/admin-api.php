@@ -278,6 +278,7 @@ function gridbuilder_widget_editor() {
 	$editor = array(
 		'instance'	=> array(
 			'type'	=> 'widget_instance',
+			'priority'	=> 10,
 		),
 	);
 	return apply_filters( 'gridbuilder_widget_editor', $editor );
