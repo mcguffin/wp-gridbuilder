@@ -10,8 +10,8 @@ class GridbuilderSettings {
 	 * 
 	 * Possible values: general | writing | reading | discussion | media | permalink
 	 */
-	private $optionset = 'reading';
-
+	private $optionset = 'gridbuilder';
+	private $options_page_name = 'gridbuilder-options';
 	/**
 	 * Getting a singleton.
 	 *
@@ -29,7 +29,38 @@ class GridbuilderSettings {
 	private function __construct() {
 		add_action( 'admin_init' , array( &$this , 'register_settings' ) );
 		
-		add_option( 'gridbuilder_frontend_enqueue_bootstrap' , false , '' , False );
+		add_action( 'admin_menu' , array( &$this , 'add_options_page' ) );
+
+		add_option( 'gridbuilder_frontend_enqueue_bootstrap' , false , '' , false );
+	}
+
+	/**
+	 * 	Add Admin page to menu
+	 *
+	 *	@action	admin_menu
+	 */
+	function add_options_page() {
+		$page_hook = add_options_page( __( 'GridBuilder Options' , 'wp-gridbuilder' ), __( 'GridBuilder' , 'wp-gridbuilder' ), 'manage_options', $this->options_page_name, array( &$this , 'render_options_page' ) );
+	}
+
+	/**
+	 * 	Render the options page
+	 */
+	function render_options_page() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+		}
+		?><div class="wrap">
+			<h2><?php _e( 'GridBuilder Options',  'wp-gridbuilder' ); ?></h2>
+
+			<form action="options.php" method="post">
+				<?php
+				settings_fields(  $this->optionset );
+				do_settings_sections( $this->optionset );
+				submit_button( __('Save Settings' , 'wp-gridbuilder' ) );
+				?>
+			</form>
+		</div><?php
 	}
 
 	/**
@@ -38,8 +69,6 @@ class GridbuilderSettings {
 	function enqueue_assets() {
 
 	}
-	
-
 
 	/**
 	 * Setup options page.
@@ -47,7 +76,7 @@ class GridbuilderSettings {
 	function register_settings() {
 		$settings_section = 'gridbuilder_settings';
 		
-		add_settings_section( $settings_section, __( 'WP-Gridbuilder',  'wp-gridbuilder' ), '__return_empty_string', $this->optionset );
+		add_settings_section( $settings_section, null, null, $this->optionset );
 		
 		$setting_name = 'gridbuilder_frontend_enqueue_bootstrap';
 		// more settings go here ...

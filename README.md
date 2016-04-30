@@ -8,8 +8,9 @@ This plugin is still pretty beta.
 
 ToDo:
 -----
- - [ ] Plugin Settings
-	- [ ] Option enqueue bootstrap in frontend
+ - [x] Plugin Settings page
+ - [ ] Enqueue bootstrap in frontend if option is on
+
  - [ ] Releasing
 	- [ ] PHP docblocks
 	- [ ] JS docblocks
@@ -23,5 +24,5 @@ ToDo:
  - [ ] Bugs:
 	- [x] Add Cell > Add widget: row cells don't get resized
 	- [ ] Add Widget: row cells don't get resized
-	- [ ] Clone Widget -> Move to another cell: clones still exist (Nott reproducable)
+	- [ ] Clone Widget -> Move to another cell: clones still exist (Not reproducable)
 	- [x] Apply changes on prev/next
