@@ -334,7 +334,7 @@ class GridbuilderAdmin {
 	 */
 	private function prioritySortSettings( $arr ) {
 		foreach ( array_keys($arr) as $k ) {
-			$this->prioritySortEditor( $arr[$k]['items'] );
+			 $arr[$k]['items'] = $this->prioritySortEditor( $arr[$k]['items'] );
 		}
 		return $arr;
 	}
