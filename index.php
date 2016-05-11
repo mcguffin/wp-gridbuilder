@@ -341,7 +341,7 @@ class Gridbuilder {
 			}
 		} else if ( $item[ 'background_color' ] ) {
 			$color = $this->mk_color( $item[ 'background_color' ], $item[ 'background_opacity' ] );
-			$styles[ '' ] = sprintf('background-color:%s;', $color );
+			$styles[ 'background-color' ] = $color;
 		}
 		$style_attr = $this->implode_assoc( $styles, ':', ';' );
 		$style_attr .= trim( $item['attr_style'], "; \t\n\r\0\x0B" );
