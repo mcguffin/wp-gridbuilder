@@ -11,20 +11,20 @@ if ( ! defined('ABSPATH') )
 					<div class="btn-group add">
 						<!-- container -->
 						<button class="add-container btn small button-secondary"><?php _e('Add Container','wp-gridbuilder') ?></button>
-						<select class="add-container btn small button-secondary">
+						<select class="add-container btn small">
 							<option value=""><?php _e( '▼', 'wp-gridbuilder' ) ?></option>
 						</select>
 						<!-- container -->
 						<button class="add-row btn small button-secondary"><?php _e('Add Row','wp-gridbuilder') ?></button>
-						<select class="add-row btn small button-secondary">
+						<select class="add-row btn small">
 							<option value=""><?php _e( '▼', 'wp-gridbuilder' ) ?></option>
 						</select>
 						<button class="add-cell btn small button-secondary"><?php _e('Add Cell','wp-gridbuilder') ?></button>
-						<select class="add-cell btn small button-secondary">
+						<select class="add-cell btn small">
 							<option value=""><?php _e( '▼', 'wp-gridbuilder' ) ?></option>
 						</select>
 						<button class="add-widget btn small button-secondary"><?php _e('Add Widget','wp-gridbuilder') ?></button>
-						<select class="add-widget btn small button-secondary">
+						<select class="add-widget btn small">
 							<option value=""><?php _e( '▼', 'wp-gridbuilder' ) ?></option>
 						</select>
 					</div>

@@ -32,6 +32,13 @@
 	.add {
 		select.btn {
 			max-width:30px;
+			color: #555;
+			border-color: #ccc;
+			background: #f7f7f7;
+			-webkit-box-shadow: 0 1px 0 #ccc;
+			box-shadow: 0 1px 0 #ccc;
+			vertical-align: top;
+			-moz-appearance: none;
 		}
 	}
 	[type="radio"] + label {
