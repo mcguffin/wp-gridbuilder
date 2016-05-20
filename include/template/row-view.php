@@ -9,5 +9,5 @@ if ( ! defined('ABSPATH') )
 			<span class="display-id"></span>
 			<span class="display-class"></span>
 		</div>
-		<ul class="collection cells" data-sort-group="cell"></ul>
+		<ul class="collection sort-handle cells" data-sort-group="cell"></ul>
 	</script>

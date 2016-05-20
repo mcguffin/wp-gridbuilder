@@ -4,4 +4,4 @@
 
 @import 'ui/ui';
 
-// sass --watch scss/gridbuilder-admin.scss:css/gridbuilder-admin.css --style compressed --precision 8
+// sass --watch scss/gridbuilder-admin.scss:css/gridbuilder-admin.css -r ./scss/base64-encode.rb --style compressed --precision 8

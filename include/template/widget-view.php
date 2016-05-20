@@ -5,6 +5,7 @@ if ( ! defined('ABSPATH') )
 
 ?>
 	<script type="text/html" id="tmpl-widget-view">
+		<div class="sort-handle"></div>
 		<div class="display-attributes">
 			<span class="display-id"></span>
 			<span class="display-class"></span>

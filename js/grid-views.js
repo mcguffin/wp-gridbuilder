@@ -1,5 +1,9 @@
 (function( $, grid ){
-
+	
+	if ( !! document.caretPositionFromPoint && ! document.caretRangeFromPoint ) {
+		document.caretRangeFromPoint = document.caretPositionFromPoint;
+	}
+	
 	var Prompt, Grid, Container, Row, Cell, Widget,
 		CollectionView, Prompt, Modal,
 		SelectorDisplay, TemplateDisplay,
@@ -202,8 +206,8 @@
 			this.$el.prepend( this.selectorDisplay.render().$el );
 			this.$el.prepend( this.templateDisplay.render().$el );
 
-			this.$el.on('click',function( e ) {
-				if (e.target == e.currentTarget || e.target.parentNode == e.currentTarget ) {
+			this.$el.on( 'click', function( e ) {
+				if ( e.target == e.currentTarget || e.target.parentNode == e.currentTarget ) {
 					self.closest( Grid ).setSelected( self );
 				}
 			});
@@ -306,8 +310,8 @@
 		render: function() {
 			CollectionView.prototype.render.apply(this,arguments);
 
-			var self = this,
-				dragStartX, dragStartY, startOffset;
+			var self = this, $dragged, eventProp = 'screenX',
+				dragStartX, startOffset;
 
 			_.each( sizekeys, function( sizekey, viewSize ) {
 				var size = self.model.get( sizekey );
@@ -322,33 +326,42 @@
 				}
 			} );
 
+			// FF does not include pointer position in drag events.
+			// need to get back to good old mousemove
+			function mousemove( e ) {
+				var $e = $.Event( 'drag', {
+					pageX: e.pageX,
+					pageY: e.pagey,
+					screenX: e.screenX,
+					screenY: e.screeny,
+					clientX: e.clientX,
+					clienty: e.clienty
+				} );
+				$dragged.trigger( $e );
+			}
+			function mouseup( e ) {
+				$(document).off( 'mousemove', mousemove );
+				$(document).off( 'mouseup', mouseup );
+			}
+	
 			this.$('.resize-handle, .offset-handle')
- 				.on('dragstart',function( event ) {
- 					dragStartX = event.originalEvent.clientX,
- 					dragStartY = event.originalEvent.clientY,
- 					startOffset = self.getCurrentOffset();
+				.on( 'mousedown', function( e ) {
+					// add move listener
+					dragStartX = e.screenX;
+					startOffset = self.getCurrentOffset();
+					$dragged = $(this);
+					$(document).on( 'mousemove', mousemove );
+					$(document).on( 'mouseup', mouseup );
+					
+					e.preventDefault();
+				} );
 
- 					event.stopImmediatePropagation();
-
-					// setup inivisible drag image
-					var cnv = $('<canvas class="drag-resize-image"></canvas>')
-						.attr( 'width', '20' )
-						.attr( 'height', '20' )
-						.appendTo('body')
-						.get(0),
-						ctx = cnv.getContext("2d");
-
-					ctx.fillStyle = 'rgba(0,0,0,0)';
-					ctx.fillRect( 0, 0, cnv.width, cnv.height );
-					event.originalEvent.effectAllowd = 'move';
- 					event.originalEvent.dataTransfer.setDragImage( cnv, cnv.width / 2, cnv.height / 2 );
-				})
 
 			this.$('.resize-handle')
 				.on( "drag", function( event ) {
 					var colWidth	= $(this).closest('.row').width() / 12,
 						viewSize	= self.controller.whichView(),
-						cols		= Math.max( 1, Math.min( 12, Math.round( ( event.originalEvent.pageX - self.$el.offset().left ) / colWidth ) ) ),
+						cols		= Math.max( 1, Math.min( 12, Math.round( ( event.pageX - self.$el.offset().left ) / colWidth ) ) ),
 						prevCols	= self.model.get( 'size_'+viewSize );
 
 					if (prevCols != cols) {
@@ -357,24 +370,24 @@
 						self.hasChanged();
 					}
 
-					event.stopImmediatePropagation();
+ 					event.stopPropagation();
 				} );
 
 			this.$('.offset-handle')
  				.on('drag',function( event ) {
 					var colWidth	= $(this).closest('.row').width() / 12;
 						viewSize	= self.controller.whichView(),
-						diff 		= dragStartX - event.originalEvent.clientX;
+						diff 		= dragStartX - event.screenX;
 						offsetDiff	= Math.round( diff / colWidth ),
 						offset		= Math.min( 11, Math.max( 0, startOffset - offsetDiff ) ),
 						prevOffset	= self.model.get( 'offset_' + viewSize );
-
 					if ( prevOffset != offset ) {
 						self.setOffsetClass( offset, viewSize );
-						self.model.set( 'offset_'+viewSize, offset );
+						self.model.set( 'offset_' + viewSize, offset );
 						self.hasChanged();
 					}
 
+ 					event.stopPropagation();
 					event.stopImmediatePropagation();
 				})
 
@@ -635,6 +648,7 @@
 
 				var options = $.extend({
 						group: group,
+						handle: ".sort-handle",
 					}, sortoptions ),
 					$sortable;
 

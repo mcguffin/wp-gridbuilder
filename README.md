@@ -4,7 +4,7 @@ WP GridBuilder
 A PageBuilder plugin for WordPress.
 Uses Twitter Bootstrap grid system.
 
-This plugin is still pretty beta.
+This plugin is still pretty beta and currently only works in Chrome.
 
 ToDo:
 -----
@@ -14,15 +14,18 @@ ToDo:
  - [ ] Releasing
 	- [ ] PHP docblocks
 	- [ ] JS docblocks
-	- [ ] Filter Docs
+	- [ ] JS Compression
+	- [ ] Plugin API Docs
 	- [ ] l10n
  - [ ] Future
 	- [x] Provide Out-of-the-box support for several RTE Widgets
 	- [ ] Make compatible with ACF Widgets
 	- [ ] Maybe: Widget Base Class
  - [x] After delete item: select parent item
- - [ ] Bugs:
+ - [x] Bugs:
+	- [x] FF: Grid guides not visible
+ 	- [x] FF: resize / shift does not work
 	- [x] Add Cell > Add widget: row cells don't get resized
-	- [ ] Add Widget: row cells don't get resized
-	- [ ] Clone Widget -> Move to another cell: clones still exist (Not reproducable)
+	- [x] Add Widget: row cells don't get resized
+	- [x] Clone Widget -> Move to another cell: clones still exist (Not reproducable)
 	- [x] Apply changes on prev/next

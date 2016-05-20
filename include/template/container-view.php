@@ -11,5 +11,5 @@ if ( ! defined('ABSPATH') )
 			<span class="display-id"></span>
 			<span class="display-class"></span>
 		</div>
-		<ul class="collection rows" data-sort-group="row"></ul>
+		<ul class="collection sort-handle rows" data-sort-group="row"></ul>
 	</script>
