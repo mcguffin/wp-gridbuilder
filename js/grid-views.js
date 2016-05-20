@@ -164,13 +164,16 @@
 
 			this.listenTo( this.model, 'change', this.updateDisplay );
 
+// 			this.listenTo( this.model.items, 'add', this.render );
+// 			this.listenTo( this.model.items, 'remove', this.render );
+
 			// check if template still exists
 			
 			template = this.model.get( 'template' );
 			if ( template && ! grid.templates.get( this.getClassName(), template ) ) {
 				this.model.unset( 'template' );
 			}
-			
+
 			allObjects.push( this );
 
 			return this;
@@ -185,13 +188,13 @@
 			wp.media.View.prototype.render.apply( this, arguments );
 			var self = this,
 				cls = this.collectionView(),
-				$collection = this.$('>.collection');
+				$collection = this.$('>.collection').html('');
 			this.$el.data( 'model', this.model );
 			this.$el.data( 'view', this );
-			$collection.data( 'model', this.model.items );
+			$collection.data( 'view', this ).data( 'model', this.model.items );
 			if ( cls ) {
 				this.model.items.each( function( item, i ) {
-					var cnt = new cls({ controller: self.options.controller, model: item, parent: self });
+					var cnt = new cls( { controller: self.options.controller, model: item, parent: self });
 					$collection.append( cnt.$el );
 					cnt.render();
 				});
@@ -241,7 +244,7 @@
 			this.$el.removeClass( removeClass.join(' ') ).addClass( addClass.join(' ') );
 			return this;
 		},
-		detach:function( ){
+		detach:function( ) {
 		},
 		is: function( what ) {
 			return this.constructor === what;
@@ -291,8 +294,16 @@
 		template: wp.template('cell-view'),
 		className:'cell',
 		tagName:'li',
-
-		render: function(){
+		initialize: function() {
+			var ret = CollectionView.prototype.initialize.apply(this,arguments);
+			this.listenTo( this.model.items, 'update', this.itemsChanged );
+			return ret;
+		},
+		itemsChanged: function() {
+			// let row adjust cell heights
+			this.parent().adjustCellSize();
+		},
+		render: function() {
 			CollectionView.prototype.render.apply(this,arguments);
 
 			var self = this,
@@ -411,29 +422,10 @@
 		
 		initialize: function(){
 			CollectionView.prototype.initialize.apply( this, arguments );
-
 			var self = this;
-
-			this.listenTo( this.model.items, 'update', this.adjustCellSize, this );
-			this.listenTo( this.model.items, 'update', this.bindCellListeners, this );
-			
-			this.cellListeners = [];
-			
 			return this;
 		},
-		bindCellListeners: function(){
-			var self = this;
-			// unbind old listeners
-			_.each(this.cellListeners, function( cell ) {
-				self.stopListening( cell );
-			});
-			// bind current listeners
-			this.model.items.each( function( item ) {
-				self.listenTo( item.items, 'update', self.adjustCellSize, self );
-			});
-			return this;
-		},
-		render: function(){
+		render: function() {
 			CollectionView.prototype.render.apply( this, arguments );
 			var self = this;
 			setTimeout(function(){self.adjustCellSize();},1);
@@ -535,7 +527,7 @@
 			}
 			this.switchView();
 
-			this.initSortables()
+			this.initSortables();
 
 			this.setSelected( this );
 			
@@ -635,36 +627,51 @@
 				ghostClass: 'ghost',
 				scroll: true
 			}, self = this;
+
+			$( '[data-sort-group="cell"]' ).on('add remove', function(e) {
+//				console.log('moved widget', this, e );
+			});
 			_.each( groups, function( group ) {
+
 				var options = $.extend({
 						group: group,
 					}, sortoptions ),
-					$sortable = $( '[data-sort-group="'+group+'"]' )
-						.sortable( options )
-						.on( 'add', function( e ) {
-							$(this).data('model').add( $(e.originalEvent.item).data('model') );
-							e.stopPropagation();
-							self.hasChanged();
-						} )
-						.on( 'remove', function( e ) {
-							$(this).data('model').remove( $(e.originalEvent.item).data('model') );
-							e.stopPropagation();
-							self.hasChanged();
-						} )
-						.on('sort',function(e) {
-							$(this).children().each(function(i,el){
-								var elModel = $(el).data('model');
-								elModel.set('idx',i);
-							});
-							$(this).data('model').sort();
-							e.stopPropagation();
-							self.hasChanged();
-	//						updateCellHeights();
+					$sortable;
+
+				$sortable = $( '[data-sort-group="'+group+'"]' )
+					.sortable( options )
+					.on( 'add', function( e ) {
+						var collection = $(this).data('model'),
+							view = $(this).data('view'),
+							itemView = $( e.originalEvent.item ).data( 'view' );
+
+						// update model
+ 						collection.add( $(e.originalEvent.item).data('model'), { silent: true } );
+ 						collection.trigger('update');
+
+						// update view
+						itemView.options.parent = view;
+
+						e.stopPropagation();
+					} )
+					.on( 'remove', function( e ) {
+						var collection = $(this).data('model');
+ 						collection.remove( $(e.originalEvent.item).data('model'), { silent: true } );
+ 						collection.trigger('update');
+						e.stopPropagation();
+					} )
+					.on('sort',function( e ) {
+						$(this).children().each(function(i,el){
+							var elModel = $(el).data('model');
+							elModel.set('idx',i);
 						});
+						$(this).data('model').sort();
+						e.stopPropagation();
+					});
 
 			});
 		},
-		
+
 		getSelected: function() {
 			return this.options.controller.getSelected(this);
 		},
@@ -821,7 +828,6 @@
 			return false;
 		},
 		_addItem: function( itemClass, parent, data ) {
-
 			var current = this.getSelected() || this,
 				data = data || {},
 				itemModel = new grid.model.GridObject( data ),
@@ -845,9 +851,7 @@
 
 			// add to model
 			parent.model.items.add( itemModel );
-
-			$collection.trigger('sort');
-
+			
 			this.hasChanged();
 			this.initSortables();
 
@@ -952,7 +956,7 @@
 			current.remove();
 			parent.model.items.remove( current.model );
 
-			this.setSelected( parent );
+			this.setSelected( this );
 
 			this.hasChanged();
 
@@ -1012,7 +1016,6 @@
 			template = grid.templates.get( type, slug );
 			template.set( 'data', current.model.toJSON() );
 			template.save();
-			console.log(template);return false;
 			return false;
 		},
 		manageTemplates: function( e ) {

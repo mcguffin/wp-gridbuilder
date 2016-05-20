@@ -10,10 +10,11 @@
 			_.defaults( data, { items: [] } );
 			var self = this;
 			this.items = new GridCollection( [] );
+			this.items.parent = this;
 			this.parent = false;
 			this.id = 'obj' + id++;
 
-			this.items.on( 'add', this.setItemParent, this );
+//			this.items.on( 'add', this.setItemParent, this );
 
 			_.each( data.items, function( item, i ) {
 				self.items.add(item);
@@ -34,9 +35,20 @@
 		model:GridObject,
 		comparator: function(model) {
 			return model.get('idx');
+		},
+		add: function() {
+			var models = Backbone.Collection.prototype.add.apply( this, arguments )
+				self = this;
+			modelsArr = models.constructor == Array ? models : [ models ];
+			_.each( modelsArr, function( model, i ) {
+				model.parent = self.parent;
+			});
+			return models;
 		}
 	});
 	
+
+
 	
 	GridTemplate = grid.model.GridTemplate = Backbone.Model.extend({
 		save: function( ) {
