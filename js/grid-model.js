@@ -31,13 +31,14 @@
 			return ret;
 		}
 	});
+
 	GridCollection = grid.model.GridCollection = Backbone.Collection.extend({
 		model:GridObject,
 		comparator: function(model) {
 			return model.get('idx');
 		},
 		add: function() {
-			var models = Backbone.Collection.prototype.add.apply( this, arguments )
+			var models = Backbone.Collection.prototype.add.apply( this, arguments ),
 				self = this;
 			modelsArr = models.constructor == Array ? models : [ models ];
 			_.each( modelsArr, function( model, i ) {

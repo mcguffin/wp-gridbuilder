@@ -7,6 +7,7 @@
 	var Prompt, Grid, Container, Row, Cell, Widget,
 		CollectionView, Prompt, Modal,
 		SelectorDisplay, TemplateDisplay,
+		classMap,
 		l10n		= gridbuilder.l10n,
 		options		= gridbuilder.options,
 		sizekeys 	= {},
@@ -269,7 +270,7 @@
 		getClassName: function() {
 			var self = this,
 				results = _.filter( ['Grid','Container','Row','Cell','Widget'], function( className ) {
-					return self.is( eval( className ) );
+					return self.is( classMap[ className ] );
 				});
 			return results.length ? results[0] : false;
 		},
@@ -1051,4 +1052,11 @@
 		
 	});
 
+	classMap	= {
+		'Grid'		: Grid,
+		'Container'	: Container,
+		'Row'		: Row,
+		'Cell'		: Cell,
+		'Widget'	: Widget
+	};
 })(jQuery,window.grid)
