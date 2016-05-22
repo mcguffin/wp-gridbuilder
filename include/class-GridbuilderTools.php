@@ -35,7 +35,7 @@ class GridbuilderTools {
 	 *	@action	admin_menu
 	 */
 	function add_admin_page() {
-		$page_hook = add_management_page( __( 'WP GridBuilder' , 'wp-gridbuilder' ), __( 'GridBuilder' , 'wp-gridbuilder' ), 'manage_options', $this->tool_page_name, array( &$this , 'render_management_page' ) );
+		$page_hook = add_management_page( __( 'WP GridBuilder' , 'wp-gridbuilder' ), __( 'GridBuilder' , 'wp-gridbuilder' ), get_option( 'gridbuilder_manage_templates_capability' ), $this->tool_page_name, array( &$this , 'render_management_page' ) );
 		add_action( "load-{$page_hook}" , array( &$this , 'enqueue_admin_page_assets' ) );
 		add_action( "load-{$page_hook}" , array( &$this , 'handle_import_export' ) );
 	}

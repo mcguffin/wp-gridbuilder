@@ -29,6 +29,7 @@ if ( ! defined('ABSPATH') )
 						</select>
 					</div>
 				</div>
+				<?php if ( current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) { ?>
 				<div class="toolbar-right">
 					<div class="btn-group add">
 						<button class="create-template btn small button-secondary"><?php _e( 'Create Template', 'wp-gridbuilder' ); ?></button>
@@ -36,6 +37,7 @@ if ( ! defined('ABSPATH') )
 						<button class="manage-templates btn small button-secondary"><?php _e( 'Manage Templates', 'wp-gridbuilder' ); ?></button>
 					</div>
 				</div>
+				<?php } ?>
 			</div>
 			<hr />
 			<div class="toolbar-row">
@@ -56,6 +58,12 @@ if ( ! defined('ABSPATH') )
 					<button disabled="disabled" class="item-action btn small edit button-primary"><?php _e('Edit','wp-gridbuilder') ?></button>
 					<button disabled="disabled" class="item-action btn small clone button-secondary"><?php _e('Clone','wp-gridbuilder') ?></button>
 					<button disabled="disabled" class="item-action btn small delete red button-secondary"><?php _e('Delete','wp-gridbuilder') ?></button>
+					<?php if ( current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) { ?>
+						<input disabled="disabled" class="item-action lock" type="checkbox" id="element-lock" />
+						<label for="element-lock" class="btn small lock button-secondary">
+							<span class="dashicons dashicons-unlock"></span>
+						</button>
+					<?php } ?>
 				</div>
 			</div>
 		</div>

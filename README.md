@@ -21,13 +21,17 @@ ToDo:
 	- [x] Provide Out-of-the-box support for several RTE Widgets
 	- [ ] Export / Import Grid + Elements
 	- [ ] Page Templates
-	- [ ] Lock elements and properties --> allow Lock on specific roles
-		- [ ] Model: each model & property has a lock property. like: 
+	- [x] Lock elements and properties --> allow Lock on specific roles
+		- [x] Lock properties
+		- [x] Lock elements
+			A locked element can not be editied, cloned or deleted
+		- [x] Model: each model & property has a lock property. like: 
 				if ( ! model.get( 'locked') ) openEditorModalFor( model )
 				if ( ! model.get( prop + ':locked') ) addEditorFor( prop, model )
-		- [ ] UI: Admin view (edit everything including locks) + editor view (only edit unlocked models + properties)
-		- [ ] Capabilities
-			`gridbuilder_manage_templates`
+		- [x] UI
+			- [x] Lock for each Property
+			- [x] Add element Lock in toolbar
+		- [x] Capabilities
 	- [ ] Make compatible with ACF Widgets OR 
 	- [ ] Maybe: Widget Base Class (with RTE)
 	- [ ] Sophisticated widget previews

@@ -63,7 +63,7 @@ class GridbuilderAdmin {
 	 */
 	function ajax_get_widget() {
 		global $wp_widget_factory;
-		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'widget_class' ], $_POST[ 'instance' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( 'edit_posts' ) ) {
+		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'widget_class' ], $_POST[ 'instance' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) {
 			$instance = json_decode( stripslashes( $_POST[ 'instance' ] ), true );
 			if ( isset( $wp_widget_factory->widgets[ $_POST[ 'widget_class' ] ] ) ) {
 				header( 'Content-Type: text/html' );
@@ -81,7 +81,7 @@ class GridbuilderAdmin {
 	 *	Ajax: Delete template
 	 */
 	function ajax_delete_template() {
-		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'template' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( 'edit_posts' ) ) {
+		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'template' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) {
 			$template = json_decode( stripslashes( $_POST[ 'template' ] ), true );
 			
 			$template = wp_parse_args($template, array(
@@ -106,7 +106,7 @@ class GridbuilderAdmin {
 	 *	Ajax: Create or update template
 	 */
 	function ajax_save_template() {
-		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'template' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( 'edit_posts' ) ) {
+		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'template' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) {
 
 
 			$template = json_decode( stripslashes( $_POST[ 'template' ] ), true );
@@ -328,8 +328,8 @@ class GridbuilderAdmin {
 					'default_widget_content_property'	
 										=> apply_filters( 'gridbuilder_default_widget_content_property', 'description'),
 					'features'			=> array(
-						'templates'	=> current_user_can( 'edit_theme_options' ),
-						'locks'		=> current_user_can( 'edit_theme_options' ),
+						'templates'	=> current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ),
+						'locks'		=> current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ),
 					),
 				),
 			) );

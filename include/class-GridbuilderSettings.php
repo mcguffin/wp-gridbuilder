@@ -27,11 +27,13 @@ class GridbuilderSettings {
 	 * Private constructor
 	 */
 	private function __construct() {
-		add_action( 'admin_init' , array( &$this , 'register_settings' ) );
+		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		
-		add_action( 'admin_menu' , array( &$this , 'add_options_page' ) );
+		add_action( 'admin_menu', array( $this, 'add_options_page' ) );
 
-		add_option( 'gridbuilder_frontend_enqueue_bootstrap' , false , '' , false );
+		add_option( 'gridbuilder_frontend_enqueue_bootstrap' , false, '', false );
+		
+		add_option( 'gridbuilder_manage_templates_capability' , 'edit_theme_options' );
 	}
 
 	/**

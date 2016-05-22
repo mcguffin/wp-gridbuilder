@@ -10,6 +10,7 @@
 		classMap,
 		l10n		= gridbuilder.l10n,
 		options		= gridbuilder.options,
+		features	= gridbuilder.options.features,
 		sizekeys 	= {},
 		offsetkeys	= {},
 		uuid		= 1,
@@ -76,15 +77,19 @@
 			this.listenTo(this.model,'change',this.render);
 		},
 		render: function() {
-			var id = this.model.get('attr_id'),
-				classname = this.model.get('attr_class'),
-				selector = '';
+			var id 			= this.model.get('attr_id'),
+				classname	= this.model.get('attr_class'),
+				locked		= this.model.get('locked'),
+				selector	= '';
 
 			if ( !!id ) {
 				selector += '<span class="display-id">#' + id + '</span>';
 			}
 			if ( !!classname ) {
 				selector += '<span class="display-class">.' + classname.split(' ').join('.') + '</span>';
+			}
+			if ( locked ) {
+				selector += '<span class="dashicons dashicons-lock"></span>';
 			}
 			this.$el.html(selector);
 
@@ -512,6 +517,7 @@
 			'click .grid-toolbar .edit':				'editItem',
 			'click .grid-toolbar .clone':				'cloneItem',
 			'click .grid-toolbar .delete':				'deleteItem',
+			'click .grid-toolbar .lock':				'lockItem',
 
 			'click .grid-toolbar .create-template':		'createTemplate',
 			'click .grid-toolbar .update-template':		'updateTemplate',
@@ -525,6 +531,7 @@
 
 			this.on( 'change_viewsize', this.updateVisibilitySelect, this );
 			this.on( 'select', this.updateVisibilitySelect, this );
+			this.on( 'select', this.updateLockButton, this );
 		},
 		render: function(){
 			CollectionView.prototype.render.apply( this, arguments );
@@ -691,24 +698,14 @@
 			return this.options.controller.getSelected(this);
 		},
 		setSelected:function( item ) {
-			var gridView = this.controller.view;
+			var gridView = this.controller.view,
+				can_edit = ! item.is( Grid ) && ( features.locks || ! item.model.get( 'locked' ) );
 			this.options.controller.setSelected( item );
 
 			$('.current-grid-item').removeClass('current-grid-item')
 			item.$el.addClass('current-grid-item');
 
-			// update toolbar
-			if ( item.is( Grid ) ) {
-				gridView.$('.item-action').prop( 'disabled',true );
-			} else if ( item.is( Container ) ) {
-				gridView.$('.item-action').prop( 'disabled', false );
-			} else if ( item.is( Row ) ) {
-				gridView.$('.item-action').prop( 'disabled', false );
-			} else if ( item.is( Cell ) ) {
-				gridView.$('.item-action').prop( 'disabled', false );
-			} else if ( item.is( Widget ) ) {
-				gridView.$('.item-action').prop( 'disabled', false );
-			}
+			gridView.$('.item-action').prop( 'disabled', !can_edit );
 
  			gridView.$('.add-row').prop( 'disabled', ! item.closest( Container ) );
  			gridView.$('.add-cell').prop( 'disabled', ! item.closest( Row ) );
@@ -739,7 +736,15 @@
 	 			this.$('[name="set-visibility"][value="' + visiValue + '"]').prop( 'checked', true );
 	 		}
 		},
-		
+		updateLockButton: function() {
+			var current = this.getSelected(),
+				visiValue;
+
+			if ( !!current && ! current.is( Grid ) ) {
+	 			this.$('.item-action.lock').prop( 'checked', !! current.model.get( 'locked' ) );
+	 		}
+		},
+
 		collectionView: function(){ return Container },
 
 		hasChanged: function() {
@@ -875,20 +880,23 @@
 			return this;
 		},
 		getPrevItem: function( current ) {
-			var prev;
-			current = current || this.getSelected();
-			prev = current.$el.prev().data('view');
+			var prev,
+				current = current || this.getSelected(),
+				prev = current.$el.prev().data('view');
 
 			if ( _.isUndefined( prev ) && ! current.parent().is( Grid ) ) {
 				prev = current.parent();
 			} else if (! _.isUndefined( prev ) && ! prev.is( Widget ) ) {
 				prev = prev.$('.widget').last().data('view')
 			}
+			if ( ! features.locks && prev && prev.model.get( 'locked' ) ) {
+				return this.getPrevItem( prev );
+			}
 			return prev;
 		},
 		getNextItem: function( current ) {
-			var next;
-			current = current || this.getSelected();
+			var next,
+				current = current || this.getSelected();
 
 			if ( current.$('>.collection').children().length ) {
 				next = current.$('>.collection>*').first().data('view');
@@ -902,7 +910,10 @@
 					next = current.$el.next().data('view');
 				}
 			}
-
+			console.log();
+			if ( ! features.locks && next && next.model.get( 'locked' ) ) {
+				return this.getNextItem( next );
+			}
 			return next;
 		},
 		editItem: function( e ) {
@@ -921,7 +932,8 @@
 				editor		= options.editors[ current.getClassName().toLowerCase() ],
 				dialog, title, currentTitle = current;
 			title = [];
-			while ( ! currentTitle.is(Grid ) ) {
+
+			while ( ! currentTitle.is( Grid ) ) {
 				title.unshift( currentTitle.is( Widget ) ? options.widgets[ currentTitle.model.get('widget_class') ].name : l10n[ currentTitle.getClassName() ] )
 				currentTitle = currentTitle.parent();
 			}
@@ -977,7 +989,10 @@
 
 			return false;
 		},
-		
+		lockItem: function( e ) {
+			var current = this.getSelected();
+			current.model.set( 'locked', $(e.target).is( ':checked' ) );
+		},
 
 		/**
 		 *	TEMPLATES
