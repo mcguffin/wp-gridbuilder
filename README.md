@@ -19,6 +19,7 @@ ToDo:
 	- [ ] l10n
  - [ ] Future
 	- [x] Provide Out-of-the-box support for several RTE Widgets
+	- [ ] Widget: editable col-xx-n classes
 	- [ ] Export / Import Grid + Elements
 	- [ ] Page Templates
 	- [x] Lock elements and properties --> allow Lock on specific roles
@@ -33,12 +34,11 @@ ToDo:
 			- [x] Add element Lock in toolbar
 		- [x] Capabilities
 		- [x] Locked Cell: prevent setting width + offset
-	- [ ] Make compatible with ACF Widgets OR 
+	- [ ] Make compatible with ACF Widgets 
 	- [ ] Maybe: Widget Base Class (with RTE)
 	- [ ] Sophisticated widget previews
 	- [ ] Undo (keep model state)	
 	- [ ] Keyboard shortcuts: arrows, del, CMD+D
-	- [ ] Widget: editable col-xx-n classes
  - [x] Bugs:
 	- [x] FF: Grid guides not visible
  	- [x] FF: resize / shift does not work

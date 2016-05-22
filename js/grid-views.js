@@ -706,13 +706,21 @@
 		},
 		setSelected:function( item ) {
 			var gridView = this.controller.view,
-				can_edit = ! item.is( Grid ) && ( features.locks || ! item.model.get( 'locked' ) );
+				is_unlocked	= features.locks || ! item.model.get( 'locked' ),
+				is_parent_unlocked
+							=  features.locks || ! ( item.parent() && item.parent().model.get( 'locked' ) ),
+				can_edit	= ! item.is( Grid ) && is_unlocked,
+				can_clone	= ! item.is( Grid ) && is_unlocked && is_parent_unlocked,
+				can_delete	= ! item.is( Grid ) && is_unlocked && is_parent_unlocked;
+
 			this.options.controller.setSelected( item );
 
 			$('.current-grid-item').removeClass('current-grid-item')
 			item.$el.addClass('current-grid-item');
 
-			gridView.$('.item-action').prop( 'disabled', !can_edit );
+			gridView.$('.item-action.edit').prop( 'disabled', ! can_edit );
+			gridView.$('.item-action.clone').prop( 'disabled', ! can_clone );
+			gridView.$('.item-action.delete').prop( 'disabled', ! can_delete );
 
  			gridView.$('.add-row').prop( 'disabled', ! item.closest( Container ) );
  			gridView.$('.add-cell').prop( 'disabled', ! item.closest( Row ) );
