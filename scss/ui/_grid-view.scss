@@ -191,6 +191,12 @@ body {
 		margin-top:5px;
 		margin-bottom:5px;
 		border:1px solid rgba($color-wp-blue,0.7);
+		&.locked {
+			.resize-handle,
+			.offset-handle {
+				display:none;
+			}
+		}
 		.widgets {
 			padding-bottom:15px;
 		}

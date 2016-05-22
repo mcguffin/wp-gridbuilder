@@ -196,6 +196,13 @@
 		},
 		render:function() {
 			wp.media.View.prototype.render.apply( this, arguments );
+
+			if ( ! features.locks && this.model.get('locked') ) {
+				this.$el.addClass('locked');
+			} else {
+				this.$el.addClass('unlocked');
+			}
+
 			var self = this,
 				cls = this.collectionView(),
 				$collection = this.$('>.collection').html('');
@@ -217,7 +224,6 @@
 					self.closest( Grid ).setSelected( self );
 				}
 			});
-
 			this.updateDisplay();
 
 			return this;
@@ -349,54 +355,55 @@
 				$(document).off( 'mousemove', mousemove );
 				$(document).off( 'mouseup', mouseup );
 			}
+			if ( features.locks || ! this.model.get('locked') ) {
 	
-			this.$('.resize-handle, .offset-handle')
-				.on( 'mousedown', function( e ) {
-					// add move listener
-					dragStartX = e.screenX;
-					startOffset = self.getCurrentOffset();
-					$dragged = $(this);
-					$(document).on( 'mousemove', mousemove );
-					$(document).on( 'mouseup', mouseup );
+				this.$('.resize-handle, .offset-handle')
+					.on( 'mousedown', function( e ) {
+						// add move listener
+						dragStartX = e.screenX;
+						startOffset = self.getCurrentOffset();
+						$dragged = $(this);
+						$(document).on( 'mousemove', mousemove );
+						$(document).on( 'mouseup', mouseup );
 					
-					e.preventDefault();
-				} );
+						e.preventDefault();
+					} );
 
 
-			this.$('.resize-handle')
-				.on( "drag", function( event ) {
-					var colWidth	= $(this).closest('.row').width() / 12,
-						viewSize	= self.controller.whichView(),
-						cols		= Math.max( 1, Math.min( 12, Math.round( ( event.pageX - self.$el.offset().left ) / colWidth ) ) ),
-						prevCols	= self.model.get( 'size_'+viewSize );
+				this.$('.resize-handle')
+					.on( "drag", function( event ) {
+						var colWidth	= $(this).closest('.row').width() / 12,
+							viewSize	= self.controller.whichView(),
+							cols		= Math.max( 1, Math.min( 12, Math.round( ( event.pageX - self.$el.offset().left ) / colWidth ) ) ),
+							prevCols	= self.model.get( 'size_'+viewSize );
 
-					if (prevCols != cols) {
-						self.setColClass( cols, viewSize );
-						self.model.set( 'size_'+viewSize, cols );
-						self.hasChanged();
-					}
+						if (prevCols != cols) {
+							self.setColClass( cols, viewSize );
+							self.model.set( 'size_'+viewSize, cols );
+							self.hasChanged();
+						}
 
- 					event.stopPropagation();
-				} );
+						event.stopPropagation();
+					} );
 
-			this.$('.offset-handle')
- 				.on('drag',function( event ) {
-					var colWidth	= $(this).closest('.row').width() / 12;
-						viewSize	= self.controller.whichView(),
-						diff 		= dragStartX - event.screenX;
-						offsetDiff	= Math.round( diff / colWidth ),
-						offset		= Math.min( 11, Math.max( 0, startOffset - offsetDiff ) ),
-						prevOffset	= self.model.get( 'offset_' + viewSize );
-					if ( prevOffset != offset ) {
-						self.setOffsetClass( offset, viewSize );
-						self.model.set( 'offset_' + viewSize, offset );
-						self.hasChanged();
-					}
+				this.$('.offset-handle')
+					.on('drag',function( event ) {
+						var colWidth	= $(this).closest('.row').width() / 12;
+							viewSize	= self.controller.whichView(),
+							diff 		= dragStartX - event.screenX;
+							offsetDiff	= Math.round( diff / colWidth ),
+							offset		= Math.min( 11, Math.max( 0, startOffset - offsetDiff ) ),
+							prevOffset	= self.model.get( 'offset_' + viewSize );
+						if ( prevOffset != offset ) {
+							self.setOffsetClass( offset, viewSize );
+							self.model.set( 'offset_' + viewSize, offset );
+							self.hasChanged();
+						}
 
- 					event.stopPropagation();
-					event.stopImmediatePropagation();
-				})
-
+						event.stopPropagation();
+						event.stopImmediatePropagation();
+					})
+    		}
     		return this;
 		},
 		setColClass: function( size, viewSize ) {
@@ -660,7 +667,7 @@
 					}, sortoptions ),
 					$sortable;
 
-				$sortable = $( '[data-sort-group="'+group+'"]' )
+				$sortable = $( '.unlocked>[data-sort-group="'+group+'"]' )
 					.sortable( options )
 					.on( 'add', function( e ) {
 						var collection = $(this).data('model'),

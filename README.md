@@ -32,6 +32,7 @@ ToDo:
 			- [x] Lock for each Property
 			- [x] Add element Lock in toolbar
 		- [x] Capabilities
+		- [x] Locked Cell: prevent setting width + offset
 	- [ ] Make compatible with ACF Widgets OR 
 	- [ ] Maybe: Widget Base Class (with RTE)
 	- [ ] Sophisticated widget previews
