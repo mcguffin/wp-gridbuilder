@@ -89,6 +89,28 @@
 }
 .input-wrap {
 	margin-bottom:20px;
+	.lock {
+		width:30px;
+		overflow:hidden;
+		float:right;
+		label {
+			padding:0 5px;
+			.media-modal & {
+				font-size:25px;
+			}
+		}
+		[type="checkbox"] {
+			left:-9999px;
+			position:relative;
+			&:checked + label.dashicons:before {
+//				content: "\f528"; // unlock
+				content:"\f160" !important; // lock
+			}
+		}
+	}
+	.lock + .prop {
+		padding-right:30px;
+	}
 	.input-title {
 		font-weight:bold;
 	}

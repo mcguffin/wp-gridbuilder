@@ -302,6 +302,7 @@ class GridbuilderAdmin {
 					'update_template_nonce'	=> wp_create_nonce('gridbuilder-update-template'),
 					'delete_template_nonce'	=> wp_create_nonce('gridbuilder-delete-template'),
 					'get_widget_nonce'		=> wp_create_nonce('gridbuilder-get-widget'),
+
 					'settings' => array(
 						'container'		=> $this->prioritySortSettings( gridbuilder_container_settings() ),
 						'row'			=> $this->prioritySortSettings( gridbuilder_row_settings() ),
@@ -320,11 +321,16 @@ class GridbuilderAdmin {
 						'cell'			=> gridbuilder_cell_templates(),
 						'widget'		=> gridbuilder_widget_templates(),
 					),
+
 					'widgets'			=> gridbuilder_widget_types(),
 					'screensizes'		=> gridbuilder_screen_sizes(),
 					'default_widget'	=> apply_filters( 'gridbuilder_default_widget', 'WP_Widget_Text'),
 					'default_widget_content_property'	
 										=> apply_filters( 'gridbuilder_default_widget_content_property', 'description'),
+					'features'			=> array(
+						'templates'	=> current_user_can( 'edit_theme_options' ),
+						'locks'		=> current_user_can( 'edit_theme_options' ),
+					),
 				),
 			) );
 		}

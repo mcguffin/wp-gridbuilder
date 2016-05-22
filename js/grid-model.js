@@ -6,6 +6,7 @@
 	
 	GridObject = grid.model.GridObject = Backbone.Model.extend({
 		parent:false,
+		locks:{},
 		initialize: function( data ) {
 			_.defaults( data, { items: [] } );
 			var self = this;

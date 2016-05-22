@@ -6,10 +6,10 @@
 		Cell		= grid.view.Cell, 
 		Widget		= grid.view.Widget,
 		options		= gridbuilder.options,
+		features	= gridbuilder.options.features,
 		l10n		= gridbuilder.l10n,
 		inputTypes	= ['text','textarea','color','number','media','select','checkbox','radio', 'range'],
 		inputs		= {};
-
 
 /*
 	toolbar
@@ -42,9 +42,9 @@
 			this.setValue( this.options.value || this.options.settings.default );
 			switch ( this.options.settings.type ) {
 				case 'number':
-					_.each(['min','max','step'],function(attr){
+					_.each( ['min','max','step'], function(attr) {
 						if ( typeof self.options.settings[attr] !== 'undefined' ) {
-							self.$('[type="number"]').attr(attr,self.options.settings[attr]);
+							self.$('[type="number"]').attr( attr, self.options.settings[ attr ] );
 						}
 					});
 					break;
@@ -303,6 +303,9 @@
 		className: 'input-wrap',
 
 		initialize: function( options ) {
+			_.extend( options, {
+				lock: features.locks
+			} );
 			wp.media.View.prototype.initialize.apply(this,arguments);			
 			this.input = new inputs[ options.settings.type ]( options );
 		},
@@ -311,9 +314,17 @@
 
 			this.input.render();
 			this.$('.input').append( this.input.$el );
-			this.$el.addClass('input-type-'+this.options.settings.type)
+			this.$el.addClass('input-type-'+this.options.settings.type );
+			
+			this.setLock( this.options.locked );
 
 			return this;
+		},
+		getLock: function() {
+			return this.$('.lock [type="checkbox"]').prop('checked');
+		},
+		setLock: function( lock ) {
+			this.$('.lock [type="checkbox"]').prop( 'checked', lock );
 		},
 		getValue: function() {
 			return this.input.getValue();
@@ -340,15 +351,21 @@
 
 			this.inputs = [];
 			_.each( options.settings.items, function( setting, name ) {
-				_.extend( setting, { name: name });
-				var value = self.model.get( name ),
-					input = new InputWrap({
-						controller: self.controller,
-						settings: setting,
-						value: !! value ? value : null,
-						model: self.model,
-					});
-				self.inputs.push( input );
+				_.extend( setting, { 
+					name: name, 
+					lock: features.locks 
+				});
+				if ( features.locks || ! self.model.get( name+':locked' ) ) {
+					var value = self.model.get( name ),
+						input = new InputWrap({
+							controller: self.controller,
+							settings: setting,
+							value: !! value ? value : null,
+							locked: !! self.model.get( name+':locked' ),
+							model: self.model,
+						});
+					self.inputs.push( input );
+				}
 			});
 		},
 
@@ -445,15 +462,17 @@
 		},
 		applyChanges: function() {
 			var self = this;
-
-			_.each( this.editor.inputs, function( input ){
-				self.model.set( input.options.settings.name, input.getValue() );
-			} );
+			function setModelVal( input ) {	
+				var prop = input.options.settings.name;
+				self.model.set( prop, input.getValue() );
+				if ( features.locks ) {
+					self.model.set( prop+':locked', input.getLock() );
+				}
+			}
+			_.each( this.editor.inputs, setModelVal );
 
 			_.each( this.inputgroups, function( group ) {
-				_.each( group.inputs, function( input ){
-					self.model.set( input.options.settings.name, input.getValue() );
-				} );
+				_.each( group.inputs, setModelVal );
 			});
 			return this;
 		},

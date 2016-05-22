@@ -26,6 +26,8 @@ ToDo:
 				if ( ! model.get( 'locked') ) openEditorModalFor( model )
 				if ( ! model.get( prop + ':locked') ) addEditorFor( prop, model )
 		- [ ] UI: Admin view (edit everything including locks) + editor view (only edit unlocked models + properties)
+		- [ ] Capabilities
+			`gridbuilder_manage_templates`
 	- [ ] Make compatible with ACF Widgets OR 
 	- [ ] Maybe: Widget Base Class (with RTE)
 	- [ ] Sophisticated widget previews
