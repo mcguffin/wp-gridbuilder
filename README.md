@@ -42,7 +42,7 @@ ToDo:
 	- [ ] Sophisticated widget previews
 	- [ ] Undo (keep model state)	
 	- [ ] Keyboard shortcuts: arrows, del, CMD+D
-	- [ ] dblclick = edit
+	- [x] dblclick = edit
  - [x] Bugs:
 	- [x] FF: Grid guides not visible
  	- [x] FF: resize / shift does not work

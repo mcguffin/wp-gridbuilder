@@ -188,6 +188,13 @@
 
 			return this;
 		},
+		edit: function( e ) {
+			if ( features.locks || !this.model.get( 'locked' ) ) {
+				this.closest( Grid )
+					.setSelected( this )
+					.editItem();
+			}
+		},
 		remove: function(){
 			// update model
 			var idx = allObjects.indexOf(this);
@@ -294,6 +301,9 @@
 		template: wp.template('widget-view'),
 		className:'widget',
 		tagName:'li',
+		events: {
+			'dblclick *': 'edit'
+		},
 
 		updateDisplay: function() {
 			CollectionView.prototype.updateDisplay.apply( this, arguments );
@@ -926,7 +936,6 @@
 					next = current.$el.next().data('view');
 				}
 			}
-			console.log();
 			if ( ! features.locks && next && next.model.get( 'locked' ) ) {
 				return this.getNextItem( next );
 			}
