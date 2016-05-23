@@ -721,6 +721,7 @@
 			gridView.$('.item-action.edit').prop( 'disabled', ! can_edit );
 			gridView.$('.item-action.clone').prop( 'disabled', ! can_clone );
 			gridView.$('.item-action.delete').prop( 'disabled', ! can_delete );
+			gridView.$('.item-action.lock').prop( 'disabled', false );
 
  			gridView.$('.add-row').prop( 'disabled', ! item.closest( Container ) );
  			gridView.$('.add-cell').prop( 'disabled', ! item.closest( Row ) );

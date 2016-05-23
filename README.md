@@ -34,11 +34,15 @@ ToDo:
 			- [x] Add element Lock in toolbar
 		- [x] Capabilities
 		- [x] Locked Cell: prevent setting width + offset
+		- [ ] Disable add-... btns depending on lock state
+		- [ ] Default pointer on locked sort-handles
+		- [ ] Lock page > style!
 	- [ ] Make compatible with ACF Widgets 
 	- [ ] Maybe: Widget Base Class (with RTE)
 	- [ ] Sophisticated widget previews
 	- [ ] Undo (keep model state)	
 	- [ ] Keyboard shortcuts: arrows, del, CMD+D
+	- [ ] dblclick = edit
  - [x] Bugs:
 	- [x] FF: Grid guides not visible
  	- [x] FF: resize / shift does not work
