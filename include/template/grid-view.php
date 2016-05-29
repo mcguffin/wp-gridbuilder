@@ -67,7 +67,7 @@ if ( ! defined('ABSPATH') )
 				</div>
 			</div>
 		</div>
-		<ul class="collection containers" data-sort-group="container"></ul>
+		<ul class="collection containers clearfix" data-sort-group="container"></ul>
 	</script>
 
 	<script type="text/html" id="tmpl-viewsize-item">

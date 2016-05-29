@@ -101,11 +101,6 @@ $screen-sizes: 'xs','sm','md','lg';
 	}
 }
 
-
-
-
-
-
-
-
-
+.clearfix {
+	@include clearfix();
+}

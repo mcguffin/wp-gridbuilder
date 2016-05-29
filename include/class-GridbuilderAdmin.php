@@ -63,7 +63,7 @@ class GridbuilderAdmin {
 	 */
 	function ajax_get_widget() {
 		global $wp_widget_factory;
-		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'widget_class' ], $_POST[ 'instance' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) {
+		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'widget_class' ], $_POST[ 'instance' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( 'edit_posts' ) ) {
 			$instance = json_decode( stripslashes( $_POST[ 'instance' ] ), true );
 			if ( isset( $wp_widget_factory->widgets[ $_POST[ 'widget_class' ] ] ) ) {
 				header( 'Content-Type: text/html' );

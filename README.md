@@ -35,7 +35,7 @@ ToDo:
 		- [x] Capabilities
 		- [x] Locked Cell: prevent setting width + offset
 		- [ ] Disable add-... btns depending on lock state
-		- [ ] Default pointer on locked sort-handles
+		- [x] Default pointer on locked sort-handles
 		- [ ] Lock page > style!
 	- [ ] Make compatible with ACF Widgets 
 	- [ ] Maybe: Widget Base Class (with RTE)

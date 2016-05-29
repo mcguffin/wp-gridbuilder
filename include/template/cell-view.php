@@ -15,5 +15,5 @@ if ( ! defined('ABSPATH') )
 		</div>
 		<div class="resize-handle" draggable="true"></div>
 		<div class="offset-handle" draggable="true"></div>
-		<ul class="collection sort-handle widgets" data-sort-group="widget"></ul>
+		<ul class="collection sort-handle widgets clearfix" data-sort-group="widget"></ul>
 	</script>

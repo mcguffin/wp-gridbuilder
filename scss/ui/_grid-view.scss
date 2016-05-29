@@ -52,17 +52,36 @@ body {
 	}
 	.container,
 	.row,
+	.cell,
+	.widget {
+		&.current-grid-item {
+			box-shadow:0 0 20px rgba( $color-wp-blue, 0.5 );
+			box-shadow:0 0 5px 3px rgba( $color-wp-blue,0.8);
+			&.locked {
+				box-shadow:0 0 5px 3px rgba( 127,127,127,0.5);
+			}
+		}
+		>.sort-handle {
+			cursor:move;
+		}
+		&.locked {
+			> .collection > * > .sort-handle {
+				cursor:default;
+			}
+		}
+	}
+	.container,
+	.row,
+	.widget {
+		background-color:desaturate( lighten($color-wp-blue, 60% ), 70% );
+	}
+	.container,
+	.row,
 	.cell {
 		min-height:100px;
 		margin-top:5px;
 		margin-bottom:5px;
 		position:relative;
-		.sort-handle {
-			cursor:move;
-		}
-		&.current-grid-item {
-			box-shadow:0 0 20px rgba( $color-wp-blue, 0.5 );
-		}
 		.display-selector,
 		.display-template {
 			position:absolute;
@@ -79,18 +98,9 @@ body {
 		.display-template {
 			bottom:0;
 		}
-	}
-	.container,
-	.row,
-	.cell {
 		&.current-grid-item {
-			>.collection:after {
-				content:'';
-				position:absolute;
-				right:0;
-				bottom:100%;
-				padding:5px 10px;
-			}
+			box-shadow:0 0 20px rgba( $color-wp-blue, 0.5 );
+			box-shadow:0 0 5px 3px rgba( $color-wp-blue,0.8);
 		}
 	}
 
@@ -133,13 +143,6 @@ body {
 				font-weight:normal;
 			}
 		}
-		&.current-grid-item {
-			>.collection:after {
-				content:'Container';
-				background:transparent;
-				color:#333;
-			}
-		}
 		>.display-template {
 			z-index:1;
 			bottom:-16px;
@@ -162,6 +165,9 @@ body {
 				height:0;
 			}
 		}
+		&.current-grid-item {
+			background-color:#f3f7f9;
+		}
 	}
 	.row {
 		$svg: '<svg width="100px" height="20000px" xmlns="http://www.w3.org/2000/svg" version="1.1"><line vector-effect="non-scaling-stroke" style="stroke:#d5d5d5;stroke-width:1px" x1="50" y1="0" x2="50" y2="20000"/></svg>';
@@ -179,11 +185,7 @@ body {
  		padding-top:5px;
  		padding-bottom:5px;
 		&.current-grid-item {
-			>.collection:after {
-				content:'Row';
-				background:#f0f0f0;
-				color:#333;
-			}
+			background-color:#f3f7f9;
 		}
 	}
 	.cell {
@@ -255,11 +257,6 @@ body {
 			margin-right:$resize-handle-width;
 		}
 		&.current-grid-item {
-			>.collection:after {
-				content:'Cell';
-				background:$color-wp-blue;
-				color:#fff;
-			}
 		}
 	}
 	.widget {
@@ -285,16 +282,6 @@ body {
 			box-shadow:0 0 20px rgba( $color-wp-blue,0.8);
 			border-color:$color-wp-blue;
 			color:darken($color-wp-blue, 20% );
-			background-color:desaturate( lighten($color-wp-blue, 60% ), 70% );
-			&:after {
-				content:'Widget';
-				position:absolute;
-				right:0;
-				bottom:100%;
-				padding:5px 10px;
-				background:$color-wp-blue;
-				color:#fff;
-			}
 		}
 	}
 
