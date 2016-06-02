@@ -37,7 +37,7 @@ class GridbuilderTools {
 	function add_admin_page() {
 		$page_hook = add_management_page( __( 'WP GridBuilder' , 'wp-gridbuilder' ), __( 'GridBuilder' , 'wp-gridbuilder' ), 'manage_options', $this->tool_page_name, array( &$this , 'render_management_page' ) );
 		add_action( "load-{$page_hook}" , array( &$this , 'enqueue_admin_page_assets' ) );
-		add_action( "load-{$page_hook}" , array( &$this , 'handle_import_export' ) );
+		add_action( "load-{$page_hook}" , array( &$this , 'handle_action' ) );
 	}
 
 	/**
@@ -70,18 +70,38 @@ class GridbuilderTools {
 		}
 	}
 
+
 	/**
 	 * 	Add Admin page to menu
 	 *
 	 *	@action	admin_menu
 	 */
-	function handle_import_export() {
+	function handle_action() {
 		if ( isset( $_GET['page'] ) && $_GET['page'] === $this->tool_page_name && isset( $_POST['action'] ) ) {
 			$action = $_POST['action'];
 			$nonce = $_POST[ $action . '-nonce' ];
 			$types = array( 'container', 'row', 'cell', 'widget' );
 			if ( current_user_can( 'manage_options' ) && wp_verify_nonce( $nonce, $action ) ) {
 				switch ( $action ) {
+					case 'gridbuilder-migrate':
+						global $wpdb;
+						$old = $_POST['migrate-from'];
+						$new = $_POST['migrate-to'];
+						$sql = $wpdb->prepare( 
+								"SELECT * FROM $wpdb->postmeta WHERE meta_key='_grid_data' AND meta_value LIKE '%%%s%%'", 
+								$_POST['migrate-from'] 
+							);
+						$grid_postmeta = $wpdb->get_results( $sql );
+						foreach ( $grid_postmeta as $meta ) {
+							if ( $grid = unserialize( $meta->meta_value ) ) {
+								$grid = $this->_replace_deep( $grid, $old, $new );
+								update_post_meta( $meta->post_id, '_grid_data', $grid );
+							}
+						}
+						$this->last_success_message = sprintf( _n( '%d Page updated', '%d Pages updated', count( $grid_postmeta ), 'wp-gridbuilder' ), count( $grid_postmeta ) );
+						add_action( 'admin_notices', array( $this, 'admin_notices__success' ) );
+						
+						break;
 					case 'gridbuilder-template-import':
 						$templates_added = 0;
 						$templates_updated = 0;
@@ -230,6 +250,28 @@ class GridbuilderTools {
 					</p>
 				</div>
 			</form>
+			<form method="post">
+				<div class="card">
+					<h3><?php _e( 'Migrate Domain' , 'wp-gridbuilder' ); ?></h3>
+					<p class="description"><?php 
+						_e( 'This will change all Links and image sources to the new domain name.', 'wp-gridbuilder' );
+						?><br /><?php
+						_e( 'Use this tool after changing the site URL.', 'wp-gridbuilder' );
+					?></p>
+					<p>
+						<label for="gridbuilder-migrate-from"><?php _e( 'From Domain', 'wp-gridbuilder' ); ?></label>
+						<input class="widefat" type="text" id="gridbuilder-migrate-from" name="migrate-from" />
+					</p>
+					<p>
+						<label for="gridbuilder-migrate-to"><?php _e( 'To domain', 'wp-gridbuilder' ); ?></label>
+						<input class="widefat" type="text" id="gridbuilder-migrate-to" name="migrate-to"  value="<?php esc_attr_e( get_bloginfo( 'url' ) ); ?>" />
+					</p>
+					<?php wp_nonce_field( 'gridbuilder-migrate','gridbuilder-migrate-nonce' ); ?>
+					<p>
+						<button class="button-primary" disabled="disabled" name="action" value="gridbuilder-migrate" type="submit"><?php _e('Migrate','wp-gridbuilder') ?></button>
+					</p>
+				</div>
+			</form>
 		</div><?php
 	}
 
@@ -251,7 +293,16 @@ class GridbuilderTools {
 	function admin_init() {
 	}
 
-
+	private function _replace_deep( $struct, $old, $new ) {
+		if ( is_string( $struct ) ) {
+			$struct = str_replace( $old, $new, $struct );
+		} else if ( is_array( $struct ) ) {
+			foreach ( $struct as $k => $v ) {
+				$struct[ $k ] = $this->_replace_deep( $v, $old, $new );
+			}
+		}
+		return $struct;
+	}
 }
 
 GridbuilderTools::instance();
