@@ -26,6 +26,10 @@
 	options.screensizes.size_class_template = _.template( 'col-{{screensize}}-{{size}}' );
 	options.screensizes.offset_class_template = _.template( 'col-{{screensize}}-offset-{{size}}' );
 
+
+
+	
+
 	Prompt = grid.view.Prompt = wp.media.View.extend({
 		tagName:    'div',
 		className: 'grid-prompt',
@@ -204,15 +208,17 @@
 		render:function() {
 			wp.media.View.prototype.render.apply( this, arguments );
 
+			var self = this,
+				cls = this.collectionView(),
+				$collection = this.$('>.collection');
+
 			if ( ! features.locks && this.model.get('locked') ) {
 				this.$el.addClass('locked');
 			} else {
 				this.$el.addClass('unlocked');
 			}
-
-			var self = this,
-				cls = this.collectionView(),
-				$collection = this.$('>.collection').html('');
+				
+			$collection.html('');
 			this.$el.data( 'model', this.model );
 			this.$el.data( 'view', this );
 			$collection.data( 'view', this ).data( 'model', this.model.items );
@@ -232,6 +238,11 @@
 				}
 			});
 			this.updateDisplay();
+
+			this.$el.attr('tabindex','0');
+			this.$el.on('focus', function(e) {
+				self.closest( Grid ).setSelected( self );
+			} );
 
 			return this;
 		},
@@ -538,7 +549,7 @@
 
 			'click .grid-toolbar .create-template':		'createTemplate',
 			'click .grid-toolbar .update-template':		'updateTemplate',
-			'click .grid-toolbar .manage-templates':	'manageTemplates'
+			'click .grid-toolbar .manage-templates':	'manageTemplates',
 			
 		},
 		initialize: function(){
@@ -551,12 +562,14 @@
 			this.on( 'select', this.updateLockButton, this );
 		},
 		render: function(){
-			CollectionView.prototype.render.apply( this, arguments );
+			// set view size
+			var viewSize, self = this;
 
+			CollectionView.prototype.render.apply( this, arguments );
+			
 			this.setupViewswitcher();
 
-			// set view size
-			var viewSize = window.getUserSetting( 'grid-view-size' );
+			viewSize = window.getUserSetting( 'grid-view-size' );
 
 			if ( !!viewSize ) {
 				this.$('.viewswitcher [value="'+viewSize+'"]').prop('checked',true);
@@ -572,8 +585,68 @@
 			this.renderTemplateSelects();
 
 			this.setupToolbar();
+			
+			$( document ).on( 'keydown', function( e ) {
+				self.preventBackspaceNav( e );
+			} );
+			$( document ).on( 'keyup', function( e ) {
+				self.doShortcuts( e );
+			} );
 
 			return this;
+		},
+		preventBackspaceNav: function( e ) {
+			var el = event.srcElement || event.target;
+			if ( $( el ).is( ":input" ) || $( el ).is( "[contenteditable]" ) ) {
+				return;
+			}
+			e.keyCode === 8 && e.preventDefault();
+		},
+		doShortcuts: function( e ) {
+			console.log( 'up', e.keyCode );
+			var can_edit, 
+				sel = this.getSelected();
+
+			if ( ! sel ) {
+				return;
+			}
+
+			switch ( e.keyCode ) {
+				case 13: // return
+					can_edit = features.locks || ! sel.model.get( 'locked' );
+					can_edit && this.editItem();
+					break;
+				case 32: // space
+					break;
+				case 46: // DEL
+				case 8: // backspace
+					can_edit = features.locks || ! sel.model.get( 'locked' );
+					can_edit && this.deleteItem();
+					e.preventDefault();
+					e.stopPropagation();
+					break;
+				case 37: // arrow-left
+					can_edit = features.locks || ! sel.model.get( 'locked' );
+					
+					break;
+				case 38: // arrow-up
+					break;
+				case 39: // arrow-right
+					can_edit = features.locks || ! sel.model.get( 'locked' );
+					break;
+				case 40: // arrow-down
+					break;
+			}
+			/*
+			TAB: select next
+			SHIFT-TAB: select prev
+	
+			With selected:
+			DEL | BSP	delete
+			RETURN	edit
+	
+			*/
+			
 		},
 		setupViewswitcher: function() {
 			var self = this;
@@ -721,7 +794,12 @@
 							=  features.locks || ! ( item.parent() && item.parent().model.get( 'locked' ) ),
 				can_edit	= ! item.is( Grid ) && is_unlocked,
 				can_clone	= ! item.is( Grid ) && is_unlocked && is_parent_unlocked,
-				can_delete	= ! item.is( Grid ) && is_unlocked && is_parent_unlocked;
+				can_delete	= ! item.is( Grid ) && is_unlocked && is_parent_unlocked,
+				
+				closest_grid 		= item.closest( Grid ),
+				closest_container	= item.closest( Container ),
+				closest_row			= item.closest( Row ),
+				closest_cell		= item.closest( Cell );
 
 			this.options.controller.setSelected( item );
 
@@ -733,9 +811,10 @@
 			gridView.$('.item-action.delete').prop( 'disabled', ! can_delete );
 			gridView.$('.item-action.lock').prop( 'disabled', false );
 
- 			gridView.$('.add-row').prop( 'disabled', ! item.closest( Container ) );
- 			gridView.$('.add-cell').prop( 'disabled', ! item.closest( Row ) );
- 			gridView.$('.add-widget').prop( 'disabled', ! item.closest( Cell ) );
+ 			gridView.$('.add-container').prop( 'disabled', ! features.locks && !! closest_grid.model.get( 'locked' ) );
+ 			gridView.$('.add-row').prop( 'disabled', ! closest_container || (! features.locks && !! closest_container.model.get( 'locked' ) ) );
+ 			gridView.$('.add-cell').prop( 'disabled', ! closest_row || (! features.locks && !! closest_row.model.get( 'locked' ) ) );
+ 			gridView.$('.add-widget').prop( 'disabled', ! closest_cell || (! features.locks && !! closest_cell.model.get( 'locked' ) ) );
 
  			gridView.$('.create-template').prop( 'disabled', item.is( Grid ) );
  			gridView.$('.update-template').prop( 'disabled', item.is( Grid ) || ! item.model.get( 'template' ) );
@@ -999,7 +1078,7 @@
 			return false;
 		},
 		deleteItem: function( e ) {
-			e.preventDefault();
+			e && e.preventDefault();
 
 			var current = this.getSelected(),
 				parent = current.parent(),

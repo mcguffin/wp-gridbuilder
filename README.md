@@ -22,7 +22,7 @@ ToDo:
 	- [ ] Widget: editable col-xx-n classes
 	- [ ] Export / Import Grid + Elements
 	- [ ] Page Templates
-	- [x] Lock elements and properties --> allow Lock on specific roles
+	- [ ] Lock elements and properties --> allow Lock on specific roles
 		- [x] Lock properties
 		- [x] Lock elements
 			A locked element can not be editied, cloned or deleted
@@ -34,7 +34,7 @@ ToDo:
 			- [x] Add element Lock in toolbar
 		- [x] Capabilities
 		- [x] Locked Cell: prevent setting width + offset
-		- [ ] Disable add-... btns depending on lock state
+		- [x] Disable add-... btns depending on lock state
 		- [x] Default pointer on locked sort-handles
 		- [ ] Lock page > style!
 	- [ ] Make compatible with ACF Widgets 
