@@ -303,8 +303,18 @@
 		className: 'input-wrap',
 
 		initialize: function( options ) {
-			wp.media.View.prototype.initialize.apply(this,arguments);			
-			this.input = new inputs[ options.settings.type ]( options );
+			wp.media.View.prototype.initialize.apply(this,arguments);
+			if ( options.settings.type == 'html' ) {
+				this.$el = $(options.settings.html);
+				this.input = {
+					getValue:	function(){},
+					setValue:	function(){},
+					render:		function(){},
+					dismiss:	function(){},
+				};
+			} else {
+				this.input = new inputs[ options.settings.type ]( options );
+			}
 		},
 		render: function() {	
 			wp.media.View.prototype.render.apply(this,arguments);
@@ -312,6 +322,9 @@
 			this.input.render();
 			this.$('.input').append( this.input.$el );
 			this.$el.addClass('input-type-'+this.options.settings.type)
+			if ( !! this.options.settings.style ) {
+				this.$el.attr( 'style', this.options.settings.style );
+			}
 
 			return this;
 		},
