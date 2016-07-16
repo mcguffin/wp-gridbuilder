@@ -126,7 +126,7 @@ class Gridbuilder {
 						$this->mk_background_classes( $container )
 					) 
 				),
-				'style'	=> $this->background_style_attr( $container ),
+				'style'	=> $this->background_style_attr( $container, 'container' ),
 			);
 			$container_wrap_attr = apply_filters( 'gridbuilder_container_wrapper_attr', $container_wrap_attr, $container );
 
@@ -158,7 +158,7 @@ class Gridbuilder {
 							$this->mk_background_classes( $row )
 						) 
 					),
-					'style'	=> $this->background_style_attr( $row ),
+					'style'	=> $this->background_style_attr( $row, 'row' ),
 				);
 				$row_attr = apply_filters( 'gridbuilder_row_attr', $row_attr, $row, $container );
 				$output .= sprintf( '<div %s>', $this->mk_attr( $row_attr ) );
@@ -178,7 +178,7 @@ class Gridbuilder {
 							$this->mk_cell_grid_classes( $cell ),
 							$this->mk_background_classes( $cell )
 						)),
-						'style'	=> $this->background_style_attr( $cell ),
+						'style'	=> $this->background_style_attr( $cell, 'cell' ),
 					);
 
 					$cell_attr = apply_filters( 'gridbuilder_cell_attr', $cell_attr, $cell, $row, $container );
@@ -201,7 +201,7 @@ class Gridbuilder {
 							$widget_attr = array(
 								'id'	=> $row['attr_id'],
 								'class'	=> $widget_classes,
-								'style'	=> $this->background_style_attr( $widget ),
+								'style'	=> $this->background_style_attr( $widget, 'widget' ),
 							);
 							$widget_attr = apply_filters( 'gridbuilder_widget_attr', $widget_attr, $widget, $cell, $row, $container );
 							$output .= sprintf( '<div %s>', $this->mk_attr( $widget_attr ) );
@@ -312,7 +312,7 @@ class Gridbuilder {
 	 *	@private
 	 *	@param array $item any item data
 	 */
-	private function background_style_attr( $item ) {
+	private function background_style_attr( $item, $item_type = '' ) {
 		$styles = array();
 		if ( $item['background_image'] || $item['background_video'] ) {
 			if ( $item['background_image'] ) {
@@ -335,16 +335,18 @@ class Gridbuilder {
 						$styles[ 'background-position' ]	= 'center center';
 						$styles[ 'background-repeat' ]		= 'no-repeat';
 						break;
-					case 'parallax':
-						break;
 				}
 			}
 		} else if ( $item[ 'background_color' ] ) {
 			$color = $this->mk_color( $item[ 'background_color' ], $item[ 'background_opacity' ] );
 			$styles[ 'background-color' ] = $color;
 		}
-		$style_attr = $this->implode_assoc( $styles, ':', ';' );
-		$style_attr .= trim( $item['attr_style'], "; \t\n\r\0\x0B" );
+		$styles = apply_filters( 'gridbuilder_background_styles', $styles, $item, $item_type );
+		if ( ! empty( $item_type ) ) {
+			$styles = apply_filters( "gridbuilder_background_styles_{$item_type}", $styles, $item );
+		}
+		$style_attr = $this->implode_assoc( array_filter( $styles ), ':', ';' );
+		$style_attr .= ';' . trim( $item['attr_style'], "; \t\n\r\0\x0B" );
 		return $style_attr;
 	}
 	/**
