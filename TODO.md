@@ -9,11 +9,7 @@ WP Gridbuilder ToDo:
 	- [ ] Plugin API Docs
 	- [ ] l10n
  - [ ] Future
-	- [x] Provide Out-of-the-box support for several RTE Widgets
-	- [ ] Widget: editable col-xx-n classes
-	- [ ] Export / Import Grid + Elements
-	- [ ] Page Templates
-	- [ ] Lock elements and properties --> allow Lock on specific roles
+	- [x] Lock elements and properties --> allow Lock on specific roles
 		- [x] Lock properties
 		- [x] Lock elements
 			A locked element can not be editied, cloned or deleted
@@ -27,16 +23,21 @@ WP Gridbuilder ToDo:
 		- [x] Locked Cell: prevent setting width + offset
 		- [x] Disable add-... btns depending on lock state
 		- [x] Default pointer on locked sort-handles
-		- [ ] Lock page > style!
+	- [ ] Provide Out-of-the-box support for several RTE Widgets
+	- [ ] Widget: editable col-xx-n classes
+	- [ ] Export / Import Grid + Elements
+	- [ ] Page Templates
 	- [ ] Make compatible with ACF Widgets 
 	- [ ] Maybe: Widget Base Class (with RTE)
-	- [ ] Sophisticated widget previews
-	- [ ] Undo (keep model state)	
-	- [ ] Keyboard shortcuts: arrows, del, CMD+D
+	- [ ] Sophisticated widget previews (like customizer?)
+	- [ ] Undo (keep model state in user settings)
+	- [ ] Template editing capability
+	- [x] Keyboard shortcuts: arrows, del, CMD+D
 		- [x] TAB: select next (tabindex)
-		- [ ] RETURN: edit
+		- [x] RETURN: edit
 		- [x] BACKSPACE: Delete
-		- [ ] Weg mit der Tab-Selection!
+		- [ ] Cell: Arrow left + right: offset
+		- [ ] Cell: SHIFT + Arrow left + right: size
 	- [x] dblclick = edit
  - [x] Bugs:
 	- [x] FF: Grid guides not visible
@@ -45,3 +46,4 @@ WP Gridbuilder ToDo:
 	- [x] Add Widget: row cells don't get resized
 	- [x] Clone Widget -> Move to another cell: clones still exist (Not reproducable)
 	- [x] Apply changes on prev/next
+	- [x] DBL-Click-Edit. Close: Container is selected.

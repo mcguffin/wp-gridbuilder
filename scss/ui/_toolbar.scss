@@ -8,6 +8,7 @@
 	padding:10px;
 	border-bottom:1px solid #e5e5e5;
 	@include transition( box-shadow 0.2s linear );
+	box-sizing: border-box;
 	&[data-sticky="true"] {
 		position:fixed;
 		top: 33px;

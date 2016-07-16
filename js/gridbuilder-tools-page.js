@@ -9,7 +9,6 @@
 	$(document).on('change keyup focus blur','[name^="migrate-"]',function() {
 		var val1 = $('[name="migrate-from"]').val(), 
 			val2 = $('[name="migrate-to"]').val();
-		console.log(!val1, !val2);
 		$(this).closest('form').find('[type="submit"]').prop('disabled', !val1 || ! val2 );
 	});
 

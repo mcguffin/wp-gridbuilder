@@ -86,9 +86,10 @@
 
 	CollectionView = wp.media.View.extend({
 		events: {
-//			'click *' : 'clickSelect',
-			'focusin' : 'focusin',
-			'focusout' : 'focusout',
+//			'click *' 	: 'clickSelect',
+			'focusin' 	: 'focusin',
+			'focusout' 	: 'focusout',
+			'dblclick'	: 'edit'
 		},
 		initialize: function( options ) {
 			var self = this, template;
@@ -124,6 +125,7 @@
 				this.controller
 					.setSelected( this )
 					.editItem();
+				e.stopPropagation();
 			}
 		},
 		remove: function(){
@@ -201,7 +203,7 @@
 		},
 		setVisibility: function( visibility ) {
 			var gridView = this.controller.view,
-				viewSize = gridView.whichView(),
+				viewSize = this.controller.toolbar.whichView(),
 				prop = 'visibility_' + viewSize;
 			this.model.set( prop, visibility );
 			gridView.hasChanged();
@@ -276,7 +278,6 @@
 		},
 		collectionView: function(){ return false }
 	});
-	Widget.prototype.events['dblclick *' ] = 'edit';
 
 	Cell = grid.view.element.Cell = CollectionView.extend({
 		template: wp.template('grid-element-cell'),
@@ -349,7 +350,7 @@
 				this.$('.resize-handle')
 					.on( "drag", function( event ) {
 						var colWidth	= $(this).closest('.row').width() / 12,
-							viewSize	= self.controller.whichView(),
+							viewSize	= self.controller.toolbar.whichView(),
 							cols		= Math.max( 1, Math.min( 12, Math.round( ( event.pageX - self.$el.offset().left ) / colWidth ) ) ),
 							prevCols	= self.model.get( 'size_'+viewSize );
 
@@ -365,7 +366,7 @@
 				this.$('.offset-handle')
 					.on('drag',function( event ) {
 						var colWidth	= $(this).closest('.row').width() / 12;
-							viewSize	= self.controller.whichView(),
+							viewSize	= self.controller.toolbar.whichView(),
 							diff 		= dragStartX - event.screenX;
 							offsetDiff	= Math.round( diff / colWidth ),
 							offset		= Math.min( 11, Math.max( 0, startOffset - offsetDiff ) ),
@@ -388,7 +389,7 @@
     		return this;
 		},
 		getCurrentOffset: function() {
-			var viewSize = this.controller.whichView(),
+			var viewSize = this.controller.toolbar.whichView(),
 				self = this, offset, did = false;
 
 			offset_key = _.find( offsetkeys, function(prop,size) {
@@ -489,28 +490,6 @@
 		className:'grid-view grid-item',
 		tagName:'div',
 		events: {
-// 			'click .viewswitcher [type="radio"]':		'switchView',
-// 			'click .set-visibility [type="radio"]':		'setItemVisibility',
-// 
-// 			'change select.add-container':				'addContainer',
-// 			'change select.add-row':					'addRow',
-// 			'change select.add-cell':					'addCell',
-// 			'change select.add-widget':					'addWidget',
-// 			
-// 			'click button.add-container':				'addContainer',
-// 			'click button.add-row':						'addRow',
-// 			'click button.add-cell':					'addCell',
-// 			'click button.add-widget':					'addWidget',
-// 			
-// 			'click .grid-toolbar .edit':				'editItem',
-// 			'click .grid-toolbar .clone':				'cloneItem',
-// 			'click .grid-toolbar .delete':				'deleteItem',
-// 			'click .grid-toolbar .lock':				'lockItem',
-// 
-// 			'click .grid-toolbar .create-template':		'createTemplate',
-// 			'click .grid-toolbar .update-template':		'updateTemplate',
-// 			'click .grid-toolbar .manage-templates':	'manageTemplates',
-// 			
 		},
 		initialize: function(){
 			CollectionView.prototype.initialize.apply( this, arguments );
@@ -528,92 +507,10 @@
 			this.initSortables();
 
 			this.controller.setSelected( this );
-			
-// 			this.renderTemplateSelects();
-
-// 			this.setupToolbar();
-			
-// 			$( document ).on( 'keydown', function( e ) {
-// 				self.preventBackspaceNav( e );
-// 			} );
-// 			$( document ).on( 'keyup', function( e ) {
-// 				self.doShortcuts( e );
-// 			} );
-// 
 			return this;
 		},
-// 		preventBackspaceNav: function( e ) {
-// 			var el = event.srcElement || event.target;
-// 			if ( $( el ).is( ":input" ) || $( el ).is( "[contenteditable]" ) ) {
-// 				return;
-// 			}
-// 			e.keyCode === 8 && e.preventDefault();
-// 		},
-// 		doShortcuts: function( e ) {
-// 			var can_edit, 
-// 				sel = this.controller.getSelected();
-// 
-// 			if ( ! sel ) {
-// 				return;
-// 			}
-// 
-// 			switch ( e.keyCode ) {
-// 				case 13: // return
-// 					can_edit = features.locks || ! sel.model.get( 'locked' );
-// 					can_edit && this.editItem();
-// 					break;
-// 				case 32: // space
-// 					break;
-// 				case 46: // DEL
-// 				case 8: // backspace
-// 					can_edit = features.locks || ! sel.model.get( 'locked' );
-// 					can_edit && this.deleteItem();
-// 					e.preventDefault();
-// 					e.stopPropagation();
-// 					break;
-// 				case 37: // arrow-left
-// 					can_edit = features.locks || ! sel.model.get( 'locked' );
-// 					
-// 					break;
-// 				case 38: // arrow-up
-// 					break;
-// 				case 39: // arrow-right
-// 					can_edit = features.locks || ! sel.model.get( 'locked' );
-// 					break;
-// 				case 40: // arrow-down
-// 					break;
-// 			}
-// 			/*
-// 			TAB: select next
-// 			SHIFT-TAB: select prev
-// 	
-// 			With selected:
-// 			DEL | BSP	delete
-// 			RETURN	edit
-// 	
-// 			*/
-// 			
-// 		},
 
-// 		setupToolbar: function() {
-// 			var self = this;
-// 
-// 			this.updateToolbarWidth();
-// 
-// 			$(window).on('scroll',function() {
-// 				var oldState = self.$('.grid-toolbar').attr('data-sticky') === 'true',
-// 					newState = ( $(window).scrollTop() + 33 ) >= self.$el.offset().top;
-// 				if ( oldState != newState ) {
-// 					self.$('.grid-toolbar').attr( 'data-sticky', newState.toString() );
-// 				}
-// 			});
-// 			$(window).on('resize',function() {
-// 				self.updateToolbarWidth();
-// 			})
-// 		},
-// 		updateToolbarWidth: function() {
-// 			this.$('.grid-toolbar').css( 'width', this.$el.width().toString() + 'px' );
-// 		},
+
 		renderTemplateSelects: function(){
 			var self = this; 
 			

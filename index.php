@@ -332,8 +332,6 @@ class Gridbuilder {
 					case 'center':
 						$styles[ 'background-repeat' ]		= 'no-repeat';
 						break;
-					case 'parallax':
-						break;
 				}
 				if ( $item['background_position_horizontal'] || $item['background_position_vertical'] ) {
 					$styles[ 'background-position' ] = sprintf('%s %s', $item['background_position_vertical'], $item['background_position_horizontal'] );
@@ -349,6 +347,7 @@ class Gridbuilder {
 		$style_attr .= trim( $item['attr_style'], "; \t\n\r\0\x0B" );
 		return $style_attr;
 	}
+
 	/**
 	 *	@private
 	 *	@param array $item any item data

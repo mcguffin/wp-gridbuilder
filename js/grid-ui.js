@@ -171,7 +171,6 @@
 			// prevent selected element from loosing focus
 			e.preventDefault();
 		},
-
 		addItem: function( e ) {
 			this.trigger( 'add:' + $(e.target).data('add-item') )
 			e.preventDefault();
@@ -205,11 +204,14 @@
 			wp.media.View.prototype.initialize.apply( this, arguments );
 			// create toolbar
 			this.delegateEvents();
+			this.setupSticky();
 		},
 		render: function() {
 			wp.media.View.prototype.render.apply( this, arguments );
 
 			this.setupViewswitcher();
+
+			this.updateWidth();
 
 			viewSize = window.getUserSetting( 'grid-view-size' );
 
@@ -219,6 +221,24 @@
 				this.$('.viewswitcher [type="radio"]:last').prop('checked',true);
 			}
 			this.switchView();
+
+		},
+		setupSticky: function() {
+			var self = this;
+
+			$(window).on('scroll',function() {
+				var oldState = self.$el.attr('data-sticky') === 'true',
+					newState = ( $(window).scrollTop() + 33 ) >= self.controller.$el.offset().top;
+				if ( oldState != newState ) {
+					self.$el.attr( 'data-sticky', newState.toString() );
+				}
+			});
+			$(window).on('resize',function() {
+				self.updateWidth();
+			});
+		},
+		updateWidth: function() {
+			this.$el.css( 'width', this.controller.$el.width().toString() + 'px' );
 		},
 		update: function() {
 			var item = this.controller.getSelected(),
@@ -382,15 +402,8 @@
 				}
 			}
 		},
-// 			$( document ).on( 'keydown', function( e ) {
-// 				self.preventBackspaceNav( e );
-// 			} );
-// 			$( document ).on( 'keyup', function( e ) {
-// 				self.doShortcuts( e );
-// 			} );
-		
+
 		initialize: function() {
-			console.log('init');
 			wp.media.View.prototype.initialize.apply( this, arguments );
 			// create toolbar
 			this.toolbar = new grid.view.ui.Toolbar({
@@ -665,7 +678,6 @@
 				titleSegment = currentTitle.is( Widget ) ? options.widgets[ currentTitle.model.get('widget_class') ].name : l10n[ currentTitle.getClassName() ];
 				title.unshift( titleSegment );
 				currentTitle = currentTitle.parent();
-				console.log(titleSegment);
 			}
 //			console.log(currentTitle.is);return;
 			dialog		= new grid.view.EditDialog( { 
