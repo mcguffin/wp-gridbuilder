@@ -323,20 +323,22 @@ class Gridbuilder {
 						$styles[ 'background-repeat' ] = 'repeat;';
 						break;
 					case 'cover':
-						$styles[ 'background-position' ]	= 'center center';
 						$styles[ 'background-size' ]		= 'cover';
 						break;
 					case 'fixed':
-						$styles[ 'background-position' ]	= 'center center';
 						$styles[ 'background-size' ]		= 'cover';
 						$styles[ 'background-attachment' ]	= 'fixed';
 						break;
 					case 'center':
-						$styles[ 'background-position' ]	= 'center center';
 						$styles[ 'background-repeat' ]		= 'no-repeat';
 						break;
 					case 'parallax':
 						break;
+				}
+				if ( $item['background_position_horizontal'] || $item['background_position_vertical'] ) {
+					$styles[ 'background-position' ] = sprintf('%s %s', $item['background_position_vertical'], $item['background_position_horizontal'] );
+				} else {
+					$styles[ 'background-position' ] = 'center center';
 				}
 			}
 		} else if ( $item[ 'background_color' ] ) {

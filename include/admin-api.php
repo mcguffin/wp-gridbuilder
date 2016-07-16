@@ -74,11 +74,33 @@ function _gridbuilder_background_settings() {
 			'description' => __('How the background image is displayed.', 'wp-gridbuilder'),
 			'priority' => 20,
 		),
+		'background_position_horizontal' => array(
+			'title' 	=> __('Horizontal Position', 'wp-gridbuilder'),
+			'type' 		=> 'select',
+			'options' 	=> array(
+				'left'		=> __('Left', 'wp-gridbuilder'),
+				'center'	=> __('Center', 'wp-gridbuilder'),
+				'right'		=> __('Right', 'wp-gridbuilder'),
+			),
+			'priority' 	=> 21,
+			'default'	=> 'center',
+		),
+		'background_position_vertical' => array(
+			'title' 	=> __('Vertical Position', 'wp-gridbuilder'),
+			'type' 		=> 'select',
+			'options' 	=> array(
+				'top' 		=> __('Top', 'wp-gridbuilder'),
+				'center'	=> __('Center', 'wp-gridbuilder'),
+				'bottom'	=> __('Bottom', 'wp-gridbuilder'),
+			),
+			'priority' 	=> 22,
+			'default'	=> 'center',
+		),
 		'background_video'		=> array(
 			'title' => __('Background Video', 'wp-gridbuilder'),
 			'type' => 'media',
 			'mimetype'	=> 'video',
-			'priority' => 25,
+			'priority' => 30,
 		),
 	);
 	return apply_filters( 'gridbuilder_background_settings', $settings );

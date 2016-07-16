@@ -450,14 +450,13 @@
 			return this.controller.getSelected(this);
 		},
 		checkSelected: function( e ) {
-			if ( ! this.$el.has( e.target ).length ) {
+			if ( ! this.$el.has( e.target ).length && ! $(e.target).closest('.grid-ui-modal') ) {
 				this.setSelected( null );
 			}
 		},
 		setSelected:function( item ) {
 			this.controller.setSelected( item );
 			this.toolbar.update();
-
 			if ( !! item && ! item.$el.is(':focus') ) {
 				item.$el.focus();
 			}
@@ -673,6 +672,7 @@
 				title: title.join( ' › ' ),
 				controller: this , 
 				model: current.model, 
+				item: current,
 				settings: settings, 
 				editor: editor 
 			} );
