@@ -53,6 +53,7 @@ function _gridbuilder_background_settings() {
 			'max'		=> 1,
 			'step'		=> 0.01,
 			'priority'	=> 10,
+			'default'	=> 1.0,
 		),
 		'background_image'		=> array(
 			'title' => __('Background Image', 'wp-gridbuilder'),
@@ -73,6 +74,7 @@ function _gridbuilder_background_settings() {
 			),
 			'description' => __('How the background image is displayed.', 'wp-gridbuilder'),
 			'priority' => 20,
+			'default'	=> 'cover',
 		),
 		'background_video'		=> array(
 			'title' => __('Background Video', 'wp-gridbuilder'),
