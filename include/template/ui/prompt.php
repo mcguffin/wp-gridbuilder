@@ -4,22 +4,7 @@ if ( ! defined('ABSPATH') )
 	die();
 
 ?>
-	<script type="text/html" id="tmpl-grid-edit-dialog">
-		<h2 class="grid-dialog-title"></h2>
-		<div class="grid-dialog-content">
-		</div>
-		<div class="grid-dialog-sidebar">
-		</div>
-		<div class="grid-dialog-toolbar"></div>
-	</script>
-
-	<script type="text/html" id="tmpl-grid-manage-templates-dialog">
-		<h2 class="grid-dialog-title"></h2>
-		<div class="grid-dialog-content"></div>
-		<div class="grid-dialog-toolbar"></div>
-	</script>
-
-	<script type="text/html" id="tmpl-grid-prompt">
+	<script type="text/html" id="tmpl-grid-ui-prompt">
 		<div class="grid-promt-dialog-wrap">
 			<div class="grid-promt-dialog-inner">
 				<div class="grid-promt-dialog">
@@ -37,12 +22,3 @@ if ( ! defined('ABSPATH') )
 		</div>
 		<div class="media-modal-backdrop"></div>
 	</script>
-
-
-	<script type="text/html" id="tmpl-grid-templates-list">
-		<h2>{{{ data.title }}}</h2>
-		<ul class="templates"></ul>
-	</script>
-
-
-

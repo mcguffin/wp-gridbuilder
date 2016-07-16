@@ -9,7 +9,9 @@
 		features	= gridbuilder.options.features,
 		l10n		= gridbuilder.l10n,
 		inputTypes	= ['text','textarea','color','number','media','select','checkbox','radio', 'range'],
-		inputs		= {};
+		inputs		= {
+			inited: false,
+		};
 
 /*
 	toolbar
@@ -33,7 +35,7 @@
 			offset
 		widget
 */
-	
+
 	var inputPrototype = {
 		render: function( ) {
 			wp.media.View.prototype.render.apply(this,arguments);
@@ -169,13 +171,18 @@
 		},
 		dismiss: function(){}
 	};
-	
-	_.each( inputTypes, function( type ) {
-		inputs[type]	= wp.media.View.extend( _.extend( {
-			template: wp.template( 'input-' + type )
-		}, inputPrototype ) );
-	});
-	
+	function getInputTypes() {
+		if ( ! inputs.inited ) {
+			_.each( inputTypes, function( type ) {
+				inputs[type]	= wp.media.View.extend( _.extend( {
+					template: wp.template( 'grid-ui-input-' + type )
+				}, inputPrototype ) );
+			});
+			inputs.inited = true;
+		}
+		return inputs;
+	}
+
 	inputs.widget_instance = wp.media.View.extend( {
 		tagName: 'form',
 		className: 'widget-instance',
@@ -230,7 +237,7 @@
 			return this;
 		}
 	} );
-	
+
 	ActiveInput =  Backbone.View.extend({
 		tagName:'input', 
 		attributes:{
@@ -253,8 +260,9 @@
 			this.model.save();
 		}
 	});
+
 	TemplatesList = wp.media.View.extend({
-		template:  wp.template('grid-templates-list'),
+		template:  wp.template('grid-ui-templates-list'),
 		className: 'templates-list',
 
 		render: function() {
@@ -299,15 +307,29 @@
 
 
 	InputWrap = wp.media.View.extend({
-		template:  wp.template('input-wrap'),
+		template:  wp.template('grid-ui-input-wrap'),
 		className: 'input-wrap',
 
 		initialize: function( options ) {
+			var inputs = getInputTypes();
+
 			_.extend( options, {
 				lock: features.locks
 			} );
-			wp.media.View.prototype.initialize.apply(this,arguments);			
-			this.input = new inputs[ options.settings.type ]( options );
+			wp.media.View.prototype.initialize.apply(this,arguments);
+			if ( options.settings.type == 'html' ) {
+				this.$el = $(options.settings.html);
+				this.input = {
+					getValue:	function(){},
+					setValue:	function(){},
+					render:		function(){},
+					dismiss:	function(){},
+				};
+			} else if ( !! inputs[ options.settings.type ] ) {
+				this.input = new inputs[ options.settings.type ]( options );
+			} else {
+				console.log( 'no such type', options.settings.type );
+			}
 		},
 		render: function() {	
 			wp.media.View.prototype.render.apply(this,arguments);
@@ -339,9 +361,8 @@
 		}
 	});
 
-
 	InputGroup = wp.media.View.extend({
-		template:  wp.template('input-group'),
+		template:  wp.template('grid-ui-input-group'),
 		className: 'input-group',
 
 		initialize: function( options ) {
@@ -388,41 +409,16 @@
 		}
 	});
 
-	Dialog = grid.view.Dialog = wp.media.View.extend({
-		initialize: function( options ) {
-			var self = this;
-			
-			this.model		= options.model;
-			this.controller	= options.controller;
 
-			// setup button
-			this.okayBtn = new wp.media.view.Button( { text: l10n.Done, classes: ['apply','button-primary'] } );
-
-			return this;
-		},
-		render: function(){
-			wp.media.View.prototype.render.apply(this,arguments);
-			
-			this.$('.grid-dialog-title').text( this.options.title );
-			
-			// render button
-			this.okayBtn.render();
-			this.$('.grid-dialog-toolbar').append( this.okayBtn.$el );
-		},
-		dismiss: function() {
-			this.$('.grid-dialog-content').html('');
-		}
-	});
-
-	EditDialog = grid.view.EditDialog = grid.view.Dialog.extend({
-		template:  wp.template('grid-edit-dialog'),
+	EditDialog = grid.view.EditDialog = grid.view.ui.Dialog.extend({
+		template:  wp.template('grid-ui-edit-dialog'),
 		className: 'edit-dialog sidebar',
 		events: {
 			'click .apply' : 'done'
 		},
 		initialize: function( options ) {
 			var self = this;
-			grid.view.Dialog.prototype.initialize.apply(this,arguments);
+			grid.view.ui.Dialog.prototype.initialize.apply(this,arguments);
 		
 			// setup input groups
 			this.inputgroups = [];
@@ -446,7 +442,7 @@
 			return this;
 		},
 		render: function() {
-			grid.view.Dialog.prototype.render.apply(this,arguments);
+			grid.view.ui.Dialog.prototype.render.apply(this,arguments);
 
 			var self = this;
 			
@@ -487,19 +483,19 @@
 			_.each(this.inputgroups, function( inputgroup ) {
 				inputgroup.dismiss();
 			});
-			grid.view.Dialog.prototype.dismiss.apply( this, arguments );
+			grid.view.ui.Dialog.prototype.dismiss.apply( this, arguments );
 			return this;
 		}
 	});
 
-	ManageTemplatesDialog = grid.view.ManageTemplatesDialog = grid.view.Dialog.extend({
-		template:  wp.template('grid-manage-templates-dialog'),
+	ManageTemplatesDialog = grid.view.ManageTemplatesDialog = grid.view.ui.Dialog.extend({
+		template:  wp.template('grid-ui-dialog'),
 		className: 'manage-templates-dialog',
 		events: {
 			'click .apply':		'done',
 		},
 		initialize: function() {
-			grid.view.Dialog.prototype.initialize.apply(this,arguments);
+			grid.view.ui.Dialog.prototype.initialize.apply(this,arguments);
 			var self = this
 				this.templateLists = {};
 
@@ -512,7 +508,7 @@
 			});
 		},
 		render: function() {
-			grid.view.Dialog.prototype.render.apply(this,arguments);
+			grid.view.ui.Dialog.prototype.render.apply(this,arguments);
 
 			var self = this;
 			_.each( this.templateLists, function( templateList ){
@@ -526,8 +522,8 @@
 		}
 	});
 
-	SelectWidgetDialog = grid.view.SelectWidgetDialog = grid.view.Dialog.extend({
-		template:  wp.template('grid-manage-templates-dialog'),
+	SelectWidgetDialog = grid.view.SelectWidgetDialog = grid.view.ui.Dialog.extend({
+		template:  wp.template('grid-ui-dialog'),
 		className: 'select-widget-dialog',
 		events: {
 			'change [name="widget_class"]' : 'done'
@@ -535,8 +531,8 @@
 		initialize: function( ) {
 			var self = this;
 
-			grid.view.Dialog.prototype.initialize.apply(this,arguments);
-			
+			grid.view.ui.Dialog.prototype.initialize.apply(this,arguments);
+			// should be buttons!
 			this.selectWidget = new InputWrap( { 
 				model: this.model,
 				settings: {

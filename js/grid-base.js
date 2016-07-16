@@ -101,11 +101,15 @@
 	var options		= gridbuilder.options,
 		l10n		= gridbuilder.l10n,
 		grid = exports.grid = {};
-	exports.grid.model = {};
-	exports.grid.view = {};
-	exports.grid.controller = {};
-	exports.grid.templates = {};
-	exports.grid.utils = {
+
+	exports.grid.model		= {};
+	exports.grid.view		= {
+		ui		: {},
+		element	: {}
+	};
+	exports.grid.controller	= {};
+	exports.grid.templates	= {};
+	exports.grid.utils		= {
 		sanitizeTitle: function( str ){
 			str = str.removeAccents().toLowerCase();
 			str = str.replace(/[^a-z0-9]/g,'-');
@@ -114,6 +118,7 @@
 			return str;
 		},
 	}
+
 
 	exports.grid.controller.Grid = function( ) {
 		this.$input = $('[name="_grid_data"]');
@@ -127,12 +132,14 @@
 
 		this.listenTo( this.model, 'change', this.onChangeModel );
 
-		this.view = new exports.grid.view.Grid( {
+		this.view = new exports.grid.view.ui.Editor( {
 			controller: this,
 			model: this.model
 		} );
+		this.view.setActiveEditor();
 		this.view.$el.insertAfter( '#wp-content-wrap' );
 		this.view.render();
+		this.view.$el.focus();
 
 		$(document).on( 'click', '[type="submit"]', function( e ) {
 			self.onChangeModel();

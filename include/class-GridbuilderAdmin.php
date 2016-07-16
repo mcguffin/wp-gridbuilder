@@ -248,20 +248,54 @@ class GridbuilderAdmin {
 
 			wp_register_style( 'gridbuilder-admin' , plugins_url( '/css/gridbuilder-admin.css' , dirname(__FILE__) ), array('wp-color-picker', ), $version);
 
-			$script_id = 'gridbuilder-admin';
-
 			if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) {
+
 				$script_id = 'gridbuilder-base';
-				wp_register_script( 'sortable' , plugins_url( 'js/Sortable/Sortable.js' , dirname(__FILE__) ), array(), $version );
-				wp_register_script( 'jquery-sortable' , plugins_url( 'js/Sortable/jquery.binding.js' , dirname(__FILE__) ), array('sortable'), $version );
 
-				wp_register_script( 'gridbuilder-base', plugins_url( 'js/grid-base.js' , dirname(__FILE__) ), array( 'jquery', 'wp-backbone' ), $version );
-				wp_register_script( 'gridbuilder-model', plugins_url( 'js/grid-model.js' , dirname(__FILE__) ), array('gridbuilder-base'), $version );
-				wp_register_script( 'gridbuilder-dialog-views', plugins_url( 'js/grid-dialog-views.js' , dirname(__FILE__) ), array( 'wp-color-picker', 'gridbuilder-model','media-views'), $version );
-				wp_register_script( 'gridbuilder-views', plugins_url( 'js/grid-views.js' , dirname(__FILE__) ), array( 'gridbuilder-model','media-views','gridbuilder-dialog-views','jquery-sortable'), $version );
+				wp_register_script( 'sortable' , 
+					plugins_url( 'js/Sortable/Sortable.js' , dirname(__FILE__) ), 
+					array(), 
+				$version );
 
-				wp_register_script( 'gridbuilder-admin', plugins_url( 'js/gridbuilder-admin.js' , dirname(__FILE__) ), array( 'gridbuilder-views' ), $version );
+				wp_register_script( 'jquery-sortable' , 
+					plugins_url( 'js/Sortable/jquery.binding.js' , dirname(__FILE__) ), 
+					array( 'jquery', 'sortable' ), 
+				$version );
+
+				wp_register_script( $script_id, 
+					plugins_url( 'js/grid-base.js' , dirname(__FILE__) ), 
+					array( 'wp-backbone' ), 
+				$version );
+
+				wp_register_script( 'gridbuilder-model', 
+					plugins_url( 'js/grid-model.js' , dirname(__FILE__) ), 
+					array( $script_id ), 
+				$version );
+
+
+				wp_register_script( 'gridbuilder-ui', 
+					plugins_url( 'js/grid-ui.js' , dirname(__FILE__) ), 
+					array( 'gridbuilder-model','media-views'), 
+				$version );
+
+				wp_register_script( 'gridbuilder-dialog-views', 
+					plugins_url( 'js/grid-dialog-views.js' , dirname(__FILE__) ), 
+					array( 'wp-color-picker', 'gridbuilder-model','gridbuilder-ui'), 
+				$version );
+
+				wp_register_script( 'gridbuilder-element', 
+					plugins_url( 'js/grid-element.js' , dirname(__FILE__) ), 
+					array( 'gridbuilder-model','gridbuilder-dialog-views','jquery-sortable'), 
+				$version );
+
+				wp_register_script( 'gridbuilder-admin', 
+					plugins_url( 'js/gridbuilder-admin.js' , dirname(__FILE__) ), 
+					array( 'gridbuilder-element' ), 
+				$version );
+
 			} else {
+				$script_id = 'gridbuilder-admin';
+
 				wp_register_script( $script_id, plugins_url( 'js/gridbuilder.min.js' , dirname(__FILE__) ), array('jquery', 'wp-backbone', 'wp-color-picker', 'media-views' ), $version );
 			}
 
@@ -364,13 +398,10 @@ class GridbuilderAdmin {
 	 */
 	function print_media_templates() {
 		if ( $this->is_enabled_for_post_type() ) {
-			include __DIR__.'/template/grid-view.php';
-			include __DIR__.'/template/container-view.php';
-			include __DIR__.'/template/row-view.php';
-			include __DIR__.'/template/cell-view.php';
-			include __DIR__.'/template/widget-view.php';
-			include __DIR__.'/template/grid-dialog.php';
-			include __DIR__.'/template/input.php';
+			$rp = __DIR__.'/template/{,*/,*/*/,*/*/*/}*.php';
+			foreach ( glob($rp,GLOB_BRACE) as $template_file ) {	
+				include $template_file;
+			}
 		}
 	}
 

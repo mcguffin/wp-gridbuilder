@@ -52,11 +52,8 @@
 
 					is_initial = false;
 				}
-				if ( newState ) {
-					if ( ! gridController ) {
-						gridController = new grid.controller.Grid( );
-					}
-					gridController.view.render();
+				if ( newState && ! gridController ) {
+					gridController = new grid.controller.Grid( );
 				}
 			}
 

@@ -4,7 +4,7 @@ if ( ! defined('ABSPATH') )
 	die();
 
 ?>
-	<script type="text/html" id="tmpl-container-view">
+	<script type="text/html" id="tmpl-grid-element-container">
 		<div class="top sort-handle"></div>
 		<div class="bottom sort-handle"></div>
 		<a href="#" class="toggle-collapse dashicons dashicons-arrow-down"></a>

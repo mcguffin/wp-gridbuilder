@@ -54,7 +54,7 @@ body {
 	.row,
 	.cell,
 	.widget {
-		&.current-grid-item {
+		&:focus {
 			box-shadow:0 0 20px rgba( $color-wp-blue, 0.5 );
 			box-shadow:0 0 5px 3px rgba( $color-wp-blue,0.8);
 			&.locked {
@@ -98,7 +98,7 @@ body {
 		.display-template {
 			bottom:0;
 		}
-		&.current-grid-item {
+		&:focus {
 			box-shadow:0 0 20px rgba( $color-wp-blue, 0.5 );
 			box-shadow:0 0 5px 3px rgba( $color-wp-blue,0.8);
 		}
@@ -165,7 +165,7 @@ body {
 				height:0;
 			}
 		}
-		&.current-grid-item {
+		&:focus {
 			background-color:#f3f7f9;
 		}
 	}
@@ -184,7 +184,7 @@ body {
  		border-bottom:1px solid #d5d5d5;
  		padding-top:5px;
  		padding-bottom:5px;
-		&.current-grid-item {
+		&:focus {
 			background-color:#f3f7f9;
 		}
 	}
@@ -256,7 +256,7 @@ body {
 		&>.collection {
 			margin-right:$resize-handle-width;
 		}
-		&.current-grid-item {
+		&:focus {
 		}
 	}
 	.widget {
@@ -278,7 +278,7 @@ body {
 		.widget-type {
 			font-weight:normal;
 		}
-		&.current-grid-item {
+		&:focus {
 			box-shadow:0 0 20px rgba( $color-wp-blue,0.8);
 			border-color:$color-wp-blue;
 			color:darken($color-wp-blue, 20% );

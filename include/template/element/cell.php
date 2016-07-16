@@ -4,7 +4,7 @@ if ( ! defined('ABSPATH') )
 	die();
 
 ?>
-	<script type="text/html" id="tmpl-cell-view">
+	<script type="text/html" id="tmpl-grid-element-cell">
 		<div class="display-sizes">
 			<span class="display-offset"></span>
 			<span class="display-size"></span>
