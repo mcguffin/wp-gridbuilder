@@ -323,13 +323,19 @@ class Gridbuilder {
 						$styles[ 'background-repeat' ] = 'repeat;';
 						break;
 					case 'cover':
-						$styles[ 'background-position' ]	= 'center center';
-						$styles[ 'background-size' ]		= 'cover';
+						$styles[ 'background-position' ]		= 'center center';
+						$styles[ '-webkit-background-size' ]	= 'cover';
+						$styles[ '-moz-background-size' ]		= 'cover';
+						$styles[ '-o-background-size' ]			= 'cover';
+						$styles[ 'background-size' ]			= 'cover';
 						break;
 					case 'fixed':
-						$styles[ 'background-position' ]	= 'center center';
-						$styles[ 'background-size' ]		= 'cover';
-						$styles[ 'background-attachment' ]	= 'fixed';
+						$styles[ 'background-position' ]		= 'center center';
+						$styles[ '-webkit-background-size' ]	= 'cover';
+						$styles[ '-moz-background-size' ]		= 'cover';
+						$styles[ '-o-background-size' ]			= 'cover';
+						$styles[ 'background-size' ]			= 'cover';
+						$styles[ 'background-attachment' ]		= 'fixed';
 						break;
 					case 'center':
 						$styles[ 'background-position' ]	= 'center center';
