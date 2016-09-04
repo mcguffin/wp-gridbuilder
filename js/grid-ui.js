@@ -116,7 +116,7 @@
 			return this;
 		},
 		render: function(){
-			wp.media.View.prototype.render.apply(this,arguments);
+			wp.media.View.prototype.render.apply( this, arguments );
 
 			this.$('.grid-dialog-title').text( this.options.title );
 			

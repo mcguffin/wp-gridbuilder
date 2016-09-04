@@ -2,7 +2,10 @@ WP Gridbuilder ToDo:
 ====================
  - [x] Plugin Settings page
  - [x] Bring Back Templates
- - [ ] Enqueue bootstrap in frontend if option is on
+ - [ ] Enqueue styles in frontend if option is on
+ - [ ] Provide CSS / SCSS Framework for theme development (via @include)
+ - [ ] Features
+	 - [ ] Add Fullscreen checkbox
  - [ ] Releasing
 	- [x] JS Compression
 	- [ ] PHP docblocks

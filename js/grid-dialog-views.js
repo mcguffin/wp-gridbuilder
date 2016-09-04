@@ -312,6 +312,7 @@
 
 		initialize: function( options ) {
 			var inputs = getInputTypes();
+			console.log( options.settings );
 
 			_.extend( options, {
 				lock: features.locks
@@ -331,7 +332,8 @@
 				console.log( 'no such type', options.settings.type );
 			}
 		},
-		render: function() {	
+		render: function() {
+			var self = this;
 			wp.media.View.prototype.render.apply(this,arguments);
 
 			this.input.render();
@@ -339,6 +341,17 @@
 			this.$el.addClass('input-type-'+this.options.settings.type );
 			
 			this.setLock( this.options.locked );
+			
+			if ( this.options.settings.attr ) {
+				_.each( this.options.settings.attr, function( value, attr ) {
+					var prevAttr = self.$el.attr( attr ),
+						glue = ' ';
+					if ( attr == 'style' ) {
+						glue = ';';
+					}
+					self.$el.attr( attr, prevAttr + glue + value )
+				} );
+			}
 
 			return this;
 		},
@@ -366,7 +379,7 @@
 		className: 'input-group',
 
 		initialize: function( options ) {
-			wp.media.View.prototype.initialize.apply(this,arguments);
+			wp.media.View.prototype.initialize.apply( this, arguments );
 			var self = this;
 			this.model = options.model;
 
