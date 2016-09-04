@@ -1,6 +1,7 @@
 WP Gridbuilder ToDo:
 ====================
  - [x] Plugin Settings page
+ - [x] Bring Back Templates
  - [ ] Enqueue bootstrap in frontend if option is on
  - [ ] Releasing
 	- [x] JS Compression
@@ -23,6 +24,7 @@ WP Gridbuilder ToDo:
 		- [x] Locked Cell: prevent setting width + offset
 		- [x] Disable add-... btns depending on lock state
 		- [x] Default pointer on locked sort-handles
+		- [ ] User setting: Apply locks for me
 	- [ ] Provide Out-of-the-box support for several RTE Widgets
 	- [ ] Widget: editable col-xx-n classes
 	- [ ] Export / Import Grid + Elements
@@ -39,6 +41,8 @@ WP Gridbuilder ToDo:
 		- [ ] Cell: Arrow left + right: offset
 		- [ ] Cell: SHIFT + Arrow left + right: size
 	- [x] dblclick = edit
+	- [ ] BG-image: select size
+	- [ ] Responsive BG-Images
  - [x] Bugs:
 	- [x] FF: Grid guides not visible
  	- [x] FF: resize / shift does not work

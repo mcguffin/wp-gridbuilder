@@ -153,7 +153,11 @@
 			$collection.data( 'view', this ).data( 'model', this.model.items );
 			if ( cls ) {
 				this.model.items.each( function( item, i ) {
-					var cnt = new cls( { controller: self.options.controller, model: item, parent: self });
+					var cnt = new cls( { 
+						controller: self.options.controller, 
+						model: item, 
+						parent: self 
+					});
 					$collection.append( cnt.$el );
 					cnt.render();
 				});

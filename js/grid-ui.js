@@ -135,37 +135,62 @@
 		tagName:'div',
 		events: {
 			// prevent selection from loosing focus
-//			'mousedown *':								'preventDefault',
+//			'mousedown *':							'preventDefault',
 
-			'click .viewswitcher [type="radio"]':		'switchView',
+			'click .viewswitcher [type="radio"]':	'switchView',
 
 
-			'click .set-visibility [type="radio"]':		'setVisible',
+			'click .set-visibility [type="radio"]':	'setVisible',
 			
-			'click button.add-item':					'addItem',
-			'change select.add-item':					'addTemplateItem',
+			'click button.add-item':				'addItem',
+			'change select.add-item':				'addTemplateItem',
 /*
-			'change select.add-container':				'addContainer',
-			'click button.add-container':				'addContainer',
+			'change select.add-container':			'addContainer',
+			'click button.add-container':			'addContainer',
 
-			'change select.add-row':					'addRow',
-			'click button.add-row':						'addRow',
+			'change select.add-row':				'addRow',
+			'click button.add-row':					'addRow',
 
-			'change select.add-cell':					'addCell',
-			'click button.add-cell':					'addCell',
+			'change select.add-cell':				'addCell',
+			'click button.add-cell':				'addCell',
 
-			'change select.add-widget':					'addWidget',
-			'click button.add-widget':					'addWidget',
+			'change select.add-widget':				'addWidget',
+			'click button.add-widget':				'addWidget',
 */
 
-			'click .item-action.edit':					'editItem',
-			'click .item-action.clone':					'cloneItem',
-			'click .item-action.delete':				'deleteItem',
-			'click .item-action.lock':					'lockItem',
+			'click .item-action.edit':				'editItem',
+			'click .item-action.clone':				'cloneItem',
+			'click .item-action.delete':			'deleteItem',
+			'click .item-action.lock':				'lockItem',
 
-			'click .grid-toolbar .create-template':		'createTemplate',
-			'click .grid-toolbar .update-template':		'updateTemplate',
-			'click .grid-toolbar .manage-templates':	'manageTemplates',
+			'click .create-template':				'createTemplate',
+			'click .update-template':				'updateTemplate',
+			'click .manage-templates':				'manageTemplates',
+		},
+		initialize: function() {
+			wp.media.View.prototype.initialize.apply( this, arguments );
+			// create toolbar
+			this.delegateEvents();
+			this.setupSticky();
+		},
+		render: function() {
+			wp.media.View.prototype.render.apply( this, arguments );
+
+			this.setupViewswitcher();
+
+			this.setupTemplateSelects();
+
+			this.updateWidth();
+
+			viewSize = window.getUserSetting( 'grid-view-size' );
+
+			if ( !!viewSize ) {
+				this.$('.viewswitcher [value="'+viewSize+'"]').prop('checked',true);
+			} else {
+				this.$('.viewswitcher [type="radio"]:last').prop('checked',true);
+			}
+			this.switchView();
+
 		},
 		preventDefault:function(e) {
 			// prevent selected element from loosing focus
@@ -176,8 +201,8 @@
 			e.preventDefault();
 		},
 		addTemplateItem: function( e ) {
-			console.log($(e.target).val());
-			this.trigger( 'add:' + $(e.target).data('add-item') );
+			this.trigger( 'add:' + $(e.target).data('add-item'), $(e.target).val() );
+			$(e.target).val('');
 			e.preventDefault();
 		},
 		editItem: function( e ) {
@@ -200,29 +225,6 @@
 			this.trigger('visible', this.$('.set-visibility [type="radio"]:checked').val() );
 		},
 
-		initialize: function() {
-			wp.media.View.prototype.initialize.apply( this, arguments );
-			// create toolbar
-			this.delegateEvents();
-			this.setupSticky();
-		},
-		render: function() {
-			wp.media.View.prototype.render.apply( this, arguments );
-
-			this.setupViewswitcher();
-
-			this.updateWidth();
-
-			viewSize = window.getUserSetting( 'grid-view-size' );
-
-			if ( !!viewSize ) {
-				this.$('.viewswitcher [value="'+viewSize+'"]').prop('checked',true);
-			} else {
-				this.$('.viewswitcher [type="radio"]:last').prop('checked',true);
-			}
-			this.switchView();
-
-		},
 		setupSticky: function() {
 			var self = this;
 
@@ -246,6 +248,7 @@
 				can_visible = can_create_template = can_update_template = false,
 				can_add_container = can_add_row = can_add_cell = can_add_widget = false,
 				can_manage_templates = true;
+
 			if ( !! item ) {
 				var item_is_grid = item.is( grid.view.element.Grid ),
 					is_unlocked	= features.locks || ! item.model.get( 'locked' ),
@@ -307,6 +310,19 @@
 				self.$('.viewswitcher').append( html );
 			});
 		},
+		
+		setupTemplateSelects: function(  ) {
+			this.$('select.add-item[data-add-item]').each(function(){
+				var $self = $(this),
+					type = $self.attr('data-add-item');
+				// remove previous 
+				$(this).find('[value!=""]').remove();
+				grid.templates[type].each(function(el,i) {
+					var tplData = grid.templates[type].get( el.id ).toJSON();
+					$('<option value="'+tplData.id+'">'+tplData.name+'</option>').appendTo( $self );
+				});
+			});
+		},
 
 		switchView: function( ) {
 			var newView = this.whichView(),
@@ -348,6 +364,18 @@
 			if ( !!current && ! current.is( Grid ) ) {
 	 			this.$('.item-action.lock').prop( 'checked', !! current.model.get( 'locked' ) );
 	 		}
+		},
+		createTemplate: function(e) {
+			this.trigger( 'create:template' );
+			e.preventDefault();
+		},
+		updateTemplate: function(e) {
+			this.trigger( 'update:template' );
+			e.preventDefault();
+		},
+		manageTemplates: function(e) {
+			this.trigger( 'manage:templates' );
+			e.preventDefault();
 		}
 
 	});
@@ -355,7 +383,7 @@
 	Editor = grid.view.ui.Editor = wp.media.View.extend({
 		className:'grid-editor',
 		tagName:'div',
-		
+		selectWidgetModal: null,
 		events:{
 			'focusout *': function( e ) {
 				// console.log('blur',e);
@@ -415,7 +443,7 @@
 				model: this.model
 			});
 			this.bindEvents();
-			this.render();
+		//	this.render();
 		},
 		bindEvents: function() {
 			var self = this;
@@ -435,9 +463,15 @@
 			this.toolbar.on( 'viewsize', this.onChangeViewsize, this );
 			this.toolbar.on( 'viewsize', this.reFocus, this );
 
-// 			this.toolbar.on( 'template:create', this.createTemplate, this );
-// 			this.toolbar.on( 'template:update', this.createTemplate, this );
-// 			this.toolbar.on( 'template:manager', this.createTemplate, this );
+			this.toolbar.on( 'create:template', this.createTemplate, this );
+			this.toolbar.on( 'update:template', this.updateTemplate, this );
+			this.toolbar.on( 'manage:templates', this.openTemplateManager, this );
+
+			this.toolbar.on( 'add:container', this.addContainer, this );
+			this.toolbar.on( 'add:row', this.addRow, this );
+			this.toolbar.on( 'add:cell', this.addCell, this );
+			this.toolbar.on( 'add:widget', this.addWidget, this );
+
 		},
 		preventBackspaceNav: function( e ) {
 			var el = event.srcElement || event.target;
@@ -481,63 +515,44 @@
 		/**
 		 *	Managing items
 		 */
-		addContainer:function( e ) {
-			var template = $(e.target).is('select') ? grid.templates.get( 'container', $(e.target).val() ) : false,
+		addContainer:function( ) {
+			var template = arguments.length ? grid.templates.get( 'container', arguments[0] ) : false,
 				val = template ? template.get('data') : {};
 			
-			if ( template ) {
-				$(e.target).val('');
-				val.template = template.get('slug');
-			}
-			
-			this._addItem( Container, this, val );
+			this._addItem( grid.view.element.Container, this.grid, val );
 			
 			return false;
 		},
 		addRow: function( e ) {
-			var current	= this.getSelected(),
-				parent	= current.closest(Container),
-				template = $(e.target).is('select') ? grid.templates.get( 'row', $(e.target).val() ) : false,
-				val = template ? template.get('data') : {};
+			var current		= this.getSelected(),
+				parent		= current.closest( grid.view.element.Container ),
+				template	= arguments.length ? grid.templates.get( 'row', arguments[0] ) : false,
+				val			= template ? template.get('data') : {};
 
-			if ( !! template ) {
-				$(e.target).val('');
-				val.template = template.get('slug');
-			}
-			
-			this._addItem( Row, parent, val );
-
-			$(e.target).val('');
+			this._addItem( grid.view.element.Row, parent, val );
 
 			return false;
 		},
 		addCell: function( e ) {
 			var current	= this.getSelected(),
-				parent	= current.closest(Row),
-				template = $(e.target).is('select') ? grid.templates.get( 'cell', $(e.target).val() ) : false,
+				parent	= current.closest( grid.view.element.Row ),
+				template = arguments.length ? grid.templates.get( 'cell', arguments[0] ) : false,
 				val = template ? template.get('data') : { size_xs: 12 };
 
-			if ( template ) {
-				$(e.target).val('');
-				val.template = template.get('slug');
-			}			
-
-			this._addItem( Cell, parent, val );
+			this._addItem( grid.view.element.Cell, parent, val );
 
 			return false;
 		},
 		addWidget: function( e ) {
 			var self		= this,
 				current		= this.getSelected(),
-				parent		= current.closest( Cell ),
-				template	= $(e.target).is('select') ? grid.templates.get( 'widget', $(e.target).val() ) : false,
+				parent		= current.closest( grid.view.element.Cell ),
+				template	= arguments.length ? grid.templates.get( 'widget', arguments[0] ) : false,
 				val			= template ? template.get('data') : { instance: {} },
 				model		= new Backbone.Model(), dialog;
 
-			if ( template ) {
-				$(e.target).val('');
-				val.template = template.get('slug');
-				this._addItem( Widget, parent, val );
+			if ( !! template ) {
+				this._addItem( grid.view.element.Widget, parent, val );
 			} else {
 				if ( this.selectWidgetModal === null ) {
 					this.selectWidgetModal = new wp.media.view.Modal( { controller: this } ),
@@ -550,7 +565,7 @@
 
 					dialog.on( 'done', function() {
 						val.widget_class = model.get( 'widget_class' );
-						self._addItem( Widget, parent, val ).editItem( );
+						self._addItem( grid.view.element.Widget, parent, val ).editItem( );
 						self.selectWidgetModal.close();
 					}, this.selectWidgetModal );
 
@@ -598,8 +613,8 @@
 			// add to model
 			parent.model.items.add( itemModel );
 			
+			this.grid.initSortables();
 			this.grid.hasChanged();
-			this.initSortables();
 
 			this.setSelected( item );
 			
@@ -651,6 +666,7 @@
 				item.model.set( 'locked', !oldState );
 				this.reFocus()
 			}
+			this.toolbar.update();
 		},
 		
 		editItem: function( e ) {
@@ -753,7 +769,7 @@
 		/**
 		 *	TEMPLATES
 		 */
-		createTemplate: function( e ) {
+		createTemplate: function( ) {
 			// get selection
 			var self = this,
 				current = this.getSelected(),
@@ -785,15 +801,18 @@
 
 					// add to template select
 					grid.templates[type].add( template );
-					self.renderTemplateSelects();
+
+					toolbar.update();
 
 					self.grid.hasChanged();
 				})
 				template.save();
+				current.reFocus();
 			}, this ).open();
 
 			return false;
 		},
+
 		updateTemplate: function() {
 			// find the template
 			var current = this.getSelected(),
@@ -802,11 +821,12 @@
 			template = grid.templates.get( type, slug );
 			template.set( 'data', current.model.toJSON() );
 			template.save();
+			current.reFocus();
 			return false;
 		},
-		manageTemplates: function( e ) {
+
+		openTemplateManager: function( ) {
 			// find the template
-			e.preventDefault();
 
 			var self = this,
 				modal = new wp.media.view.Modal( { controller: this } ),
@@ -816,7 +836,14 @@
 			dialog.on( 'done', function(){
 				modal.close();
 			}, modal );
-			modal.content( dialog ).open();
+
+			modal
+				.content( dialog )
+				.on('close',function( e ) {
+					self.toolbar.setupTemplateSelects();
+					!!current && current.$el.focus();
+				})
+				.open();
 
 			return false;
 		}

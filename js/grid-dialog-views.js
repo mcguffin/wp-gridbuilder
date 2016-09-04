@@ -544,7 +544,7 @@
 			} );
 		},
 		render: function() {
-			grid.view.Dialog.prototype.render.apply(this,arguments);
+			grid.view.ui.Dialog.prototype.render.apply(this,arguments);
 			this.$('.grid-dialog-content').append( this.selectWidget.render().$el );
 			return this;
 		},
