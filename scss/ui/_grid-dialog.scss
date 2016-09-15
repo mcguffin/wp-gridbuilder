@@ -137,8 +137,16 @@
 			}
 		}
 	}
-	.lock + .prop {
-		padding-right:30px;
+	.grid-dialog-content & {
+		.lock + .prop {
+			padding-left:30px;
+		}
+	}
+
+	.grid-dialog-sidebar & {
+		.lock + .prop {
+			padding-right:30px;
+		}
 	}
 	.input-title {
 		font-weight:bold;

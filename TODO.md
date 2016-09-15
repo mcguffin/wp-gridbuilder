@@ -4,8 +4,6 @@ WP Gridbuilder ToDo:
  - [x] Bring Back Templates
  - [ ] Enqueue styles in frontend if option is on
  - [ ] Provide CSS / SCSS Framework for theme development (via @include)
- - [ ] Features
-	 - [ ] Add Fullscreen checkbox
  - [ ] Releasing
 	- [x] JS Compression
 	- [ ] PHP docblocks
@@ -28,15 +26,19 @@ WP Gridbuilder ToDo:
 		- [x] Disable add-... btns depending on lock state
 		- [x] Default pointer on locked sort-handles
 		- [ ] User setting: Apply locks for me
-	- [ ] Provide Out-of-the-box support for several RTE Widgets
-	- [ ] Widget: editable col-xx-n classes
 	- [ ] Export / Import Grid + Elements
 	- [ ] Page Templates
-	- [ ] Make compatible with ACF Widgets 
-	- [ ] Maybe: Widget Base Class (with RTE)
-	- [ ] Sophisticated widget previews (like customizer?)
+	- [ ] Customizer based Editor
 	- [ ] Undo (keep model state in user settings)
-	- [ ] Template editing capability
+	- [ ] Roles: Template editing capability
+	- [x] BG-image
+		- [x] Select Align
+		- [x] Use <img>, srcset, sizes where possible (not fixed images!)
+	- [ ] Widgets
+		- [ ] Support RTE Widgets
+		- [ ] Make compatible with ACF Widgets 
+		- [x] Widget: editable col-xx-n classes
+		- [ ] Maybe: Widget Base Class (with RTE)
 	- [x] Keyboard shortcuts: arrows, del, CMD+D
 		- [x] TAB: select next (tabindex)
 		- [x] RETURN: edit
@@ -44,8 +46,6 @@ WP Gridbuilder ToDo:
 		- [ ] Cell: Arrow left + right: offset
 		- [ ] Cell: SHIFT + Arrow left + right: size
 	- [x] dblclick = edit
-	- [ ] BG-image: select size
-	- [ ] Responsive BG-Images
  - [x] Bugs:
 	- [x] FF: Grid guides not visible
  	- [x] FF: resize / shift does not work

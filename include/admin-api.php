@@ -41,13 +41,13 @@ function _gridbuilder_attributes_settings() {
 function _gridbuilder_background_settings() {
 	$settings = array(
 		'background_color'		=> array(
-			'title'		=> __('Background Color', 'wp-gridbuilder'),
+			'title'		=> __('Color', 'wp-gridbuilder'),
 			'type'		=> 'color',
 			'priority'	=> 5,
 			'palettes'	=> false,
 		),
 		'background_opacity'	=> array(
-			'title'		=> __('Background Color Opacity', 'wp-gridbuilder'),
+			'title'		=> __('Color Opacity', 'wp-gridbuilder'),
 			'type'		=> 'range',
 			'min'		=> 0,
 			'max'		=> 1,
@@ -55,24 +55,38 @@ function _gridbuilder_background_settings() {
 			'priority'	=> 10,
 		),
 		'background_image'		=> array(
-			'title' => __('Background Image', 'wp-gridbuilder'),
-			'type' => 'media',
-			'mimetype'	=> 'image',
-			'priority' => 15,
+			'title'			=> __('Image', 'wp-gridbuilder'),
+			'type'			=> 'media',
+			'mimetype'		=> 'image',
+			'priority'		=> 15,
 		),
-		'background_alignment'	=> array(
-			'title' => __('Background Image Alignment', 'wp-gridbuilder'),
-			'type' => 'select',
-			'options' => array(
-				'tile' => __('Tiled Image', 'wp-gridbuilder'),
-				'center' => __('Centered, with original size', 'wp-gridbuilder'),
-				'cover' => __('Cover', 'wp-gridbuilder'),
-				'fixed' => __('Fixed', 'wp-gridbuilder'),
+		'background_size'	=> array(
+			'title' 		=> __('Image Size', 'wp-gridbuilder'),
+			'type' 			=> 'select',
+			'options' 		=> array(
+				'none'			=> __('Tiled Image', 'wp-gridbuilder'),
+				'contain'		=> __('Contain', 'wp-gridbuilder'),
+				'cover'			=> __('Cover', 'wp-gridbuilder'),
+				'fill'			=> __('Fill (scale unproportional)', 'wp-gridbuilder'),
 //				'parallax' => __('Parallax', 'wp-gridbuilder'),
 //				'parallax-original' => __('Parallax (Original Size)', 'wp-gridbuilder'),
 			),
-			'description' => __('How the background image is displayed.', 'wp-gridbuilder'),
-			'priority' => 20,
+			'description'	=> __('How the background image is displayed.', 'wp-gridbuilder'),
+			'priority'		=> 20,
+			'default'		=> 'contain',
+		),
+		'background_attachment'	=> array(
+			'title'			=> __('Image Alignment', 'wp-gridbuilder'),
+			'type' 			=> 'select',
+			'options' 		=> array(
+				'scroll'		=> __('Scroll', 'wp-gridbuilder'),
+				'fixed'			=> __('Fixed', 'wp-gridbuilder'),
+//				'parallax' => __('Parallax', 'wp-gridbuilder'),
+//				'parallax-original' => __('Parallax (Original Size)', 'wp-gridbuilder'),
+			),
+			'description'	=> __('How the background image is displayed.', 'wp-gridbuilder'),
+			'priority'		=> 20,
+			'default'		=> 'scroll',
 		),
 		'background_position_horizontal' => array(
 			'title' 	=> __('Horizontal Position', 'wp-gridbuilder'),
@@ -104,6 +118,103 @@ function _gridbuilder_background_settings() {
 		),
 	);
 	return apply_filters( 'gridbuilder_background_settings', $settings );
+}
+
+
+function _gridbuilder_grid_settings( $priority = 0 ) {
+	$settings = array(
+		'size_xs'	=> array(
+			'title' => __('Cell size phone', 'wp-gridbuilder'),
+			'type' => 'number',
+			'min' => 1,
+			'max' => 12,
+			'step' => 1,
+			'priority' => $priority + 5,
+			'attr'		=> array(
+				'class'			=> 'size-quarter',
+			),
+		),
+		'size_sm'	=> array(
+			'title' => __('Cell size tablet portrait', 'wp-gridbuilder'),
+			'type' => 'number',
+			'min' => 1,
+			'max' => 12,
+			'step' => 1,
+			'priority' => $priority + 10,
+			'attr'		=> array(
+				'class'			=> 'size-quarter',
+			),
+		),
+		'size_md'	=> array(
+			'title' => __('Cell size tablet landscape', 'wp-gridbuilder'),
+			'type' => 'number',
+			'min' => 1,
+			'max' => 12,
+			'step' => 1,
+			'priority' => $priority + 15,
+			'attr'		=> array(
+				'class'			=> 'size-quarter',
+			),
+		),
+		'size_lg'		=> array(
+			'title' => __('Cell size desktop', 'wp-gridbuilder'),
+			'type' => 'number',
+			'min' => 1,
+			'max' => 12,
+			'step' => 1,
+			'priority' => $priority + 20,
+			'attr'		=> array(
+				'class'			=> 'size-quarter',
+			),
+		),
+
+		'offset_xs'		=> array(
+			'title' 		=> __('Cell offset phone', 'wp-gridbuilder'),
+			'type' 			=> 'number',
+			'min' 			=> 0,
+			'max' 			=> 11,
+			'step' 			=> 1,
+			'priority' 		=> $priority + 25,
+			'attr'			=> array(
+				'class'			=> 'size-quarter',
+			),
+		),
+		'offset_sm'		=> array(
+			'title' 		=> __('Cell offset tablet portrait', 'wp-gridbuilder'),
+			'type' 			=> 'number',
+			'min' 			=> 0,
+			'max' 			=> 11,
+			'step' 			=> 1,
+			'priority' 		=> $priority + 30,
+			'attr'			=> array(
+				'class'			=> 'size-quarter',
+			),
+		),
+		'offset_md'		=> array(
+			'title'			=> __('Cell offset tablet landscape', 'wp-gridbuilder'),
+			'type'			=> 'number',
+			'min'			=> 0,
+			'max'			=> 11,
+			'step'			=> 1,
+			'priority'		=> $priority + 35,
+			'attr'			=> array(
+				'class'			=> 'size-quarter',
+			),
+		),
+		'offset_lg'		=> array(
+			'title'			=> __('Cell offset desktop', 'wp-gridbuilder'),
+			'type' 			=> 'number',
+			'min' 			=> 0,
+			'max' 			=> 11,
+			'step' 			=> 1,
+			'priority' 		=> $priority + 40,
+			'attr'			=> array(
+				'class'			=> 'size-quarter',
+			),
+		),
+	);
+	return apply_filters( 'gridbuilder_grid_settings', $settings );
+
 }
 
 function gridbuilder_container_settings() {
@@ -230,107 +341,18 @@ function gridbuilder_container_editor() {
 	return apply_filters( 'gridbuilder_container_editor', $editor );
 }
 function gridbuilder_row_editor() {
-	$editor = array();
+	$editor = array(
+		'fullscreen'	=> array(
+			'title'			=> __('Fullscreen', 'repeatmobile-admin'),
+			'description'	=> __('If checked the container will be at least one viewport high.', 'repeatmobile-admin'),
+			'type'			=> 'checkbox',
+			'priority'		=> 50,
+		),
+	);
 	return apply_filters( 'gridbuilder_row_editor', $editor );
 }
 function gridbuilder_cell_editor() {
-	$editor = array(
-//		'<div style="width:25%;float:left;">',
-		'size_lg'		=> array(
-			'title' => __('Cell size desktop', 'wp-gridbuilder'),
-			'type' => 'number',
-			'min' => 1,
-			'max' => 12,
-			'step' => 1,
-			'priority' => 20,
-			'attr'		=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'size_md'	=> array(
-			'title' => __('Cell size tablet landscape', 'wp-gridbuilder'),
-			'type' => 'number',
-			'min' => 1,
-			'max' => 12,
-			'step' => 1,
-			'priority' => 15,
-			'attr'		=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'size_sm'	=> array(
-			'title' => __('Cell size tablet portrait', 'wp-gridbuilder'),
-			'type' => 'number',
-			'min' => 1,
-			'max' => 12,
-			'step' => 1,
-			'priority' => 10,
-			'attr'		=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'size_xs'	=> array(
-			'title' => __('Cell size phone', 'wp-gridbuilder'),
-			'type' => 'number',
-			'min' => 1,
-			'max' => 12,
-			'step' => 1,
-			'priority' => 5,
-			'attr'		=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-/*
-		'</div>',
-
-		'<div style="width:25%;float:left;">',
-*/
-		'offset_lg'		=> array(
-			'title'			=> __('Cell offset desktop', 'wp-gridbuilder'),
-			'type' 			=> 'number',
-			'min' 			=> 0,
-			'max' 			=> 11,
-			'step' 			=> 1,
-			'priority' 		=> 40,
-			'attr'			=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'offset_md'		=> array(
-			'title'			=> __('Cell offset tablet landscape', 'wp-gridbuilder'),
-			'type'			=> 'number',
-			'min'			=> 0,
-			'max'			=> 11,
-			'step'			=> 1,
-			'priority'		=> 35,
-			'attr'			=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'offset_sm'		=> array(
-			'title' 		=> __('Cell offset tablet portrait', 'wp-gridbuilder'),
-			'type' 			=> 'number',
-			'min' 			=> 0,
-			'max' 			=> 11,
-			'step' 			=> 1,
-			'priority' 		=> 30,
-			'attr'			=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'offset_xs'		=> array(
-			'title' 		=> __('Cell offset phone', 'wp-gridbuilder'),
-			'type' 			=> 'number',
-			'min' 			=> 0,
-			'max' 			=> 11,
-			'step' 			=> 1,
-			'priority' 		=> 25,
-			'attr'			=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-//		'</div>',
-
+	$editor = _gridbuilder_grid_settings() + array(
 		'fullscreen'	=> array(
 			'title'			=> __('Fullscreen', 'repeatmobile-admin'),
 			'description'	=> __('If checked the container will be at least one viewport high.', 'repeatmobile-admin'),
@@ -341,7 +363,7 @@ function gridbuilder_cell_editor() {
 	return apply_filters( 'gridbuilder_cell_editor', $editor );
 }
 function gridbuilder_widget_editor() {
-	$editor = array(
+	$editor = _gridbuilder_grid_settings( 100 ) + array(
 		'instance'	=> array(
 			'type'	=> 'widget_instance',
 			'priority'	=> 10,
@@ -363,3 +385,6 @@ function gridbuilder_widget_types() {
 	}
 	return apply_filters( 'gridbuilder_widget_types', $widgets );
 }
+
+
+

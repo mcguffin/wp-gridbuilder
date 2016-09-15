@@ -417,15 +417,19 @@
 						e.stopPropagation();
 						break;
 					case 37: // arrow-left
-						can_edit = features.locks || ! sel.model.get( 'locked' );
-					
-						break;
-					case 38: // arrow-up
-						break;
 					case 39: // arrow-right
-						can_edit = features.locks || ! sel.model.get( 'locked' );
-						break;
+					case 38: // arrow-up
 					case 40: // arrow-down
+						can_edit = features.locks || ! sel.model.get( 'locked' );
+						if ( sel.is( grid.view.element.Cell ) ) {
+							if ( e.keyCode == 37 ) { // left
+								e.shiftKey ? sel.decrementSize() : sel.decrementOffset();
+							} else if ( e.keyCode == 39 ) { // right
+								e.shiftKey ? sel.incrementSize() : sel.incrementOffset();
+							}
+						}
+
+						e.stopPropagation();
 						break;
 				}
 			}

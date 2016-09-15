@@ -161,6 +161,7 @@
 		},
 		onChangeModel : function() {
 			var val = JSON.stringify( this.model.toJSON() );
+			// push to undo!
 			this.$input.val( val );
 		}
 	}, Backbone.Events);

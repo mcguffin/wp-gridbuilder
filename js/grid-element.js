@@ -346,7 +346,7 @@
 						$dragged = $(this);
 						$(document).on( 'mousemove', mousemove );
 						$(document).on( 'mouseup', mouseup );
-					
+
 						e.preventDefault();
 					} );
 
@@ -358,10 +358,11 @@
 							cols		= Math.max( 1, Math.min( 12, Math.round( ( event.pageX - self.$el.offset().left ) / colWidth ) ) ),
 							prevCols	= self.model.get( 'size_'+viewSize );
 
-						if (prevCols != cols) {
-							self.setColClass( cols, viewSize );
-							self.model.set( 'size_'+viewSize, cols );
-							self.hasChanged();
+						if ( prevCols != cols ) {
+							self.setSize( cols );
+// 							self.setColClass( cols, viewSize );
+// 							self.model.set( 'size_' + viewSize, cols );
+// 							self.hasChanged();
 						}
 
 						event.stopPropagation();
@@ -375,10 +376,14 @@
 							offsetDiff	= Math.round( diff / colWidth ),
 							offset		= Math.min( 11, Math.max( 0, startOffset - offsetDiff ) ),
 							prevOffset	= self.model.get( 'offset_' + viewSize );
+
 						if ( prevOffset != offset ) {
-							self.setOffsetClass( offset, viewSize );
-							self.model.set( 'offset_' + viewSize, offset );
-							self.hasChanged();
+							self.setOffset( offset );
+// 
+// 							self.setOffsetClass( offset, viewSize );
+// 							self.model.set( 'offset_' + viewSize, offset );
+// 							self.hasChanged();
+
 						}
 
 						event.stopPropagation();
@@ -387,14 +392,28 @@
     		}
     		return this;
 		},
+		getCurrentSize: function() {
+			var viewSize = this.controller.toolbar.whichView(),
+				self = this, did = false;
+
+			size_key = _.find( sizekeys, function(prop,size) {
+				if ( size == viewSize ) {
+					did = true;
+				}
+				return did && !! self.model.get( prop )
+			});
+			return self.model.get( size_key ) || 12;
+		
+		},
 		setColClass: function( size, viewSize ) {
 			var className = options.screensizes.size_class_template({ screensize: viewSize, size: size });
 			this.$el.removeClass( this.getColClassnames( viewSize ).join(' ') ).addClass( className );
     		return this;
 		},
+
 		getCurrentOffset: function() {
 			var viewSize = this.controller.toolbar.whichView(),
-				self = this, offset, did = false;
+				self = this, did = false;
 
 			offset_key = _.find( offsetkeys, function(prop,size) {
 				if ( size == viewSize ) {
@@ -419,6 +438,48 @@
 			}
 			return cls;
 		},
+
+		incrementOffset: function() {
+			var viewSize = this.controller.toolbar.whichView(),
+				offset = this.getCurrentOffset();
+			if ( offset < 11 ) {
+				console.log(offset,offset+1);
+				this.setOffset( offset + 1 );
+			}
+		},
+		decrementOffset: function() {
+			var viewSize = this.controller.toolbar.whichView(),
+				offset = this.getCurrentOffset();
+			if ( offset > 0 ) {
+				this.setOffset( offset - 1 );
+			}
+		},
+		incrementSize: function() {
+			var viewSize = this.controller.toolbar.whichView(),
+				size = this.getCurrentSize();
+			if ( size < 12 ) {
+				this.setSize( size + 1 );
+			}
+		},
+		decrementSize: function() {
+			var viewSize = this.controller.toolbar.whichView(),
+				size = this.getCurrentSize();
+			if ( size > 1 ) {
+				this.setSize( size - 1 );
+			}
+		},
+		
+		setSize: function( size ) {
+			this.setColClass( size, viewSize );
+			this.model.set( 'size_' + viewSize, size );
+			this.hasChanged();
+		},
+		setOffset: function( offset ) {
+			this.setOffsetClass( offset, viewSize );
+			this.model.set( 'offset_' + viewSize, offset );
+			this.hasChanged();
+		},
+		
 		collectionView: function(){ return Widget },
 	}, CollectionView );
 
