@@ -25,9 +25,9 @@ WP Gridbuilder ToDo:
 		- [x] Locked Cell: prevent setting width + offset
 		- [x] Disable add-... btns depending on lock state
 		- [x] Default pointer on locked sort-handles
-		- [ ] User setting: Apply locks for me
+		- [x] User setting: Apply locks for me
+		- [x] apply locks to D+D size / offset
 	- [ ] Export / Import Grid + Elements
-	- [ ] Page Templates
 	- [ ] Customizer based Editor
 	- [ ] Undo (keep model state in user settings)
 	- [ ] Roles: Template editing capability

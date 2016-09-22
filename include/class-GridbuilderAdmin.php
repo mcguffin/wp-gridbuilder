@@ -52,12 +52,47 @@ class GridbuilderAdmin {
 
 	/**
 	 * Admin init
+	 *
+	 *	@action admin_init
 	 */
 	function admin_init() {
+		add_action( 'personal_options_update', array( &$this, 'user_profile_update' ) );
+		add_action( 'profile_personal_options', array( &$this, 'user_profile_edit' ) );
 //		add_action('admin_enqueue_scripts',		array($this, 'admin_enqueue_scripts'));
 
 	}
-
+	/**
+	 *	Update User Profile
+	 *
+	 *	@action personal_options_update
+	 */
+	function user_profile_update( $user_id ) {
+		set_user_setting( 'gridbuilder_features_locks', isset( $_POST['gridbuilder_features_locks'] ) );
+	}
+	
+	function user_profile_edit( $profileuser ) {
+		?><table class="form-table">
+			<tbody>
+				<tr class="gridbuilder-user-features-locks">
+					<th scope="row"><?php 
+						_e( 'Gridbuilder Locks', 'wp-gridbuilder' );
+					?></th>
+					<td>
+						<fieldset>
+							<legend class="screen-reader-text"><span><?php _e( 'Gridbuilder Locks', 'wp-gridbuilder' ) ?></span></legend>
+							<label for="gridbuilder-features-locks">
+							<input name="gridbuilder_features_locks" type="checkbox" id="gridbuilder-features-locks" value="1" <?php checked( get_user_setting( 'gridbuilder_features_locks', false ) ) ?>>
+								<?php _e( 'Enable Element locking', 'wp-gridbuilder' ) ?>
+							</label>
+							<p class="description"><?php 
+								_e( 'If checked you can lock certain elements and properties of a page layout.', 'wp-gridbuilder' );
+							?></p>
+						</fieldset>
+					</td>
+				</tr>
+			</tbody>
+		</table><?php
+	}
 	/**
 	 *	Ajax: Get Widget form
 	 *
@@ -373,7 +408,11 @@ class GridbuilderAdmin {
 										=> apply_filters( 'gridbuilder_default_widget_content_property', 'description'),
 					'features'			=> array(
 						'templates'	=> current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ),
+						/*
 						'locks'		=> current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ),
+						/*/
+						'locks'		=> get_user_setting( 'gridbuilder_features_locks', false ),
+						//*/
 					),
 				),
 			) );

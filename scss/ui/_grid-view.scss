@@ -289,3 +289,13 @@ body {
 		opacity:0.4;
 	}
 }
+
+
+
+@each $size in xs sm md lg {
+	[data-view-size="#{$size}"] .col-#{$size}-lock>.resize-handle,
+	[data-view-size="#{$size}"] .col-#{$size}-offset-lock>.offset-handle {
+		display:none;
+	}
+}
+

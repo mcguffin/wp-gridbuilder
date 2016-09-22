@@ -25,8 +25,10 @@
 	_.templateSettings = {
 		interpolate: /\{\{(.+?)\}\}/g
 	};
-	options.screensizes.size_class_template = _.template( 'col-{{screensize}}-{{size}}' );
-	options.screensizes.offset_class_template = _.template( 'col-{{screensize}}-offset-{{size}}' );
+	options.screensizes.size_lock_template		= _.template( 'col-{{screensize}}-lock' );
+	options.screensizes.offset_lock_template	= _.template( 'col-{{screensize}}-offset-lock' );
+	options.screensizes.size_class_template		= _.template( 'col-{{screensize}}-{{size}}' );
+	options.screensizes.offset_class_template	= _.template( 'col-{{screensize}}-offset-{{size}}' );
 
 
 
@@ -341,12 +343,15 @@
 				this.$('.resize-handle, .offset-handle')
 					.on( 'mousedown', function( e ) {
 						// add move listener
-						dragStartX = e.screenX;
-						startOffset = self.getCurrentOffset();
-						$dragged = $(this);
-						$(document).on( 'mousemove', mousemove );
-						$(document).on( 'mouseup', mouseup );
-
+						var viewSize	= self.controller.toolbar.whichView(),
+							propname	= ( $(this).is('.offset-handle') ? 'offset_' : 'size_' ) + viewSize;
+						if ( features.lock || ! self.model.get( propname+':locked' ) ) {
+							dragStartX = e.screenX;
+							startOffset = self.getCurrentOffset();
+							$dragged = $(this);
+							$(document).on( 'mousemove', mousemove );
+							$(document).on( 'mouseup', mouseup );
+						}
 						e.preventDefault();
 					} );
 
@@ -425,7 +430,9 @@
 		},
 		setOffsetClass: function( offset, viewSize ) {
 			var className = options.screensizes.offset_class_template({ screensize: viewSize, size: offset });
-			this.$el.removeClass( this.getColClassnames( viewSize, options.screensizes.offset_class_template ).join(' ') ).addClass( className );
+			this.$el
+				.removeClass( this.getColClassnames( viewSize, options.screensizes.offset_class_template ).join(' ') )
+				.addClass( className );
     		return this;
 		},
 		getColClassnames: function( viewsize, class_template ) {
@@ -437,6 +444,9 @@
 				cls.push( class_template({ screensize:viewsize,size:i }) );
 			}
 			return cls;
+		},
+		getLockClassnames: function( viewsize, class_template ) {
+			return '';
 		},
 
 		incrementOffset: function() {
@@ -480,6 +490,33 @@
 			this.hasChanged();
 		},
 		
+		updateDisplay: function() {
+			CollectionView.prototype.updateDisplay.apply( this, arguments );
+			this.updateColLockClasses();
+		},
+		updateColLockClasses: function() {
+			var self		= this,
+				add_classes	= [],
+				rm_classes	= [];
+			;
+
+			_.each( options.screensizes.sizes, function( siteOptions, size ) {
+				_.each( {	
+					'size' : options.screensizes.size_lock_template, 
+					'offset' : options.screensizes.offset_lock_template 
+				}, function( tpl, prop ) {
+
+					var cls = tpl( { screensize : size } );
+			console.log(cls);
+					if ( self.model.get( prop + '_' + size + ':locked' ) ) {
+						add_classes.push( cls );
+					} else {
+						rm_classes.push( cls );
+					}
+				});
+			});
+			this.$el.removeClass( rm_classes.join(' ') ).addClass( add_classes.join(' ') );
+		},
 		collectionView: function(){ return Widget },
 	}, CollectionView );
 

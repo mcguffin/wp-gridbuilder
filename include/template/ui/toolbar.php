@@ -57,7 +57,7 @@ if ( ! defined('ABSPATH') )
 				<button disabled="disabled" class="item-action btn small edit button-primary"><?php _e('Edit','wp-gridbuilder') ?></button>
 				<button disabled="disabled" class="item-action btn small clone button-secondary"><?php _e('Clone','wp-gridbuilder') ?></button>
 				<button disabled="disabled" class="item-action btn small delete red button-secondary"><?php _e('Delete','wp-gridbuilder') ?></button>
-				<?php if ( current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) { ?>
+				<?php if ( get_user_setting( 'gridbuilder_features_locks', false ) ) { ?>
 					<input disabled="disabled" class="item-action lock" type="checkbox" id="element-lock" />
 					<label for="element-lock" class="btn small lock button-secondary">
 						<span class="dashicons dashicons-unlock"></span>
