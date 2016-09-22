@@ -174,13 +174,13 @@
 
 			return this;
 		},
-		clickSelect: function(e) {
-			if ( this.$el.children().get().indexOf(e.target) !== -1 ) {
-				this.closest( Grid ).setSelected( this );
-			}
-			e.stopPropagation();
-			e.preventDefault();
-		},
+// 		clickSelect: function(e) {
+// 			if ( this.$el.children().get().indexOf(e.target) !== -1 ) {
+// 				this.closest( Grid ).setSelected( this );
+// 			}
+// 			e.stopPropagation();
+// 			e.preventDefault();
+// 		},
 		reFocus: function( ){
 			this.$el.focus();
 		},
@@ -629,7 +629,7 @@
 
 				var options = $.extend({
 						group: group,
-						handle: ".sort-handle",
+						handle: '.sort-handle',
 					}, sortoptions ),
 					$sortable;
 
