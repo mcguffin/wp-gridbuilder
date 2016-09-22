@@ -1,0 +1,8 @@
+@import '../mcguffin/mcguffin';
+
+@import 'ui/ui';
+
+// 
+/*
+sass --watch scss/admin/edit.scss:css/admin/edit.css scss/admin/tools.scss:css/admin/tools.css scss/frontend/frontend.scss:css/frontend.css scss/frontend/frontend-bootstrap.scss:css/frontend-bootstrap.css -r ./scss/base64-encode.rb --style compressed --precision 8
+*/

@@ -281,10 +281,14 @@ class GridbuilderTools {
 	 *	@action	load-{$page_hook}
 	 */
 	function enqueue_admin_page_assets() {
-		wp_enqueue_style( 'gridbuilder-admin-page' , plugins_url( '/css/gridbuilder-tools-page.css' , dirname(__FILE__) ) );
+		wp_enqueue_style( 'gridbuilder-tools-page' , plugins_url( '/css/admin/tools.css' , dirname(__FILE__) ) );
 
-		wp_enqueue_script( 'gridbuilder-admin-page' , plugins_url( 'js/gridbuilder-tools-page.js' , dirname(__FILE__) ) );
-		wp_localize_script('gridbuilder-admin-page' , 'gridbuilder_admin_page' , array( ) );
+		if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) {
+			wp_enqueue_script( 'gridbuilder-tools-page' , plugins_url( 'js/admin/tools.js' , dirname(__FILE__) ) );
+		} else {
+			wp_enqueue_script( 'gridbuilder-tools-page' , plugins_url( 'js/admin/tools.min.js' , dirname(__FILE__) ) );
+		}
+//		wp_localize_script('gridbuilder-tools-page' , 'gridbuilder_tools_page' , array( ) );
 	}
 
 	/**

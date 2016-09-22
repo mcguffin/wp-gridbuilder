@@ -1,6 +1,8 @@
 $color-wp-blue: rgb(0,133,186);
 
 
+@import 'bootstrap';
+
 @import 'wp-editor';
 
 @import 'toolbar';
@@ -10,3 +12,4 @@ $color-wp-blue: rgb(0,133,186);
 @import 'grid-dialog';
 
 @import 'mce-fix';
+

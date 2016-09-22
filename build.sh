@@ -1,71 +1,86 @@
 #!/bin/bash
 
-export CLOSURE_COMPILER="/usr/local/compiler-latest/compiler.jar"
+export CLOSURE_COMPILER="closure-compiler"
 
-combined=./js/gridbuilder.min.js
+combined=./js/admin/edit.min.js
 tmp_min=./js/tmp.js
 
 rm $combined
 touch $combined
 
-# minify Sortable
-java -jar \
+#
+#	js/admin/tools.js
+#
+#java -jar \
 	$CLOSURE_COMPILER \
+	--js ./js/admin/tools.js \
+	--js_output_file ./js/admin/tools.min.js
+
+
+
+
+# js/admin/edit/grid-ui.js
+# js/admin/edit/grid-dialog-views.js
+# js/admin/edit/grid-element.js
+# js/admin/edit.js
+
+
+# minify Sortable
+$CLOSURE_COMPILER \
 	--js ./js/Sortable/Sortable.js \
 	--js_output_file $tmp_min
 
 cat $tmp_min >> $combined
 
 # minify Sortable jquery
-java -jar \
-	$CLOSURE_COMPILER \
+$CLOSURE_COMPILER \
 	--js ./js/Sortable/jquery.binding.js \
 	--js_output_file $tmp_min
 
 cat $tmp_min >> $combined
 
 # minify grid-base
-java -jar \
-	$CLOSURE_COMPILER \
-	--js ./js/grid-base.js \
+$CLOSURE_COMPILER \
+	--js ./js/admin/edit/grid-base.js \
 	--js_output_file $tmp_min
 
 cat $tmp_min >> $combined
 
 # minify grid-base
-java -jar \
-	$CLOSURE_COMPILER \
-	--js ./js/grid-model.js \
+$CLOSURE_COMPILER \
+	--js ./js/admin/edit/grid-model.js \
+	--js_output_file $tmp_min
+
+cat $tmp_min >> $combined
+
+# minify grid-ui
+$CLOSURE_COMPILER \
+	--js ./js/admin/edit/grid-ui.js \
+	--js_output_file $tmp_min
+
+cat $tmp_min >> $combined
+
+# minify grid-dialog-views
+$CLOSURE_COMPILER \
+	--js ./js/admin/edit/grid-dialog-views.js \
+	--js_output_file $tmp_min
+
+cat $tmp_min >> $combined
+
+# minify grid-element
+$CLOSURE_COMPILER \
+	--js ./js/admin/edit/grid-element.js \
 	--js_output_file $tmp_min
 
 cat $tmp_min >> $combined
 
 # minify grid-base
-java -jar \
+#java -jar \
 	$CLOSURE_COMPILER \
-	--js ./js/grid-dialog-views.js \
+	--js ./js/admin/edit.js \
 	--js_output_file $tmp_min
 
 cat $tmp_min >> $combined
 
-# minify grid-base
-java -jar \
-	$CLOSURE_COMPILER \
-	--js ./js/grid-views.js \
-	--js_output_file $tmp_min
-
-cat $tmp_min >> $combined
-
-# minify grid-base
-java -jar \
-	$CLOSURE_COMPILER \
-	--js ./js/gridbuilder-admin.js \
-	--js_output_file $tmp_min
-
-cat $tmp_min >> $combined
-
-
-
-# combine
 
 rm $tmp_min

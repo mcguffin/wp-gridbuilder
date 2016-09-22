@@ -1,8 +1,11 @@
 // bootstrap
+/*
 @import "bootstrap/bootstrap/variables";
 @import "bootstrap/bootstrap/mixins";
 @import "bootstrap/bootstrap/grid";
-
+/*/
+@import "../bootstrap/bootstrap";
+//*/
 // frontend
-@import "frontend/frontend";
+@import "frontend";
 

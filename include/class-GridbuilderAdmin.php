@@ -291,7 +291,7 @@ class GridbuilderAdmin {
 		if ( $this->is_enabled_for_post_type() ) {
 			$version = '2016-04-13';
 
-			wp_register_style( 'gridbuilder-admin' , plugins_url( '/css/gridbuilder-admin.css' , dirname(__FILE__) ), array('wp-color-picker', ), $version);
+			wp_register_style( 'gridbuilder-admin' , plugins_url( '/css/admin/edit.css' , dirname(__FILE__) ), array('wp-color-picker', ), $version);
 
 			if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) {
 
@@ -308,40 +308,40 @@ class GridbuilderAdmin {
 				$version );
 
 				wp_register_script( $script_id, 
-					plugins_url( 'js/grid-base.js' , dirname(__FILE__) ), 
+					plugins_url( 'js/admin/edit/grid-base.js' , dirname(__FILE__) ), 
 					array( 'wp-backbone' ), 
 				$version );
 
 				wp_register_script( 'gridbuilder-model', 
-					plugins_url( 'js/grid-model.js' , dirname(__FILE__) ), 
+					plugins_url( 'js/admin/edit/grid-model.js' , dirname(__FILE__) ), 
 					array( $script_id ), 
 				$version );
 
 
 				wp_register_script( 'gridbuilder-ui', 
-					plugins_url( 'js/grid-ui.js' , dirname(__FILE__) ), 
+					plugins_url( 'js/admin/edit/grid-ui.js' , dirname(__FILE__) ), 
 					array( 'gridbuilder-model','media-views'), 
 				$version );
 
 				wp_register_script( 'gridbuilder-dialog-views', 
-					plugins_url( 'js/grid-dialog-views.js' , dirname(__FILE__) ), 
+					plugins_url( 'js/admin/edit/grid-dialog-views.js' , dirname(__FILE__) ), 
 					array( 'wp-color-picker', 'gridbuilder-model','gridbuilder-ui'), 
 				$version );
 
 				wp_register_script( 'gridbuilder-element', 
-					plugins_url( 'js/grid-element.js' , dirname(__FILE__) ), 
+					plugins_url( 'js/admin/edit/grid-element.js' , dirname(__FILE__) ), 
 					array( 'gridbuilder-model','gridbuilder-dialog-views','jquery-sortable'), 
 				$version );
 
 				wp_register_script( 'gridbuilder-admin', 
-					plugins_url( 'js/gridbuilder-admin.js' , dirname(__FILE__) ), 
+					plugins_url( 'js/admin/edit.js' , dirname(__FILE__) ), 
 					array( 'gridbuilder-element' ), 
 				$version );
 
 			} else {
 				$script_id = 'gridbuilder-admin';
 
-				wp_register_script( $script_id, plugins_url( 'js/gridbuilder.min.js' , dirname(__FILE__) ), array('jquery', 'wp-backbone', 'wp-color-picker', 'media-views' ), $version );
+				wp_register_script( $script_id, plugins_url( 'js/admin/edit.min.js' , dirname(__FILE__) ), array('jquery', 'wp-backbone', 'wp-color-picker', 'media-views' ), $version );
 			}
 
 			wp_localize_script ( $script_id, 'gridbuilder' , array(
