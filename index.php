@@ -67,8 +67,10 @@ class Gridbuilder {
 	
 	function wp_enqueue_style() {
 		if ( get_option( 'gridbuilder_frontend_enqueue_bootstrap' ) ) {
-			wp_enqueue_style( 'gridbuilder-frontend', plugins_url( 'css/gridbuilder-frontend.css', __FILE__) );
+			wp_enqueue_style( 'gridbuilder-frontend', plugins_url( 'css/frontend-bootstrap.css', __FILE__) );
 			wp_enqueue_script( 'bootstrap', plugins_url( 'js/bootstrap/bootstrap.min.js', __FILE__), array( 'jquery' ) );
+		} else {
+			wp_enqueue_style( 'gridbuilder-frontend', plugins_url( 'css/frontend.css', __FILE__) );
 		}
 	}
 	

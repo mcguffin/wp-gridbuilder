@@ -2,7 +2,7 @@ WP Gridbuilder ToDo:
 ====================
  - [x] Plugin Settings page
  - [x] Bring Back Templates
- - [ ] Enqueue styles in frontend if option is on
+ - [x] Enqueue styles in frontend if option is on
  - [ ] Provide CSS / SCSS Framework for theme development (via @include)
  - [ ] Releasing
 	- [x] JS Compression
@@ -11,22 +11,6 @@ WP Gridbuilder ToDo:
 	- [ ] Plugin API Docs
 	- [ ] l10n
  - [ ] Future
-	- [x] Lock elements and properties --> allow Lock on specific roles
-		- [x] Lock properties
-		- [x] Lock elements
-			A locked element can not be editied, cloned or deleted
-		- [x] Model: each model & property has a lock property. like: 
-				if ( ! model.get( 'locked') ) openEditorModalFor( model )
-				if ( ! model.get( prop + ':locked') ) addEditorFor( prop, model )
-		- [x] UI
-			- [x] Lock for each Property
-			- [x] Add element Lock in toolbar
-		- [x] Capabilities
-		- [x] Locked Cell: prevent setting width + offset
-		- [x] Disable add-... btns depending on lock state
-		- [x] Default pointer on locked sort-handles
-		- [x] User setting: Apply locks for me
-		- [x] apply locks to D+D size / offset
 	- [ ] Export / Import Grid + Elements
 	- [ ] Customizer based Editor
 	- [ ] Undo (keep model state in user settings)
