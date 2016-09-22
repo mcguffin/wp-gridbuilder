@@ -387,8 +387,9 @@
 				}
 			},
 			'keyup *': function( e ) {
-				var can_edit, 
-					sel = this.getSelected();
+				var can_edit, prop,
+					viewSize	= this.toolbar.whichView(),
+					sel			= this.getSelected();
 
 				if ( ! sel ) {
 					return;
@@ -412,8 +413,10 @@
 					case 39: // arrow-right
 					case 38: // arrow-up
 					case 40: // arrow-down
-						can_edit = features.locks || ! sel.model.get( 'locked' );
-						if ( sel.is( grid.view.element.Cell ) ) {
+						prop		= e.shiftKey ? 'size' : 'offset';
+						can_edit	= features.locks || ( ! sel.model.get( 'locked' ) && ! sel.model.get( prop + '_' + viewSize + ':locked' ) );
+
+						if ( can_edit && sel.is( grid.view.element.Cell ) ) {
 							if ( e.keyCode == 37 ) { // left
 								e.shiftKey ? sel.decrementSize() : sel.decrementOffset();
 							} else if ( e.keyCode == 39 ) { // right

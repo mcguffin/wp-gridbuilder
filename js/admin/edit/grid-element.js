@@ -399,16 +399,20 @@
 		},
 		getCurrentSize: function() {
 			var viewSize = this.controller.toolbar.whichView(),
-				self = this, did = false;
+				self = this, did = false, size = false;
 
-			size_key = _.find( sizekeys, function(prop,size) {
-				if ( size == viewSize ) {
+			$.each( sizekeys, function( sizeKey, prop ) {
+				var _size = self.model.get( prop );
+				if ( ! did && !!_size ) {
+					size = parseInt( _size );
+				}
+				if ( sizeKey == viewSize ) {
 					did = true;
 				}
-				return did && !! self.model.get( prop )
-			});
-			return self.model.get( size_key ) || 12;
-		
+			} );
+
+			console.log(size,did);
+			return size || 12 ;
 		},
 		setColClass: function( size, viewSize ) {
 			var className = options.screensizes.size_class_template({ screensize: viewSize, size: size });
@@ -418,15 +422,18 @@
 
 		getCurrentOffset: function() {
 			var viewSize = this.controller.toolbar.whichView(),
-				self = this, did = false;
+				self = this, did = false, offset = false;
 
-			offset_key = _.find( offsetkeys, function(prop,size) {
-				if ( size == viewSize ) {
+			offset_key = _.find( offsetkeys, function(prop,sizeKey) {
+				var _offset = self.model.get( prop );
+				if ( ! did && !! _offset ) {
+					offset = parseInt( _offset );
+				}
+				if ( sizeKey == viewSize ) {
 					did = true;
 				}
-				return did && !! self.model.get( prop )
 			});
-			return self.model.get( offset_key ) || 0;
+			return offset || 0;
 		},
 		setOffsetClass: function( offset, viewSize ) {
 			var className = options.screensizes.offset_class_template({ screensize: viewSize, size: offset });
@@ -453,38 +460,39 @@
 			var viewSize = this.controller.toolbar.whichView(),
 				offset = this.getCurrentOffset();
 			if ( offset < 11 ) {
-				console.log(offset,offset+1);
-				this.setOffset( offset + 1 );
+				this.setOffset( offset + 1, viewSize );
 			}
 		},
 		decrementOffset: function() {
 			var viewSize = this.controller.toolbar.whichView(),
 				offset = this.getCurrentOffset();
 			if ( offset > 0 ) {
-				this.setOffset( offset - 1 );
+				this.setOffset( offset - 1, viewSize );
 			}
 		},
+
 		incrementSize: function() {
 			var viewSize = this.controller.toolbar.whichView(),
 				size = this.getCurrentSize();
 			if ( size < 12 ) {
-				this.setSize( size + 1 );
+				this.setSize( size + 1, viewSize );
 			}
 		},
 		decrementSize: function() {
 			var viewSize = this.controller.toolbar.whichView(),
 				size = this.getCurrentSize();
+			console.log(size);
 			if ( size > 1 ) {
-				this.setSize( size - 1 );
+				this.setSize( size - 1, viewSize );
 			}
 		},
 		
-		setSize: function( size ) {
+		setSize: function( size, viewSize ) {
 			this.setColClass( size, viewSize );
 			this.model.set( 'size_' + viewSize, size );
 			this.hasChanged();
 		},
-		setOffset: function( offset ) {
+		setOffset: function( offset, viewSize ) {
 			this.setOffsetClass( offset, viewSize );
 			this.model.set( 'offset_' + viewSize, offset );
 			this.hasChanged();
@@ -507,7 +515,6 @@
 				}, function( tpl, prop ) {
 
 					var cls = tpl( { screensize : size } );
-			console.log(cls);
 					if ( self.model.get( prop + '_' + size + ':locked' ) ) {
 						add_classes.push( cls );
 					} else {

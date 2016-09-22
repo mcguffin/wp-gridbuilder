@@ -20,15 +20,9 @@ WP Gridbuilder ToDo:
 		- [x] Use <img>, srcset, sizes where possible (not fixed images!)
 	- [ ] Widgets
 		- [ ] Support RTE Widgets
-		- [ ] Make compatible with ACF Widgets 
+		- [-] Make compatible with ACF Widgets 
 		- [x] Widget: editable col-xx-n classes
 		- [ ] Maybe: Widget Base Class (with RTE)
-	- [x] Keyboard shortcuts: arrows, del, CMD+D
-		- [x] TAB: select next (tabindex)
-		- [x] RETURN: edit
-		- [x] BACKSPACE: Delete
-		- [ ] Cell: Arrow left + right: offset
-		- [ ] Cell: SHIFT + Arrow left + right: size
 	- [x] dblclick = edit
  - [x] Bugs:
 	- [x] FF: Grid guides not visible
