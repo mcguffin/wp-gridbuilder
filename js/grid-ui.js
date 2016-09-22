@@ -487,9 +487,9 @@
 		render: function() {
 			wp.media.View.prototype.render.apply( this, arguments );
 			this.toolbar.render();
-			this.grid.render();
 			this.$el.append( this.toolbar.$el );
 			this.$el.append( this.grid.$el );
+			this.grid.render();
 		},
 		setActiveEditor: function(  ) {
 			grid.setActiveEditor( this );
