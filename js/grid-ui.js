@@ -1,18 +1,10 @@
-(function($,exports){
+(function( $, grid ) {
 
 	var Prompt, Dialog, Modal, Toolbar,
 
 		l10n		= gridbuilder.l10n,
 		options		= gridbuilder.options,
-		features	= gridbuilder.options.features,
-		grid		= exports.grid,
-		
-		Grid		= exports.grid.view.element.Grid,
-		Container	= exports.grid.view.element.Container,
-		Row			= exports.grid.view.element.Row,
-		Cell		= exports.grid.view.element.Cell,
-		Widget		= exports.grid.view.element.Widget
-		;
+		features	= gridbuilder.options.features;
 
 	Prompt = grid.view.ui.Prompt = wp.media.View.extend({
 		tagName:    'div',
@@ -361,7 +353,7 @@
 			var current = this.getSelected(),
 				visiValue;
 
-			if ( !!current && ! current.is( Grid ) ) {
+			if ( !!current && ! current.is( grid.view.element.Grid ) ) {
 	 			this.$('.item-action.lock').prop( 'checked', !! current.model.get( 'locked' ) );
 	 		}
 		},
@@ -629,9 +621,9 @@
 				current = current || this.getSelected(),
 				prev = current.$el.prev().data('view');
 
-			if ( _.isUndefined( prev ) && ! current.parent().is( Grid ) ) {
+			if ( _.isUndefined( prev ) && ! current.parent().is( grid.view.element.Grid ) ) {
 				prev = current.parent();
-			} else if (! _.isUndefined( prev ) && ! prev.is( Widget ) ) {
+			} else if (! _.isUndefined( prev ) && ! prev.is( grid.view.element.Widget ) ) {
 				prev = prev.$('.widget').last().data('view')
 			}
 			if ( ! features.locks && prev && prev.model.get( 'locked' ) ) {
@@ -650,7 +642,7 @@
 			}
 
 			if ( _.isUndefined( next ) ) {
-				while ( _.isUndefined( next ) && ! current.is( Grid ) ) {
+				while ( _.isUndefined( next ) && ! current.is( grid.view.element.Grid ) ) {
 					current = current.parent();
 					next = current.$el.next().data('view');
 				}
@@ -694,8 +686,8 @@
 				dialog, title = [], currentTitle = current, titleSegment;
 //			title = [];
 
-			while ( !! currentTitle && ! currentTitle.is( Grid ) ) {
-				titleSegment = currentTitle.is( Widget ) ? options.widgets[ currentTitle.model.get('widget_class') ].name : l10n[ currentTitle.getClassName() ];
+			while ( !! currentTitle && ! currentTitle.is( grid.view.element.Grid ) ) {
+				titleSegment = currentTitle.is( grid.view.element.Widget ) ? options.widgets[ currentTitle.model.get('widget_class') ].name : l10n[ currentTitle.getClassName() ];
 				title.unshift( titleSegment );
 				currentTitle = currentTitle.parent();
 			}
@@ -864,4 +856,4 @@
 		},
 	});
 
-})(jQuery,window)
+})( jQuery, window.grid );

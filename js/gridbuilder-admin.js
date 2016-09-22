@@ -5,7 +5,7 @@
 		toggleGridEditor;
 	
 	$(document)
-		.ready(function(){
+		.ready(function() {
 
 			var gridController, gridState = !! parseInt($('[name="_grid_enabled"]').val( )),
 				gridOn = '<input type="hidden" name="_grid_enabled" value="'+( gridState ? 1 : 0 ).toString()+'" />',

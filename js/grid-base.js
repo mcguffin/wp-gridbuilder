@@ -100,7 +100,8 @@
 
 	var options		= gridbuilder.options,
 		l10n		= gridbuilder.l10n,
-		grid = exports.grid = {};
+		grid		= exports.grid = {};
+
 
 	exports.grid.model		= {};
 	exports.grid.view		= {
