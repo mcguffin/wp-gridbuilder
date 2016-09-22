@@ -220,7 +220,8 @@
 		getValue: function() {
 			var ret = {};
 			_.each( this.$el.serializeArray(), function( val ) {
-				var name = val.name.match( /\[([a-z0-9-_]+)\]$/g )[0].replace(/[\[\]]+/g,'')
+				var name, matches = val.name.match( /\[([a-z0-9-_]+)\]$/g );
+				name = matches.length ? matches[0].replace(/[\[\]]+/g,'') : val.name;
 				ret[ name ] = val.value;
 			});
 			return ret;
@@ -312,7 +313,6 @@
 
 		initialize: function( options ) {
 			var inputs = getInputTypes();
-			console.log( options.settings );
 
 			_.extend( options, {
 				lock: features.locks
