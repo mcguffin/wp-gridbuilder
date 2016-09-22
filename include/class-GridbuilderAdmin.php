@@ -54,6 +54,8 @@ class GridbuilderAdmin {
 	 * Admin init
 	 */
 	function admin_init() {
+//		add_action('admin_enqueue_scripts',		array($this, 'admin_enqueue_scripts'));
+
 	}
 
 	/**
@@ -67,11 +69,19 @@ class GridbuilderAdmin {
 			$instance = json_decode( stripslashes( $_POST[ 'instance' ] ), true );
 			if ( isset( $wp_widget_factory->widgets[ $_POST[ 'widget_class' ] ] ) ) {
 				header( 'Content-Type: text/html' );
-				$widget = $wp_widget_factory->widgets[ $_POST[ 'widget_class'] ];
-
-				printf( '<div id="%s" class="widget">', $widget->id );
-				$widget->form( $instance );
-				echo '</div>';
+				$widget_class = $_POST[ 'widget_class'];
+				if ( class_exists( $widget_class ) && isset( $wp_widget_factory->widgets[ $widget_class ] ) ) {
+					$widget = $wp_widget_factory->widgets[ $widget_class ];
+					printf( '<div id="%s" class="widget">', $widget->id );
+					$widget->form( $instance );
+					echo '</div>';
+				} else {
+					// error due to non-existing widget
+					printf( '<div class="widget"><p class="description">%s</p></div>', 
+						sprintf( __( 'Widget “%s” is unavailable.', 'wp-gridbuilder' ), sanitize_text_field( $widget_class ) ) 
+					);
+				}
+				//*/
 			}
 		}
 		die('');
