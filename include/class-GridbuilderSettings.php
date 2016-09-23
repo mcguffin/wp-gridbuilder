@@ -66,13 +66,6 @@ class GridbuilderSettings {
 	}
 
 	/**
-	 * Enqueue options Assets
-	 */
-	function enqueue_assets() {
-
-	}
-
-	/**
 	 * Setup options page.
 	 */
 	function register_settings() {

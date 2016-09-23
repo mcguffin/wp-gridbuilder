@@ -65,6 +65,11 @@ class Gridbuilder {
 		add_filter( 'the_content', array( $this,'the_content' ) );
 	}
 	
+	/**
+	 *	Load frontend styles and scripts
+	 *
+	 *	@action wp_enqueue_scripts
+	 */
 	function wp_enqueue_style() {
 		if ( get_option( 'gridbuilder_frontend_enqueue_bootstrap' ) ) {
 			wp_enqueue_style( 'gridbuilder-frontend', plugins_url( 'css/frontend-bootstrap.css', __FILE__) );
@@ -75,6 +80,8 @@ class Gridbuilder {
 	}
 	
 	/**
+	 *	Output Grid generated HTML
+	 *
 	 *	@filter the_content
 	 */
 	public function the_content( $the_content ) {
@@ -88,6 +95,7 @@ class Gridbuilder {
 	 *	Returns Grid HTML
 	 *	
 	 *	@param array $grid_data
+	 *	@return	string	Grid HTML
 	 */
 	public function get_content( $grid_data ) {
 		global $wp_widget_factory;
@@ -237,8 +245,11 @@ class Gridbuilder {
 	}
 	
 	/**
-	 *	@private
-	 *	@param array $item any item data
+	 *	Generate Visibility classes like 'visible-sm' or 'hidden-lg'
+	 *
+	 *	@access private
+	 *	@param	array	$item	any item data
+	 *	@return	array
 	 */
 	private function mk_visibility_classes( $item ) {
 		$screensizes = gridbuilder_screen_sizes();
@@ -264,6 +275,13 @@ class Gridbuilder {
 		return $classes;
 	}
 	
+	/**
+	 *	Generate Fullscreen class
+	 *
+	 *	@access private
+	 *	@param	array	$item	any item data
+	 *	@return	array
+	 */
 	private function mk_fullscreen_classes( $item ) {
 		$classes = array();
 		if ( $item['fullscreen'] ) {
@@ -273,40 +291,51 @@ class Gridbuilder {
 	}
 	
 	/**
-	 *	@private
-	 *	@param array $cell_data
+	 *	Generate Grid- and Offset classes
+	 *
+	 *	@access private
+	 *	@param	array	$item	any item data
+	 *	@return	array
 	 */
-	private function mk_grid_classes( $cell ) {
+	private function mk_grid_classes( $item ) {
 		$screensizes = gridbuilder_screen_sizes();
 		$classes	= array();
 		$prev_size = 0;
 		$prev_offset = 0;
 		foreach ( array_keys( $screensizes['sizes'] ) as $size ) {
 			$size_prop = 'size_'.$size;
-			if ( isset( $cell[ $size_prop ] ) && is_numeric( $cell[ $size_prop ] )  && $prev_size != $cell[ $size_prop ] ) {
+			if ( isset( $item[ $size_prop ] ) && is_numeric( $item[ $size_prop ] )  && $prev_size != $item[ $size_prop ] ) {
 				$classes[] = str_replace( 
 					array( '{{screensize}}', '{{size}}' ), 
-					array( $size, $cell[ $size_prop ]), 
+					array( $size, $item[ $size_prop ]), 
 					$screensizes['size_class'] 
 				);
-				$prev_size = $cell[ $size_prop ];
+				$prev_size = $item[ $size_prop ];
 			}
 
 			$offset_prop = 'offset_'.$size;
-			if ( isset( $cell[ $offset_prop ] ) && is_numeric( $cell[ $offset_prop ] ) && $prev_offset != $cell[ $offset_prop ] ) {
+			if ( isset( $item[ $offset_prop ] ) && is_numeric( $item[ $offset_prop ] ) && $prev_offset != $item[ $offset_prop ] ) {
 				$classes[] = str_replace( 
 					array( '{{screensize}}', '{{size}}' ), 
-					array( $size, $cell[ $offset_prop ] ), 
+					array( $size, $item[ $offset_prop ] ), 
 					$screensizes['offset_class'] 
 				);
-				$prev_offset = $cell[ $offset_prop ];
+				$prev_offset = $item[ $offset_prop ];
 			}
 
 		}
 		return $classes;
 	}
 	
-	private function mk_item_attr( $item, $attr ) {
+	/**
+	 *	Make item attributes
+	 *
+	 *	@access private
+	 *	@param	array	$item	any item data
+	 *	@param	array	$attr	attributes so far
+	 *	@return assoc
+	 */
+	private function mk_item_attr( $item, $attr = array() ) {
 		if ( $item['background_image'] || $item['background_video'] || $item['background_color'] ) {
 			$classes = array();
 			$attr = wp_parse_args( $attr, array(
@@ -325,8 +354,11 @@ class Gridbuilder {
 		return $attr;
 	}
 	/**
-	 *	@private
+	 *	Return background classnames
+	 *
+	 *	@access private
 	 *	@param array $item any item data
+	 *	@return array
 	 */
 	private function mk_background_classes( $item ) {
 		$classes = array();
@@ -353,8 +385,11 @@ class Gridbuilder {
 */
 
 	/**
-	 *	@private
-	 *	@param array $item any item data
+	 *	Return background styles
+	 *
+	 *	@access private
+	 *	@param	array	$item	any item data
+	 *	@return assoc
 	 */
 	private function mk_background_styles( $item ) {
 		$styles = array();
@@ -370,8 +405,11 @@ class Gridbuilder {
 	}
 
 	/**
-	 *	@private
-	 *	@param array $item any item data
+	 *	Return background Elements HTML
+	 *
+	 *	@access private
+	 *	@param	array	$item	any item data
+	 *	@return string
 	 */
 	private function background_elements( $item ) {
 		$output = '';
@@ -411,6 +449,9 @@ color overlay
 		return $output;
 	}
 	/**
+	 *	Remove `controls` attibute from wp-video shortcode.
+	 *
+	 *	@filter wp_video_shortcode
 	 *	@return html wp video shortcode without controls
 	 */
 	public function wp_video_shortcode_rm_controls( $output, $atts, $video, $post_id, $library ) {
@@ -418,11 +459,17 @@ color overlay
 		return $output;
 	}
 	/**
+	 *	Make css compliant color value.
+	 *	
+	 *	@access private
+	 *	@param	string	$color		Hex color value
+	 *	@param	mixed	$opacity	Opacity value as float or empty string
+	 *
 	 *	@return string 'rgba(r,g,b,a)' or #rrggbb
 	 */
-	private function mk_color( $color, $opacity ) {
-		$a = floatval($opacity);
-		if ( $opacity === '' || $a == 1 ) {
+	private function mk_color( $color, $opacity = '' ) {
+		$op = floatval($opacity);
+		if ( $opacity === '' || $op == 1 ) {
 			return $color;
 		}
 		$color = intval( str_replace('#','',$color), 16 );
@@ -431,14 +478,16 @@ color overlay
 		$g = ($color >> 8) % 256;
 		$r = ($color >> 16) % 256;
 		
-		return sprintf( 'rgba(%d,%d,%d,%s)', $r, $g, $b, strval($a) );
+		return sprintf( 'rgba(%d,%d,%d,%s)', $r, $g, $b, strval($op) );
 	}
 
 	/**
 	 *	Make HTML attributes
 	 *
-	 *	@private
-	 *	@param assoc $attr
+	 *	@access private
+	 *	@param	assoc	$attr
+	 *
+	 *	@return	string
 	 */
 	private function mk_attr( $attr ) {
 		$output = '';
@@ -464,10 +513,16 @@ color overlay
 	}
 
 	/**
-	 *	Make HTML attributes
+	 *	Reduce assoc to string.
+	 *	Use for query strings, style attributes and such.
 	 *
-	 *	@private
-	 *	@param assoc $attr
+	 *	@access private
+	 *	@param	assoc	$assoc
+	 *	@param	string	$inner_glue			
+	 *	@param	string	$outer_glue			
+	 *	@param	bool	$keep_numeric_keys	How to handle numeric keys. 
+	 *
+	 *	@return string
 	 */
 	private function implode_assoc( $assoc, $inner_glue = '=', $outer_glue = '&', $keep_numeric_keys = false ) {
 		$arr = array();
@@ -484,15 +539,18 @@ color overlay
 	}
 	
 	/**
-	 * Load text domain
+	 *	Load text domain
+	 * 
+	 *  @action plugins_loaded
 	 */
 	public function load_textdomain() {
 		load_plugin_textdomain( 'wp-gridbuilder' , false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
+
 	/**
-	 * Init hook.
+	 *	Init hook.
 	 * 
-	 *  - Register assets
+	 *  @action init
 	 */
 	function init() {
 	}
@@ -513,7 +571,7 @@ color overlay
 	public static function deactivate() {
 	}
 	/**
-	 *
+	 *	Fired on plugin deinstallation
 	 */
 	public static function uninstall(){
 		delete_option( 'gridbuilder_container_templates');

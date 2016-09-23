@@ -51,16 +51,15 @@ class GridbuilderAdmin {
 
 
 	/**
-	 * Admin init
+	 *	Admin init
 	 *
 	 *	@action admin_init
 	 */
 	function admin_init() {
 		add_action( 'personal_options_update', array( &$this, 'user_profile_update' ) );
 		add_action( 'profile_personal_options', array( &$this, 'user_profile_edit' ) );
-//		add_action('admin_enqueue_scripts',		array($this, 'admin_enqueue_scripts'));
-
 	}
+
 	/**
 	 *	Update User Profile
 	 *
@@ -70,6 +69,11 @@ class GridbuilderAdmin {
 		set_user_setting( 'gridbuilder_features_locks', isset( $_POST['gridbuilder_features_locks'] ) );
 	}
 	
+	/**
+	 *	Output User Profile Editor HTML
+	 *
+	 *	@action profile_personal_options
+	 */
 	function user_profile_edit( $profileuser ) {
 		?><table class="form-table">
 			<tbody>
@@ -93,8 +97,9 @@ class GridbuilderAdmin {
 			</tbody>
 		</table><?php
 	}
+
 	/**
-	 *	Ajax: Get Widget form
+	 *	Ajax: Get Widget form.
 	 *
 	 *	@action wp_ajax_gridbuilder-get-widget
 	 */
@@ -131,7 +136,7 @@ class GridbuilderAdmin {
 	}
 
 	/**
-	 *	Ajax: Delete template
+	 *	Ajax: Delete a template
 	 */
 	function ajax_delete_template() {
 		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'template' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) {
@@ -156,7 +161,7 @@ class GridbuilderAdmin {
 	}
 
 	/**
-	 *	Ajax: Create or update template
+	 *	Ajax: Create or update a template
 	 */
 	function ajax_save_template() {
 		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'template' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) {
@@ -297,7 +302,7 @@ class GridbuilderAdmin {
 	 */
 	function register_assets() {
 		if ( $this->is_enabled_for_post_type() ) {
-			$version = '2016-04-13';
+			$version = '2016-09-23';
 
 			wp_register_style( 'gridbuilder-admin' , plugins_url( '/css/admin/edit.css' , dirname(__FILE__) ), array('wp-color-picker', ), $version);
 
@@ -428,16 +433,22 @@ class GridbuilderAdmin {
 			) );
 		}
 	}
-	
+
 	/**
+	 *	Sort an array of assocs by key `priority`
+	 *
 	 *	@private
+	 *	@return	array
 	 */
 	private function prioritySortEditor( $arr ) {
-		uasort( $arr, array($this,'prioritySort') );
+		uasort( $arr, array( $this, 'prioritySort' ) );
 		return $arr;
 	}
 	/**
+	 *	Sort an array of arrays of assocs by key `priority`
+	 *
 	 *	@private
+	 *	@return	array
 	 */
 	private function prioritySortSettings( $arr ) {
 		foreach ( array_keys($arr) as $k ) {
@@ -445,8 +456,12 @@ class GridbuilderAdmin {
 		}
 		return $arr;
 	}
+
 	/**
+	 *	Sort callback
+	 *
 	 *	@private
+	 *	return int
 	 */
 	private function prioritySort( $a, $b ) {
 		return $a['priority'] - $b['priority'];
@@ -458,7 +473,7 @@ class GridbuilderAdmin {
 	function print_media_templates() {
 		if ( $this->is_enabled_for_post_type() ) {
 			$rp = __DIR__.'/template/{,*/,*/*/,*/*/*/}*.php';
-			foreach ( glob($rp,GLOB_BRACE) as $template_file ) {	
+			foreach ( glob( $rp, GLOB_BRACE ) as $template_file ) {	
 				include $template_file;
 			}
 		}

@@ -17,7 +17,7 @@
 		allObjects	= [],
 		
 		active_editor;
-		
+
 	_.each( options.screensizes.sizes, function( siteOptions, size ) {
 		sizekeys[size]		= 'size_' + size;
 		offsetkeys[size]	= 'offset_' + size;
@@ -363,22 +363,20 @@
 							$(document).on( 'mousemove', mousemove );
 							$(document).on( 'mouseup', mouseup );
 						}
+						console.log();
 						e.preventDefault();
 					} );
 
 
 				this.$('.resize-handle')
 					.on( "drag", function( event ) {
-						var colWidth	= $(this).closest('.row').width() / 12,
+						var colWidth	= $(this).closest('.row').width() / options.screensizes.columns,
 							viewSize	= self.controller.toolbar.whichView(),
-							cols		= Math.max( 1, Math.min( 12, Math.round( ( event.pageX - self.$el.offset().left ) / colWidth ) ) ),
+							cols		= Math.max( 1, Math.min( options.screensizes.columns, Math.round( ( event.pageX - self.$el.offset().left ) / colWidth ) ) ),
 							prevCols	= self.model.get( 'size_'+viewSize );
 
 						if ( prevCols != cols ) {
 							self.setSize( cols );
-// 							self.setColClass( cols, viewSize );
-// 							self.model.set( 'size_' + viewSize, cols );
-// 							self.hasChanged();
 						}
 
 						event.stopPropagation();
@@ -386,7 +384,7 @@
 
 				this.$('.offset-handle')
 					.on('drag',function( event ) {
-						var colWidth	= $(this).closest('.row').width() / 12;
+						var colWidth	= $(this).closest('.row').width() / options.screensizes.columns;
 							viewSize	= self.controller.toolbar.whichView(),
 							diff 		= dragStartX - event.screenX;
 							offsetDiff	= Math.round( diff / colWidth ),
@@ -395,11 +393,6 @@
 
 						if ( prevOffset != offset ) {
 							self.setOffset( offset );
-// 
-// 							self.setOffsetClass( offset, viewSize );
-// 							self.model.set( 'offset_' + viewSize, offset );
-// 							self.hasChanged();
-
 						}
 
 						event.stopPropagation();
@@ -423,7 +416,7 @@
 			} );
 
 			console.log(size,did);
-			return size || 12 ;
+			return size || options.screensizes.columns ;
 		},
 		setColClass: function( size, viewSize ) {
 			var className = options.screensizes.size_class_template({ screensize: viewSize, size: size });
@@ -470,7 +463,7 @@
 		incrementOffset: function() {
 			var viewSize = this.controller.toolbar.whichView(),
 				offset = this.getCurrentOffset();
-			if ( offset < 11 ) {
+			if ( offset < (options.screensizes.columns - 1 ) ) {
 				this.setOffset( offset + 1, viewSize );
 			}
 		},
@@ -485,7 +478,7 @@
 		incrementSize: function() {
 			var viewSize = this.controller.toolbar.whichView(),
 				size = this.getCurrentSize();
-			if ( size < 12 ) {
+			if ( size < options.screensizes.columns ) {
 				this.setSize( size + 1, viewSize );
 			}
 		},
@@ -606,10 +599,13 @@
 	Container.prototype.events['click .toggle-collapse' ] = 'toggleCollapsed';
 
 	Grid = grid.view.element.Grid = CollectionView.extend({
-		template: wp.template('grid-element-grid'),
-		className:'grid-view grid-item',
-		tagName:'div',
-		events: {
+		template	: wp.template('grid-element-grid'),
+		className	: 'grid-view grid-item',
+		tagName		: 'div',
+		attributes	: {
+			'data-grid-columns': options.screensizes.columns
+		},
+		events		: {
 		},
 		initialize: function(){
 			CollectionView.prototype.initialize.apply( this, arguments );

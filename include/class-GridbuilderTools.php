@@ -24,8 +24,6 @@ class GridbuilderTools {
 	 * Private constructor
 	 */
 	private function __construct() {
-		add_action( 'admin_init' , array( &$this , 'admin_init' ) );
-
 		add_action( 'admin_menu' , array( &$this , 'add_admin_page' ) );
 	}
 
@@ -195,6 +193,8 @@ class GridbuilderTools {
 
 	/**
 	 * 	Render Import/Export page
+	 *
+	 *	@action ($page_hook)
 	 */
 	function render_management_page() {
 		$count_templates = 0;
@@ -292,11 +292,13 @@ class GridbuilderTools {
 	}
 
 	/**
-	 * Admin init
+	 *	Recursive Search and Replace in assoc
+	 *
+	 *	@param	mixed	$struct	Array or string
+	 *	@param	string	$old
+	 *	@param	string	$new
+	 *	@return	mixed	$struct with replaced strings
 	 */
-	function admin_init() {
-	}
-
 	private function _replace_deep( $struct, $old, $new ) {
 		if ( is_string( $struct ) ) {
 			$struct = str_replace( $old, $new, $struct );
