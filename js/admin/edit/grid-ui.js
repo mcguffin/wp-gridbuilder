@@ -570,7 +570,7 @@
 			var current	= this.getSelected(),
 				parent	= current.closest( grid.view.element.Row ),
 				template = arguments.length ? grid.templates.get( 'cell', arguments[0] ) : false,
-				val = template ? template.get('data') : { size_xs: 12 };
+				val = template ? template.get('data') : { size_xs: options.screensizes.columns };
 
 			this._addItem( grid.view.element.Cell, parent, val );
 

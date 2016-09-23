@@ -123,96 +123,76 @@ function _gridbuilder_background_settings() {
 
 function _gridbuilder_grid_settings( $priority = 0 ) {
 	$settings = array(
-		'size_xs'	=> array(
-			'title' => __('Cell size phone', 'wp-gridbuilder'),
-			'type' => 'number',
-			'min' => 1,
-			'max' => 12,
-			'step' => 1,
-			'priority' => $priority + 5,
-			'attr'		=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'size_sm'	=> array(
-			'title' => __('Cell size tablet portrait', 'wp-gridbuilder'),
-			'type' => 'number',
-			'min' => 1,
-			'max' => 12,
-			'step' => 1,
-			'priority' => $priority + 10,
-			'attr'		=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'size_md'	=> array(
-			'title' => __('Cell size tablet landscape', 'wp-gridbuilder'),
-			'type' => 'number',
-			'min' => 1,
-			'max' => 12,
-			'step' => 1,
-			'priority' => $priority + 15,
-			'attr'		=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'size_lg'		=> array(
-			'title' => __('Cell size desktop', 'wp-gridbuilder'),
-			'type' => 'number',
-			'min' => 1,
-			'max' => 12,
-			'step' => 1,
-			'priority' => $priority + 20,
-			'attr'		=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-
-		'offset_xs'		=> array(
-			'title' 		=> __('Cell offset phone', 'wp-gridbuilder'),
-			'type' 			=> 'number',
-			'min' 			=> 0,
-			'max' 			=> 11,
-			'step' 			=> 1,
-			'priority' 		=> $priority + 25,
-			'attr'			=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'offset_sm'		=> array(
-			'title' 		=> __('Cell offset tablet portrait', 'wp-gridbuilder'),
-			'type' 			=> 'number',
-			'min' 			=> 0,
-			'max' 			=> 11,
-			'step' 			=> 1,
-			'priority' 		=> $priority + 30,
-			'attr'			=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'offset_md'		=> array(
-			'title'			=> __('Cell offset tablet landscape', 'wp-gridbuilder'),
-			'type'			=> 'number',
-			'min'			=> 0,
-			'max'			=> 11,
-			'step'			=> 1,
-			'priority'		=> $priority + 35,
-			'attr'			=> array(
-				'class'			=> 'size-quarter',
-			),
-		),
-		'offset_lg'		=> array(
-			'title'			=> __('Cell offset desktop', 'wp-gridbuilder'),
-			'type' 			=> 'number',
-			'min' 			=> 0,
-			'max' 			=> 11,
-			'step' 			=> 1,
-			'priority' 		=> $priority + 40,
-			'attr'			=> array(
-				'class'			=> 'size-quarter',
+		'grid_settings'	=> array(
+			'type'		=> 'matrix',
+			'priority'	=> $priority,
+			'rows'		=> array(
+				0 => array(
+					0 => array(
+						'type'	=> 'label',
+						'title'	=> '',
+					),
+				),
+				1 => array(
+					0 => array(
+						'type'	=> 'label',
+						'title'	=> __( 'Visibility', 'wp-gridbuilder' ),
+					),
+				),
+				2 => array(
+					0 => array(
+						'type'	=> 'label',
+						'title'	=> __( 'Size', 'wp-gridbuilder' ),
+					),
+				),
+				3 => array(
+					0 => array(
+						'type'	=> 'label',
+						'title'	=> __( 'Offset', 'wp-gridbuilder' ),
+					),
+				),
 			),
 		),
 	);
+	$sizes = gridbuilder_screen_sizes();
+	foreach ( $sizes['sizes'] as $size => $size_settings ) {
+		// title
+		$settings['grid_settings']['rows'][ 0 ][] = array(
+			'type'	=> 'label',
+			'title'	=> $size_settings['name'],
+		);
+
+		// visibility
+		$settings['grid_settings']['rows'][ 1 ][ 'visibility_' . $size ] = array(
+			'type'		=> 'radio',
+			'title'		=> false,
+			'default'	=> '',
+			'options'	=> array(
+				''			=> __( 'Default', 'wp-gridbuilder' ),
+				'visible'	=> __( 'Visible', 'wp-gridbuilder' ),
+				'hidden'	=> __( 'Hidden', 'wp-gridbuilder' ),
+			),
+		);
+
+		// size
+		$settings['grid_settings']['rows'][ 2 ][ 'size_' . $size ] = array(
+			'type'	=> 'number',
+			'title'	=> false,
+			'min' => 1,
+			'max' => $sizes['columns'],
+			'step' => 1,
+		);
+
+		// offset
+		$settings['grid_settings']['rows'][ 3 ][ 'offset_' . $size ] = array(
+			'type'	=> 'number',
+			'title'	=> false,
+			'min' => 0,
+			'max' => $sizes['columns'] - 1,
+			'step' => 1,
+		);
+	}	
+
 	return apply_filters( 'gridbuilder_grid_settings', $settings );
 
 }

@@ -131,6 +131,10 @@
 		[type="checkbox"] {
 			left:-9999px;
 			position:relative;
+			width:1px;
+			height:1px;
+			float:left;
+			margin-top:20px;
 			&:checked + label.dashicons:before {
 //				content: "\f528"; // unlock
 				content:"\f160" !important; // lock
@@ -208,7 +212,27 @@
 		}
 	}
 }
-
+.input-matrix {
+	tr:nth-child(even) {
+		background:#f0f0f0;
+	}
+	td {
+		border-right:1px solid #ccc;
+	}
+	.input-wrap {
+		margin-bottom:0;
+		.lock {
+			[type="checkbox"] {
+				margin-top:0;
+			}
+		}
+		&.input-type-radio {
+			.radiogroup {
+				display:block;
+			}
+		}
+	}
+}
 
 
 

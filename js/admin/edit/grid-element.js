@@ -32,10 +32,6 @@
 
 
 
-	
-
-
-
 	SelectorDisplay = wp.media.View.extend({
 		tagName:    'div',
 		className:  'display-selector',
@@ -88,9 +84,6 @@
 
 	CollectionView = wp.media.View.extend({
 		events: {
-//			'click *' 	: 'clickSelect',
-			'focusin' 	: 'focusin',
-			'focusout' 	: 'focusout',
 			'dblclick'	: 'edit'
 		},
 		initialize: function( options ) {
@@ -100,14 +93,10 @@
 			this.options	= options;
 			this.controller	= options.controller;
 			this.model 		= options.model;
-//			this.controller.subviews.add( this );
 			this.templateDisplay = new TemplateDisplay({ model: this.model });
 			this.selectorDisplay = new SelectorDisplay({ model: this.model });
 
 			this.listenTo( this.model, 'change', this.updateDisplay );
-
-// 			this.listenTo( this.model.items, 'add', this.render );
-// 			this.listenTo( this.model.items, 'remove', this.render );
 
 			// check if template still exists
 			
@@ -167,43 +156,13 @@
 			this.$el.prepend( this.selectorDisplay.render().$el );
 			this.$el.prepend( this.templateDisplay.render().$el );
 
-// 			this.$el.on( 'click', function( e ) {
-// 				if ( e.target == e.currentTarget || e.target.parentNode == e.currentTarget ) {
-// 					self.closest( Grid ).setSelected( self );
-// 				}
-// 			});
 			this.updateDisplay();
 
 			return this;
 		},
-// 		clickSelect: function(e) {
-// 			if ( this.$el.children().get().indexOf(e.target) !== -1 ) {
-// 				this.closest( Grid ).setSelected( this );
-// 			}
-// 			e.stopPropagation();
-// 			e.preventDefault();
-// 		},
 		reFocus: function( ){
 			this.$el.focus();
 		},
-		
-		/*
-		focusUnselect: function(e) {
-			this.controller.setSelected( null );
-		},
-		focusSelect: function(e) {
-			if (e.target === this.el) {
-	 			this.controller.setSelected( this );
-				e.stopPropagation();
-				e.preventDefault();
-  			}
-		},
-		/*/
-		focusin: function(e) {
-		},
-		focusout: function(e) {
-		},
-		//*/
 		updateDisplay: function() {
 			this.updateVisibilityClasses();
 		},
@@ -307,6 +266,7 @@
 		initialize: function() {
 			var ret = CollectionView.prototype.initialize.apply(this,arguments);
 			this.listenTo( this.model.items, 'update', this.itemsChanged );
+			this.listenTo( this.model, 'change', this.updateDisplay );
 			return ret;
 		},
 		itemsChanged: function() {
@@ -418,8 +378,12 @@
 			return size || options.screensizes.columns ;
 		},
 		setColClass: function( size, viewSize ) {
-			var className = options.screensizes.size_class_template({ screensize: viewSize, size: size });
-			this.$el.removeClass( this.getColClassnames( viewSize ).join(' ') ).addClass( className );
+			var className;
+			this.$el.removeClass( this.getColClassnames( viewSize ).join(' ') );
+			if ( ! isNaN( parseInt(size) ) ) {
+				className = options.screensizes.size_class_template({ screensize: viewSize, size: size });
+				this.$el.addClass( className );
+			}
     		return this;
 		},
 
@@ -439,10 +403,12 @@
 			return offset || 0;
 		},
 		setOffsetClass: function( offset, viewSize ) {
-			var className = options.screensizes.offset_class_template({ screensize: viewSize, size: offset });
-			this.$el
-				.removeClass( this.getColClassnames( viewSize, options.screensizes.offset_class_template ).join(' ') )
-				.addClass( className );
+			var className;
+			this.$el.removeClass( this.getColClassnames( viewSize, options.screensizes.offset_class_template ).join(' ') );
+			if ( ! isNaN( parseInt( offset ) ) ) {
+				className = options.screensizes.offset_class_template({ screensize: viewSize, size: offset });
+				this.$el.addClass( className );
+			}
     		return this;
 		},
 		getColClassnames: function( viewsize, class_template ) {
@@ -503,6 +469,22 @@
 		updateDisplay: function() {
 			CollectionView.prototype.updateDisplay.apply( this, arguments );
 			this.updateColLockClasses();
+			this.updateSizeClasses();
+			this.updateOffsetClasses();
+		},
+		updateSizeClasses: function() {
+			var self = this;
+			_.each( options.screensizes.sizes, function( siteOptions, screenSize ) {
+				var size = self.model.get( 'size_' + screenSize );
+				self.setColClass( size, screenSize );
+			});
+		},
+		updateOffsetClasses: function() {
+			var self = this;
+			_.each( options.screensizes.sizes, function( siteOptions, screenSize ) {
+				var offset = self.model.get( 'offset_' + screenSize );
+				self.setOffsetClass( offset, screenSize );
+			});
 		},
 		updateColLockClasses: function() {
 			var self		= this,

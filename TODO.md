@@ -7,6 +7,7 @@ WP Gridbuilder ToDo:
  - [ ] Releasing
 	- [x] JS Compression
 	- [ ] PHP docblocks
+	- [ ] Filter docs
 	- [ ] JS docblocks
 	- [ ] Plugin API Docs
 	- [ ] l10n

@@ -1,5 +1,5 @@
 (function( $, grid ){
-	var Dialog, InputWrap, InputGroup, TemplatesList, ActiveInput,
+	var Dialog, InputWrap, InputGroup, TemplatesList, ActiveInput, ParentView, ChildView,
 		Grid		= grid.view.Grid, 
 		Container	= grid.view.Container, 
 		Row			= grid.view.Row, 
@@ -8,7 +8,7 @@
 		options		= gridbuilder.options,
 		features	= gridbuilder.options.features,
 		l10n		= gridbuilder.l10n,
-		inputTypes	= ['text','textarea','color','number','media','select','checkbox','radio', 'range'],
+		inputTypes	= ['text','textarea','color','number','media','select','checkbox','radio', 'range', 'label'],
 		inputs		= {
 			inited: false,
 		};
@@ -171,6 +171,7 @@
 		},
 		dismiss: function(){}
 	};
+
 	function getInputTypes() {
 		if ( ! inputs.inited ) {
 			_.each( inputTypes, function( type ) {
@@ -182,6 +183,27 @@
 		}
 		return inputs;
 	}
+
+	ParentView = wp.media.View.extend( {
+		initialize: function( options ) {
+			wp.media.View.prototype.initialize.apply( this, arguments );
+			this.children = [];
+		},
+		render: function() {
+			var self = this;
+			wp.media.View.prototype.render.apply( this, arguments );
+			_.each(this.children,function(child,i){
+				child.render();
+				self.$el.append(child.$el);
+			});
+		}
+	} );
+	ChildView = ParentView.extend( {
+		initialize: function( options ) {
+			ParentView.prototype.initialize.apply( this, arguments );
+			!!options.parent && options.parent.children.push( this );
+		}
+	} );
 
 	inputs.widget_instance = wp.media.View.extend( {
 		tagName: 'form',
@@ -321,8 +343,6 @@
 		}
 	});
 
-
-
 	InputWrap = wp.media.View.extend({
 		template:  wp.template('grid-ui-input-wrap'),
 		className: 'input-wrap',
@@ -337,20 +357,25 @@
 			if ( options.settings.type == 'html' ) {
 				this.$el = $(options.settings.html);
 				this.input = {
-					getValue:	function(){},
-					setValue:	function(){},
-					render:		function(){},
-					dismiss:	function(){},
+					getValue	: function(){},
+					setValue	: function(){},
+					render		: function(){},
+					dismiss		: function(){}
 				};
 			} else if ( !! inputs[ options.settings.type ] ) {
 				this.input = new inputs[ options.settings.type ]( options );
 			} else {
+				this.input = false;
 				console.log( 'no such type', options.settings.type );
 			}
 		},
 		render: function() {
 			var self = this;
 			wp.media.View.prototype.render.apply(this,arguments);
+			
+			if ( ! this.input ) {
+				return this;
+			}
 
 			this.input.render();
 			this.$('.input').append( this.input.$el );
@@ -401,38 +426,75 @@
 
 			this.inputs = [];
 			_.each( options.settings.items, function( setting, name ) {
-				_.extend( setting, { 
-					name: name, 
-					lock: features.locks 
-				});
-				if ( features.locks || ! self.model.get( name+':locked' ) ) {
-					var value = self.model.get( name ),
-						input = new InputWrap({
-							controller: self.controller,
-							settings: setting,
-							value: !! value ? value : null,
-							locked: !! self.model.get( name+':locked' ),
-							model: self.model,
-						});
-					self.inputs.push( input );
+
+				if ( setting.type == 'matrix' ) {
+					self.initializeInputMatrix( setting, name );
+				} else {
+					self.initializeInputWrap( setting, name );
 				}
 			});
 		},
+		initializeInputWrap: function( setting, name ){
+			var value, input = false, self = this;
+			_.extend( setting, { 
+				name: name, 
+				lock: features.locks && setting.type != 'label'
+			});
 
+			if ( features.locks || ! self.model.get( name+':locked' ) ) {
+				value = self.model.get( name ),
+				input = new InputWrap({
+					controller	: self.controller,
+					settings	: setting,
+					value		: !! value ? value : null,
+					locked		: !! self.model.get( name+':locked' ),
+					model		: self.model
+				});
+				self.inputs.push( input );
+			}
+			return input;
+		},
+		initializeInputMatrix: function( setting, name ){
+			var self = this,
+				_matrix = new ParentView( {
+					tagName		: 'table',
+					className	: 'input-matrix form-table',
+					template	: wp.template('grid-ui-input-matrix'),
+				} );
+			_.each( setting.rows, function( rowData, i ) {
+				var _row = new ChildView( {
+					tagName	: 'tr',
+					parent	: _matrix
+				} );
+				_.each( rowData, function( cellData, name ) {
+					var input, _cell = new ChildView( {
+						tagName	: 'td',
+						parent	: _row
+					} );
+					input = self.initializeInputWrap( cellData, name );
+					input.$parent = _cell.$el;
+				} );
+			} );
+			self.inputs.push( _matrix );
+		},
 		render: function() {	
 			wp.media.View.prototype.render.apply(this,arguments);
 
 			var self = this;
 			_.each(this.inputs, function( input ){
 				input.render();
-				self.$('.inputs').append( input.$el );
+				if ( input.$parent ) {
+					input.$parent.append( input.$el );
+				} else {
+					self.$('.inputs').append( input.$el );
+				}
 			});
 
 			return this;
 		},
 		dismiss: function() {
 			_.each(this.inputs, function( input ){
-				input.dismiss();
+				!!input.dismiss && input.dismiss();
 			});
 			return this;
 		}
@@ -488,10 +550,14 @@
 		applyChanges: function() {
 			var self = this;
 			function setModelVal( input ) {	
-				var prop = input.options.settings.name;
-				self.model.set( prop, input.getValue() );
-				if ( features.locks ) {
-					self.model.set( prop+':locked', input.getLock() );
+				if ( !! input.options.settings && !!input.options.settings.name ) {
+					var prop = input.options.settings.name;
+					if ( isNaN( parseInt(prop) ) ) {
+						self.model.set( prop, input.getValue() );
+						if ( features.locks ) {
+							self.model.set( prop+':locked', input.getLock() );
+						}
+					}
 				}
 			}
 			_.each( this.editor.inputs, setModelVal );
