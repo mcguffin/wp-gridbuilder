@@ -363,7 +363,6 @@
 							$(document).on( 'mousemove', mousemove );
 							$(document).on( 'mouseup', mouseup );
 						}
-						console.log();
 						e.preventDefault();
 					} );
 
@@ -376,7 +375,7 @@
 							prevCols	= self.model.get( 'size_'+viewSize );
 
 						if ( prevCols != cols ) {
-							self.setSize( cols );
+							self.setSize( cols, viewSize );
 						}
 
 						event.stopPropagation();
@@ -392,7 +391,7 @@
 							prevOffset	= self.model.get( 'offset_' + viewSize );
 
 						if ( prevOffset != offset ) {
-							self.setOffset( offset );
+							self.setOffset( offset, viewSize );
 						}
 
 						event.stopPropagation();
@@ -492,8 +491,8 @@
 		},
 		
 		setSize: function( size, viewSize ) {
-			this.setColClass( size, viewSize );
 			this.model.set( 'size_' + viewSize, size );
+			this.setColClass( size, viewSize );
 			this.hasChanged();
 		},
 		setOffset: function( offset, viewSize ) {
@@ -501,7 +500,6 @@
 			this.model.set( 'offset_' + viewSize, offset );
 			this.hasChanged();
 		},
-		
 		updateDisplay: function() {
 			CollectionView.prototype.updateDisplay.apply( this, arguments );
 			this.updateColLockClasses();
