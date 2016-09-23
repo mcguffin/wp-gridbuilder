@@ -102,21 +102,29 @@ class GridbuilderAdmin {
 		global $wp_widget_factory;
 		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'widget_class' ], $_POST[ 'instance' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( 'edit_posts' ) ) {
 			$instance = json_decode( stripslashes( $_POST[ 'instance' ] ), true );
-			if ( isset( $wp_widget_factory->widgets[ $_POST[ 'widget_class' ] ] ) ) {
-				header( 'Content-Type: text/html' );
-				$widget_class = $_POST[ 'widget_class'];
-				if ( class_exists( $widget_class ) && isset( $wp_widget_factory->widgets[ $widget_class ] ) ) {
-					$widget = $wp_widget_factory->widgets[ $widget_class ];
-					printf( '<div id="%s" class="widget">', $widget->id );
-					$widget->form( $instance );
-					echo '</div>';
-				} else {
-					// error due to non-existing widget
-					printf( '<div class="widget"><p class="description">%s</p></div>', 
-						sprintf( __( 'Widget “%s” is unavailable.', 'wp-gridbuilder' ), sanitize_text_field( $widget_class ) ) 
+			header( 'Content-Type: text/html' );
+			$widget_class = $_POST[ 'widget_class'];
+			if ( class_exists( $widget_class ) && isset( $wp_widget_factory->widgets[ $_POST[ 'widget_class' ] ] ) ) {
+				$widget = $wp_widget_factory->widgets[ $widget_class ];
+				printf( '<div id="%s" class="widget">', $widget->id );
+				$widget->form( $instance );
+				echo '</div>';
+				//*/
+			} else {
+				// error due to non-existing widget
+				echo '<div id="gridbuilder-error-widget" class="widget">';
+				printf( '<p class="description">%s</p>', 
+					sprintf( __( 'Widget “%s” is unavailable. This is what you entered.', 'wp-gridbuilder' ), sanitize_text_field( $widget_class ) ) 
+				);
+				
+				foreach ( $instance as $key => $value ) {
+					$k = sanitize_key($key);
+					printf( "<label for=\"gridbuilder_error_widget-%s\"><strong>%s</strong></label>: <textarea class=\"widefat code\" id=\"gridbuilder_error_widget-%s\" name=\"gridbuilder_error_widget[%s]\" readonly>%s</textarea>\n\n", 
+						$k, $k, $k, $k, 
+						esc_textarea($value)
 					);
 				}
-				//*/
+				echo '</div>';
 			}
 		}
 		die('');
@@ -346,34 +354,36 @@ class GridbuilderAdmin {
 
 			wp_localize_script ( $script_id, 'gridbuilder' , array(
 				'l10n'		=> array(
-					'Edit'			=> __( 'Edit',  'wp-gridbuilder' ),
+					'Edit'				=> __( 'Edit',  'wp-gridbuilder' ),
 
-					'EditGrid'		=> __( 'Edit Grid',  'wp-gridbuilder' ),
-					'EditText'		=> __( 'Edit Text',  'wp-gridbuilder' ),
-					'Done'			=> __( 'Done',  'wp-gridbuilder' ),
-					'Delete'		=> __( 'Delete',  'wp-gridbuilder' ),
+					'EditGrid'			=> __( 'Edit Grid',  'wp-gridbuilder' ),
+					'EditText'			=> __( 'Edit Text',  'wp-gridbuilder' ),
+					'Done'				=> __( 'Done',  'wp-gridbuilder' ),
+					'Delete'			=> __( 'Delete',  'wp-gridbuilder' ),
 				
-					'Grid'			=> __( 'Grid',  'wp-gridbuilder' ),
-					'Container'		=> __( 'Container',  'wp-gridbuilder' ),
-					'Row'			=> __( 'Row',  'wp-gridbuilder' ),
-					'Cell'			=> __( 'Cell',  'wp-gridbuilder' ),
-					'Widget'		=> __( 'Widget',  'wp-gridbuilder' ),
+					'Grid'				=> __( 'Grid',  'wp-gridbuilder' ),
+					'Container'			=> __( 'Container',  'wp-gridbuilder' ),
+					'Row'				=> __( 'Row',  'wp-gridbuilder' ),
+					'Cell'				=> __( 'Cell',  'wp-gridbuilder' ),
+					'Widget'			=> __( 'Widget',  'wp-gridbuilder' ),
 
-					'EditContainer'	=> __( 'Edit Container',  'wp-gridbuilder' ),
-					'EditRow'		=> __( 'Edit Row',  'wp-gridbuilder' ),
-					'EditCell'		=> __( 'Edit Cell',  'wp-gridbuilder' ),
-					'EditWidget'	=> __( 'Edit Widget',  'wp-gridbuilder' ),
+					'EditContainer'		=> __( 'Edit Container',  'wp-gridbuilder' ),
+					'EditRow'			=> __( 'Edit Row',  'wp-gridbuilder' ),
+					'EditCell'			=> __( 'Edit Cell',  'wp-gridbuilder' ),
+					'EditWidget'		=> __( 'Edit Widget',  'wp-gridbuilder' ),
 
-					'Template'		=> __( 'Template',  'wp-gridbuilder' ),
-					'Templates'		=> __( 'Templates',  'wp-gridbuilder' ),
+					'Template'			=> __( 'Template',  'wp-gridbuilder' ),
+					'Templates'			=> __( 'Templates',  'wp-gridbuilder' ),
 					'ManageTemplates'
-									=> __( 'Manage Templates',  'wp-gridbuilder' ),
-					'TemplateName'	=> __( 'Template Name',  'wp-gridbuilder' ),
+										=> __( 'Manage Templates',  'wp-gridbuilder' ),
+					'TemplateName'		=> __( 'Template Name',  'wp-gridbuilder' ),
 					'CreateTemplateDescription'
-									=> __( 'The Template will be available at blahblah...',  'wp-gridbuilder' ),
+										=> __( 'The Template will be available at blahblah...',  'wp-gridbuilder' ),
 				
-					'WidgetTypes'	=> __( 'Widget Types',  'wp-gridbuilder' ),
-					'SelectWidget'	=> __( 'Select Widget',  'wp-gridbuilder' ),
+					'WidgetTypes'		=> __( 'Widget Types',  'wp-gridbuilder' ),
+					'SelectWidget'		=> __( 'Select Widget',  'wp-gridbuilder' ),
+					
+					'unkonwnWidget'		=> __( 'Unknown Widget:',  'wp-gridbuilder' ),
 				),
 				'options'	=> array(
 					'ajaxurl'				=> admin_url( 'admin-ajax.php' ),

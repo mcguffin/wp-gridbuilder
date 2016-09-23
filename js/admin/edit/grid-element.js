@@ -263,6 +263,9 @@
 		},
 		hasChanged: function() {
 			this.closest(Grid).hasChanged( );
+		},
+		getTitle: function() {
+			return l10n[ this.getClassName() ];
 		}
 	});
 
@@ -276,13 +279,21 @@
 
 		updateDisplay: function() {
 			CollectionView.prototype.updateDisplay.apply( this, arguments );
-			this.$('.widget-type').text( options.widgets[ this.model.get('widget_class') ].name );
+			this.$('.widget-type').text( this.getTitle() );
 
 			var title = this.model.get('instance').title;
 			this.$('.widget-title').text(title);
 			return this;
 		},
-		collectionView: function(){ return false }
+		collectionView: function() { return false },
+		getTitle: function( ) {
+			var widgetClass = this.model.get('widget_class');
+			try {
+				return options.widgets[ widgetClass ].name;
+			} catch( err ) {
+				return l10n.unkonwnWidget + ' ' + widgetClass;
+			}
+		}
 	});
 
 	Cell = grid.view.element.Cell = CollectionView.extend({
