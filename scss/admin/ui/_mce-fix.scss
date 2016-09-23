@@ -1,11 +1,18 @@
-.media-modal .mce-panel {
-	z-index:1000101 !important;
-}
-#wp-link-wrap,
-.mce-menu,
-.mce-popover,
-.mce-tooltip,
-.mce-notification,
-.mce-inline-toolbar-grp {
-	z-index:1000102 !important;
+// .media-modal .mce-panel {
+// 	z-index:1000101 !important;
+// }
+// #wp-link-wrap,
+// .mce-menu,
+// .mce-popover,
+// .mce-tooltip,
+// .mce-notification,
+// .mce-inline-toolbar-grp {
+// 	z-index:1000102 !important;
+// }
+
+
+.grid-modal-open {
+	div.mce-inline-toolbar-grp {
+		z-index:260100;
+	}
 }

@@ -19,16 +19,8 @@ WP Gridbuilder ToDo:
 		- [x] Select Align
 		- [x] Use <img>, srcset, sizes where possible (not fixed images!)
 	- [ ] Widgets
-		- [ ] Support RTE Widgets
+		- [x] Support BlackStudio TinyMce Widget
 		- [-] Make compatible with ACF Widgets 
+			Nope.
 		- [x] Widget: editable col-xx-n classes
-		- [ ] Maybe: Widget Base Class (with RTE)
-	- [x] dblclick = edit
- - [x] Bugs:
-	- [x] FF: Grid guides not visible
- 	- [x] FF: resize / shift does not work
-	- [x] Add Cell > Add widget: row cells don't get resized
-	- [x] Add Widget: row cells don't get resized
-	- [x] Clone Widget -> Move to another cell: clones still exist (Not reproducable)
-	- [x] Apply changes on prev/next
-	- [x] DBL-Click-Edit. Close: Container is selected.
+		- [ ] Maybe: Widget Toolbox

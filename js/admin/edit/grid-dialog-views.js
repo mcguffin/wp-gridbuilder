@@ -214,11 +214,27 @@
 		hasMCE: function(){
 			return this.getMCE().length > 0;			
 		},
-		getMCE: function(){
-			return this.$('[id^="wp-"][id$="-editor-container"] textarea');
+		getMCE: function( sel ) {
+			var $textareas = this.$( '.mce-tinymce + textarea, .quicktags-toolbar + textarea' ),
+				editors = [];
+			_.each( tinyMCE.editors, function( ed, i ) {
+				$textareas.each(function(i,el){
+					if ( el === ed.targetElm ) {
+						editors.push( ed );
+					}
+				})
+			} );
+			return editors;
 		},
 		getValue: function() {
-			var ret = {};
+			var self = this,
+				ret = {};
+
+			// save tinymce.
+			_.each( this.getMCE(), function(ed){
+				ed.save();
+			});
+
 			_.each( this.$el.serializeArray(), function( val ) {
 				var name, matches = val.name.match( /\[([a-z0-9-_]+)\]$/g );
 				name = matches.length ? matches[0].replace(/[\[\]]+/g,'') : val.name;
@@ -231,10 +247,10 @@
 		},
 		dismiss: function() {
 			$(document).trigger( {type:'widget-removed',target: this.$widget } ); // necessary for tinymce widget
-			var $mce = this.getMCE();
-			if ( $mce.length ) {
-				$(document).trigger( {type:'deactivate-tinymce',target: $mce } ); // necessary for tinymce widget
-			}
+			// remove tinymce.
+			_.each( this.getMCE(), function(ed){
+				tinymce.remove( ed );
+			});
 			return this;
 		}
 	} );

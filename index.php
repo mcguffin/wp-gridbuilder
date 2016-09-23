@@ -535,4 +535,8 @@ if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 	require_once plugin_dir_path(__FILE__) . 'include/class-GridbuilderAdmin.php';
 	require_once plugin_dir_path(__FILE__) . 'include/class-GridbuilderTools.php';
 	require_once plugin_dir_path(__FILE__) . 'include/class-GridbuilderSettings.php';
+	$compat = glob(plugin_dir_path(__FILE__) . 'include/compat/*.php');
+	foreach ( $compat as $compat_file ) {
+		require_once $compat_file;
+	}
 }

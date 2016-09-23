@@ -1,6 +1,8 @@
 (function( $, grid ) {
 
 	var Prompt, Dialog, Modal, Toolbar,
+		
+		mceZIndex = 160000,
 
 		l10n		= gridbuilder.l10n,
 		options		= gridbuilder.options,
@@ -61,6 +63,7 @@
 		initialize: function() {
 			var ret = wp.media.view.Modal.prototype.initialize.apply( this, arguments );
 			this.prevnext = ! _.isUndefined( this.options.prev ) && ! _.isUndefined( this.options.next );
+			this._prevMCE = {};
 			return ret;
 		},
 		render: function() {
@@ -74,15 +77,46 @@
 			return ret;
 		},
 		open: function() {
+			var self = this;
+
 			wp.media.view.Modal.prototype.open.apply( this, arguments );
 			// body.modal-open prevetns rte toolbars from rendering
 			$( 'body' ).removeClass( 'modal-open' ).addClass('grid-modal-open');
 			
+			// floatpanels (like menus)
+			this._prevMCE.FloatPanelZindex = tinyMCE.ui.FloatPanel.zIndex;
+			tinyMCE.ui.FloatPanel.zIndex += mceZIndex;
+			
+			// tooltips
+			this._prevMCE.TooltipRepaint = tinyMCE.ui.Tooltip.prototype.repaint;
+			tinyMCE.ui.Tooltip.prototype.repaint = function(){
+				self._prevMCE.TooltipRepaint.apply(this,arguments);
+				var style = this.getEl().style;
+				style.zIndex = mceZIndex + 0xFFFF + 0XFFFF;
+			}
+
+			// notifications
+			this._prevMCE.NotificationpRepaint = tinyMCE.ui.Notification.prototype.repaint;
+			tinyMCE.ui.Notification.prototype.repaint = function(){
+				self._prevMCE.NotificationpRepaint.apply(this,arguments);
+				var style = this.getEl().style;
+				style.zIndex = mceZIndex + 0xFFFF + 0XFFFF;
+			}
+
+			this._prevMCE.wpLinkRenderHtml = tinymce.ui.WPLinkPreview.prototype.renderHtml;
+			tinymce.ui.WPLinkPreview.prototype.renderHtml = function() {
+				var ret = self._prevMCE.wpLinkRenderHtml.apply(this,arguments);
+				return ret.replace('class="wp-link-preview"','class="wp-link-preview in-grid-modal"');
+			}
 		},
 		close: function( options ) {
 			wp.media.view.Modal.prototype.close.apply( this, arguments );
 			// body.modal-open prevetns rte toolbars from rendering
 			$( 'body' ).removeClass( 'grid-modal-open' );
+			!! this._prevMCE.FloatPanelZindex		&& ( tinyMCE.ui.FloatPanel.zIndex					= this._prevMCE.FloatPanelZindex );
+			!! this._prevMCE.TooltipRepaint			&& ( tinyMCE.ui.Tooltip.prototype.repaint			= this._prevMCE.TooltipRepaint );
+			!! this._prevMCE.NotificationpRepaint	&& ( tinyMCE.ui.Notification.prototype.repaint		= this._prevMCE.NotificationpRepaint );
+			!! this._prevMCE.wpLinkRenderHtml		&& ( tinymce.ui.WPLinkPreview.prototype.renderHtml	= this._prevMCE.wpLinkRenderHtml );
 		},
 		next: function(){
 			this.trigger('next');
@@ -690,7 +724,7 @@
 //			title = [];
 
 			while ( !! currentTitle && ! currentTitle.is( grid.view.element.Grid ) ) {
-				titleSegment = currentTitle.is( grid.view.element.Widget ) ? options.widgets[ currentTitle.model.get('widget_class') ].name : l10n[ currentTitle.getClassName() ];
+				titleSegment = currentTitle.getTitle(); 
 				title.unshift( titleSegment );
 				currentTitle = currentTitle.parent();
 			}

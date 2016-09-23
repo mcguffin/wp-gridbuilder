@@ -1,8 +1,8 @@
 (function( $, grid ){
 	var GridObject, GridCollection,
-		options = gridbuilder.options,
-		l10n = gridbuilder.l10n,
-		id = 0;
+		options	= gridbuilder.options,
+		l10n	= gridbuilder.l10n,
+		id		= 0;
 	
 	GridObject = grid.model.GridObject = Backbone.Model.extend({
 		parent:false,
