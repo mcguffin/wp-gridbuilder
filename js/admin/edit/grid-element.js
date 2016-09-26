@@ -266,7 +266,6 @@
 		initialize: function() {
 			var ret = CollectionView.prototype.initialize.apply(this,arguments);
 			this.listenTo( this.model.items, 'update', this.itemsChanged );
-			this.listenTo( this.model, 'change', this.updateDisplay );
 			return ret;
 		},
 		itemsChanged: function() {

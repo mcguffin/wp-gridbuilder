@@ -11,7 +11,9 @@
 		inputTypes	= ['text','textarea','color','number','media','select','checkbox','radio', 'range', 'label'],
 		inputs		= {
 			inited: false,
-		};
+		},
+
+		mceZIndex;
 
 /*
 	toolbar
@@ -212,8 +214,10 @@
 		initialize: function( ) {
 			wp.media.View.prototype.initialize.apply(this,arguments);
 			this.$el.append( '<span class="spinner" style="visibility:visible;float:none"></span>' );
-			this.$widget = null;
-			var self = this;
+			this.$widget	= null;
+
+			var self		= this;
+
 
 			$.ajax({
 				method: 'post',
@@ -222,6 +226,7 @@
 				success: function( data, status, xhr ) {
 					self.$widget = $(data);
 					self.$el.html('').append( self.$widget );
+					self.prepareMCE();
 					$(document).trigger( 'widget-added', [ self.$widget ] ); // necessary for tinymce widget
 				},
 				data: {
@@ -273,7 +278,50 @@
 			_.each( this.getMCE(), function(ed){
 				tinymce.remove( ed );
 			});
+			this.resetMCE();
 			return this;
+		},
+
+		prepareMCE: function(){
+			var self = this;
+			this._prevMCE = {};
+			
+			// set tinymce z-index higher than modal z-index
+			mceZIndex = 1000 + parseInt( window.getComputedStyle( this.$el.closest('.grid-ui-modal').get(0) ).getPropertyValue("z-index") );
+
+			// floatpanels (like menus)
+			this._prevMCE.FloatPanelZindex = tinyMCE.ui.FloatPanel.zIndex;
+			tinyMCE.ui.FloatPanel.zIndex += mceZIndex;
+
+			// tooltips
+			this._prevMCE.TooltipRepaint = tinyMCE.ui.Tooltip.prototype.repaint;
+			tinyMCE.ui.Tooltip.prototype.repaint = function(){
+				self._prevMCE.TooltipRepaint.apply(this,arguments);
+				var style = this.getEl().style;
+				style.zIndex = mceZIndex + 0xFFFF + 0XFFFF;
+			}
+
+			// notifications
+			this._prevMCE.NotificationpRepaint = tinyMCE.ui.Notification.prototype.repaint;
+			tinyMCE.ui.Notification.prototype.repaint = function(){
+				self._prevMCE.NotificationpRepaint.apply(this,arguments);
+				var style = this.getEl().style;
+				style.zIndex = mceZIndex + 0xFFFF + 0XFFFF;
+				console.log(style.zIndex);
+			}
+			
+			// wplink
+			this._prevMCE.wpLinkRenderHtml = tinymce.ui.WPLinkPreview.prototype.renderHtml;
+			tinymce.ui.WPLinkPreview.prototype.renderHtml = function() {
+				var ret = self._prevMCE.wpLinkRenderHtml.apply(this,arguments);
+				return ret.replace('class="wp-link-preview"','class="wp-link-preview in-grid-modal"');
+			}
+		},
+		resetMCE: function(){
+			!! this._prevMCE.FloatPanelZindex		&& ( tinyMCE.ui.FloatPanel.zIndex					= this._prevMCE.FloatPanelZindex );
+			!! this._prevMCE.TooltipRepaint			&& ( tinyMCE.ui.Tooltip.prototype.repaint			= this._prevMCE.TooltipRepaint );
+			!! this._prevMCE.NotificationpRepaint	&& ( tinyMCE.ui.Notification.prototype.repaint		= this._prevMCE.NotificationpRepaint );
+			!! this._prevMCE.wpLinkRenderHtml		&& ( tinymce.ui.WPLinkPreview.prototype.renderHtml	= this._prevMCE.wpLinkRenderHtml );
 		}
 	} );
 
@@ -548,14 +596,15 @@
 			return this;
 		},
 		applyChanges: function() {
-			var self = this;
+			var self 		= this,
+				updateModel	= {};
 			function setModelVal( input ) {	
 				if ( !! input.options.settings && !!input.options.settings.name ) {
 					var prop = input.options.settings.name;
 					if ( isNaN( parseInt(prop) ) ) {
-						self.model.set( prop, input.getValue() );
+						updateModel[ prop ] = input.getValue();
 						if ( features.locks ) {
-							self.model.set( prop+':locked', input.getLock() );
+							updateModel[ prop + ':locked' ] = input.getLock();
 						}
 					}
 				}
@@ -565,6 +614,7 @@
 			_.each( this.inputgroups, function( group ) {
 				_.each( group.inputs, setModelVal );
 			});
+			this.model.set( updateModel );
 			return this;
 		},
 		done: function(){

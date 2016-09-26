@@ -326,18 +326,18 @@ function gridbuilder_row_editor() {
 			'title'			=> __('Fullscreen', 'repeatmobile-admin'),
 			'description'	=> __('If checked the container will be at least one viewport high.', 'repeatmobile-admin'),
 			'type'			=> 'checkbox',
-			'priority'		=> 50,
+			'priority'		=> 0,
 		),
 	);
 	return apply_filters( 'gridbuilder_row_editor', $editor );
 }
 function gridbuilder_cell_editor() {
-	$editor = _gridbuilder_grid_settings() + array(
+	$editor = _gridbuilder_grid_settings( 10 ) + array(
 		'fullscreen'	=> array(
 			'title'			=> __('Fullscreen', 'repeatmobile-admin'),
 			'description'	=> __('If checked the container will be at least one viewport high.', 'repeatmobile-admin'),
 			'type'			=> 'checkbox',
-			'priority'		=> 50,
+			'priority'		=> 0,
 		),
 	);
 	return apply_filters( 'gridbuilder_cell_editor', $editor );

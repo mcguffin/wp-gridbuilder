@@ -22,6 +22,6 @@ WP Gridbuilder ToDo:
 	- [ ] Widgets
 		- [x] Support BlackStudio TinyMce Widget
 		- [-] Make compatible with ACF Widgets 
-			Nope.
+			Nope. Won't work.
 		- [x] Widget: editable col-xx-n classes
 		- [ ] Maybe: Widget Toolbox
