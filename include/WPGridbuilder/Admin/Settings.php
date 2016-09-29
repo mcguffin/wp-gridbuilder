@@ -1,8 +1,8 @@
 <?php
 
+namespace WPGridbuilder\Admin;
 
-if ( ! class_exists( 'GridbuilderSettings' ) ):
-class GridbuilderSettings {
+class Settings {
 	private static $_instance = null;
 	
 	/**
@@ -98,5 +98,3 @@ class GridbuilderSettings {
 
 }
 
-GridbuilderSettings::instance();
-endif;

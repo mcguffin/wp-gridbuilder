@@ -482,6 +482,7 @@
 		},
 		render: function() {
 			wp.media.View.prototype.render.apply( this, arguments );
+			console.log(this.toolbar);
 			this.toolbar.render();
 			this.$el.append( this.toolbar.$el );
 			this.$el.append( this.grid.$el );
@@ -685,7 +686,7 @@
 					next: !! next,
 					prev: !! prev,
 				} ),
-				settings	= options.settings[ current.getClassName().toLowerCase() ],
+				//settings	= options.settings[ current.getClassName().toLowerCase() ],
 				editor		= options.editors[ current.getClassName().toLowerCase() ],
 				dialog, title = [], currentTitle = current, titleSegment;
 //			title = [];
@@ -701,7 +702,7 @@
 				controller: this , 
 				model: current.model, 
 				item: current,
-				settings: settings, 
+			//	settings: settings, 
 				editor: editor 
 			} );
 

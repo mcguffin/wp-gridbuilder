@@ -15,28 +15,6 @@
 
 		mceZIndex;
 
-/*
-	toolbar
-		ID
-		class
-		color
-		opacity
-		Background image / video
-		Background sizing: cover | repeat | center
-		
-	title
-		
-	content editor
-		container
-			title
-			subtitle
-		row
-			later: cells
-		cell
-			size
-			offset
-		widget
-*/
 
 	var inputPrototype = {
 		render: function( ) {
@@ -564,10 +542,10 @@
 			this.editor = new InputGroup({
 				controller: this,
 				model: this.model,
-				settings: { title:'', items:options.editor }
+				settings: { title:'', items:options.editor.main }
 			});
 
-			_.each( options.settings, function( setting, name ){
+			_.each( options.editor.sidebar, function( setting, name ){
 				_.extend( setting, { name: name });
 
 				var inputgroup = new InputGroup({

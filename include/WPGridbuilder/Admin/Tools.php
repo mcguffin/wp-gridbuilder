@@ -1,8 +1,9 @@
 <?php
 
+namespace WPGridbuilder\Admin;
 
-if ( ! class_exists( 'GridbuilderTools' ) ):
-class GridbuilderTools {
+
+class Tools {
 	private static $_instance = null;
 	
 	private $tool_page_name = 'gridbuilder-management';
@@ -311,5 +312,3 @@ class GridbuilderTools {
 	}
 }
 
-GridbuilderTools::instance();
-endif;
