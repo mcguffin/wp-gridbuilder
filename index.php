@@ -417,7 +417,9 @@ class Gridbuilder {
 		$has_overlay = apply_filters( 'gridbuilder_force_background_overlay', $has_overlay, $item );
 		if ( $item['background_image'] && $item['background_attachment'] !== 'fixed' ) {
 			// attach image
+			$output .= apply_filters( 'gridbuilder_before_background_image', '', $item );
 			$output .= wp_get_attachment_image( $item['background_image'], 'full' );
+			$output .= apply_filters( 'gridbuilder_after_background_image', '', $item );
 		}
 /*
 image
