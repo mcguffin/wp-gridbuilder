@@ -24,6 +24,12 @@ class Settings {
 	}
 
 	/**
+	 *	Prevent Instantinating
+	 */
+	private function __clone() { }
+	private function __wakeup() { }
+
+	/**
 	 * Private constructor
 	 */
 	private function __construct() {

@@ -8,6 +8,8 @@ use WPGridbuilder\Settings\Editors as EditorSettings;
 use WPGridbuilder\Settings\Core as CoreSettings;
 use WPGridbuilder\Settings\Widgets as WidgetSettings;
 
+use WPGridbuilder\Widget;
+
 class Admin {
 	private static $_instance = null;
 	
@@ -23,6 +25,12 @@ class Admin {
 			self::$_instance = new self();
 		return self::$_instance;
 	}
+
+	/**
+	 *	Prevent Instantinating
+	 */
+	private function __clone() { }
+	private function __wakeup() { }
 
 	/**
 	 * Private constructor
@@ -53,6 +61,13 @@ class Admin {
 		add_option( 'gridbuilder_widget_templates', array() );
 
 		add_option( 'gridbuilder_post_types', array('post','page') );
+
+		Widget\Factory::instance()->make( 'the_beau_widget', 'Beautiful Widget', array(
+			'title'	=> array(
+				'title'	=> __('Title', 'wp-gridbuilder'),
+				'class'	=> 'Widget\Field\Text',
+			),
+		) );
 	}
 
 
