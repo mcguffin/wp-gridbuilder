@@ -13,6 +13,9 @@
 
 .grid-modal-open {
 	div.mce-inline-toolbar-grp {
-		z-index:260100;
+		z-index:1260100;
 	}
+}
+#wp-link-wrap {
+	z-index:1260101;
 }

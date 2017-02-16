@@ -163,7 +163,7 @@ class Gridbuilder {
 			$output .= apply_filters( 'gridbuilder_before_container', '', $container );
 			// container 
 			$container_attr = array(
-				'class'	=> $container['fluid'] ? 'container-fluid' : 'container',
+				'class'	=> array( $container['fluid'] ? 'container-fluid' : 'container' ),
 			);
 			$container_attr = apply_filters( 'gridbuilder_container_attr', $container_attr, $container );
 
@@ -350,6 +350,8 @@ class Gridbuilder {
 			if ( ! empty( $item['attr_style'] ) ) {
 				$attr['style'][] = trim( $item['attr_style'], " \t\n\r\0\x0B;" );
 			}
+		} else {
+			$attr['style'] = trim( $item['attr_style'], " \t\n\r\0\x0B;" );
 		}
 		return $attr;
 	}
@@ -398,7 +400,7 @@ class Gridbuilder {
 			$styles[ 'background-image' ] = sprintf( 'url("%s")', $img_src );
 		}
 		if ( $item[ 'background_color' ] ) {
-			$color = $this->mk_color( $item[ 'background_color' ], $item[ 'background_opacity' ] );
+			$color = $this->mk_color( $item[ 'background_color' ], 1 );
 			$styles[ 'background-color' ] = $color;
 		}
 		return $styles;
@@ -413,6 +415,7 @@ class Gridbuilder {
 	 */
 	private function background_elements( $item ) {
 		$output = '';
+		$output .= apply_filters( 'gridbuilder_before_background_elements', '', $item );
 		$has_overlay = ( $item['background_image'] || $item['background_video'] ) && $item[ 'background_color' ];
 		$has_overlay = apply_filters( 'gridbuilder_force_background_overlay', $has_overlay, $item );
 		if ( $item['background_image'] && $item['background_attachment'] !== 'fixed' ) {
@@ -448,6 +451,7 @@ color overlay
 				 $this->mk_attr( $overlay_atts )
 			);
 		}
+		$output .= apply_filters( 'gridbuilder_after_background_elements', '', $item );
 		return $output;
 	}
 	/**
