@@ -381,6 +381,7 @@ class Core {
 		$output = '';
 		$has_overlay = ( $item['background_image'] || $item['background_video'] ) && $item[ 'background_color' ];
 		$has_overlay = apply_filters( 'gridbuilder_force_background_overlay', $has_overlay, $item );
+		$output .= apply_filters( 'gridbuilder_before_background_elements', '', $item );
 		if ( $item['background_image'] && $item['background_attachment'] !== 'fixed' ) {
 			// attach image
 			$output .= wp_get_attachment_image( $item['background_image'], 'full' );
@@ -412,6 +413,7 @@ color overlay
 				 $this->mk_attr( $overlay_atts )
 			);
 		}
+		$output .= apply_filters( 'gridbuilder_after_background_elements', '', $item );
 		return $output;
 	}
 	/**
