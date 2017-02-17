@@ -37,8 +37,8 @@ Command line args were: `"WP GridBuilder" admin admin_css admin_js settings`
 
 namespace WPGridbuilder;
 
-define( 'PLUGIN_FILE', __FILE__ );
-define( 'PLUGIN_DIRECTORY', plugin_dir_path(__FILE__) );
+define( 'GRIDBUILDER_FILE', __FILE__ );
+define( 'GRIDBUILDER_DIRECTORY', plugin_dir_path(__FILE__) );
 
 require_once plugin_dir_path(__FILE__) . 'include/vendor/autoload.php';
 
