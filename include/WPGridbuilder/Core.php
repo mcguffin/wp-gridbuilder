@@ -24,9 +24,9 @@ class Core {
 		add_action( 'init' , array( &$this , 'init' ) );
 		add_action( 'wp_enqueue_scripts' , array( &$this , 'wp_enqueue_style' ) );
 
-		register_activation_hook( PLUGIN_FILE, array( __CLASS__ , 'activate' ) );
-		register_deactivation_hook( PLUGIN_FILE, array( __CLASS__ , 'deactivate' ) );
-		register_uninstall_hook( PLUGIN_FILE, array( __CLASS__ , 'uninstall' ) );
+		register_activation_hook( GRIDBUILDER_FILE, array( __CLASS__ , 'activate' ) );
+		register_deactivation_hook( GRIDBUILDER_FILE, array( __CLASS__ , 'deactivate' ) );
+		register_uninstall_hook( GRIDBUILDER_FILE, array( __CLASS__ , 'uninstall' ) );
 		
 		add_filter( 'the_content', array( $this,'the_content' ) );
 	}
@@ -38,10 +38,10 @@ class Core {
 	 */
 	function wp_enqueue_style() {
 		if ( get_option( 'gridbuilder_frontend_enqueue_bootstrap' ) ) {
-			wp_enqueue_style( 'gridbuilder-frontend', plugins_url( 'css/frontend-bootstrap.css', PLUGIN_FILE ) );
-			wp_enqueue_script( 'bootstrap', plugins_url( 'js/bootstrap/bootstrap.min.js', PLUGIN_FILE ), array( 'jquery' ) );
+			wp_enqueue_style( 'gridbuilder-frontend', plugins_url( 'css/frontend-bootstrap.css', GRIDBUILDER_FILE ) );
+			wp_enqueue_script( 'bootstrap', plugins_url( 'js/bootstrap/bootstrap.min.js', GRIDBUILDER_FILE ), array( 'jquery' ) );
 		} else {
-			wp_enqueue_style( 'gridbuilder-frontend', plugins_url( 'css/frontend.css', PLUGIN_FILE ) );
+			wp_enqueue_style( 'gridbuilder-frontend', plugins_url( 'css/frontend.css', GRIDBUILDER_FILE ) );
 		}
 	}
 	
@@ -512,7 +512,7 @@ color overlay
 	 *  @action plugins_loaded
 	 */
 	public function load_textdomain() {
-		load_plugin_textdomain( 'wp-gridbuilder' , false, PLUGIN_DIRECTORY . '/languages/' );
+		load_plugin_textdomain( 'wp-gridbuilder' , false, GRIDBUILDER_DIRECTORY . '/languages/' );
 	}
 
 	/**
