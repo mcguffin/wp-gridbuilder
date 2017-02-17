@@ -8,6 +8,8 @@ use WPGridbuilder\Settings\Editors as EditorSettings;
 use WPGridbuilder\Settings\Core as CoreSettings;
 use WPGridbuilder\Settings\Widgets as WidgetSettings;
 
+
+
 class Admin {
 	private static $_instance = null;
 	
@@ -111,11 +113,13 @@ class Admin {
 	 */
 	function ajax_get_widget() {
 		global $wp_widget_factory;
+
 		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'widget_class' ], $_POST[ 'instance' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( 'edit_posts' ) ) {
 			$instance = json_decode( stripslashes( $_POST[ 'instance' ] ), true );
 			header( 'Content-Type: text/html' );
-			$widget_class = $_POST[ 'widget_class'];
-			if ( class_exists( $widget_class ) && isset( $wp_widget_factory->widgets[ $_POST[ 'widget_class' ] ] ) ) {
+			$widget_class = str_replace( '\\\\', '\\', rawurldecode( $_POST[ 'widget_class'] ) );
+
+			if ( class_exists( $widget_class ) && isset( $wp_widget_factory->widgets[ $widget_class ] ) ) {
 				$widget = $wp_widget_factory->widgets[ $widget_class ];
 				printf( '<div id="%s" class="widget">', $widget->id );
 				$widget->form( $instance );
@@ -317,43 +321,43 @@ class Admin {
 				$script_id = 'gridbuilder-base';
 
 				wp_register_script( 'sortable' , 
-					plugins_url( 'js/Sortable/Sortable.js' , GRIDBUILDER_FILE ), 
+					plugins_url( 'js/src/Sortable/Sortable.js' , GRIDBUILDER_FILE ), 
 					array(), 
 				$version );
 
 				wp_register_script( 'jquery-sortable' , 
-					plugins_url( 'js/Sortable/jquery.binding.js' , GRIDBUILDER_FILE ), 
+					plugins_url( 'js/src/Sortable/jquery.binding.js' , GRIDBUILDER_FILE ), 
 					array( 'jquery', 'sortable' ), 
 				$version );
 
 				wp_register_script( $script_id, 
-					plugins_url( 'js/admin/edit/grid-base.js' , GRIDBUILDER_FILE ), 
+					plugins_url( 'js/src/admin/edit/grid-base.js' , GRIDBUILDER_FILE ), 
 					array( 'wp-backbone' ), 
 				$version );
 
 				wp_register_script( 'gridbuilder-model', 
-					plugins_url( 'js/admin/edit/grid-model.js' , GRIDBUILDER_FILE ), 
+					plugins_url( 'js/src/admin/edit/grid-model.js' , GRIDBUILDER_FILE ), 
 					array( $script_id ), 
 				$version );
 
 
 				wp_register_script( 'gridbuilder-ui', 
-					plugins_url( 'js/admin/edit/grid-ui.js' , GRIDBUILDER_FILE ), 
+					plugins_url( 'js/src/admin/edit/grid-ui.js' , GRIDBUILDER_FILE ), 
 					array( 'gridbuilder-model','media-views'), 
 				$version );
 
 				wp_register_script( 'gridbuilder-dialog-views', 
-					plugins_url( 'js/admin/edit/grid-dialog-views.js' , GRIDBUILDER_FILE ), 
+					plugins_url( 'js/src/admin/edit/grid-dialog-views.js' , GRIDBUILDER_FILE ), 
 					array( 'wp-color-picker', 'gridbuilder-model','gridbuilder-ui'), 
 				$version );
 
 				wp_register_script( 'gridbuilder-element', 
-					plugins_url( 'js/admin/edit/grid-element.js' , GRIDBUILDER_FILE ), 
+					plugins_url( 'js/src/admin/edit/grid-element.js' , GRIDBUILDER_FILE ), 
 					array( 'gridbuilder-model','gridbuilder-dialog-views','jquery-sortable'), 
 				$version );
 
 				wp_register_script( 'gridbuilder-admin', 
-					plugins_url( 'js/admin/edit.js' , GRIDBUILDER_FILE ), 
+					plugins_url( 'js/src/admin/edit.js' , GRIDBUILDER_FILE ), 
 					array( 'gridbuilder-element' ), 
 				$version );
 

@@ -248,7 +248,7 @@
 		getTitle: function( ) {
 			var widgetClass = this.model.get('widget_class');
 			try {
-				return options.widgets[ widgetClass ].name;
+				return options.widgets[ unescape( widgetClass ) ].name;
 			} catch( err ) {
 				return l10n.unkonwnWidget + ' ' + widgetClass;
 			}

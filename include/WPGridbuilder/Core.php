@@ -176,8 +176,10 @@ class Core {
 						$widget = wp_parse_args( $widget, $bg_defaults );
 						$widget = wp_parse_args( $widget, $widget_defaults );
 						$widget = wp_parse_args( $widget, $widget_args_defaults );
-						if ( isset( $wp_widget_factory->widgets[ $widget['widget_class'] ] ) ) {
-							$wp_widget = $wp_widget_factory->widgets[ $widget['widget_class'] ];
+						$widget_class = rawurldecode( $widget['widget_class'] );
+
+						if ( isset( $wp_widget_factory->widgets[ $widget_class ] ) ) {
+							$wp_widget = $wp_widget_factory->widgets[ $widget_class ];
 							$widget_attr = array(
 								'id'	=> $row['attr_id'],
 								'class'	=> array_merge( 

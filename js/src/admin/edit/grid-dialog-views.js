@@ -672,7 +672,8 @@
 			return this;
 		},
 		done: function() {
-			this.model.set( 'widget_class', this.selectWidget.getValue() );
+			var val = this.selectWidget.getValue();
+			this.model.set( 'widget_class', escape( val ) );
 			this.selectWidget.setValue( null );
 			this.trigger( 'done' );
 			return false;

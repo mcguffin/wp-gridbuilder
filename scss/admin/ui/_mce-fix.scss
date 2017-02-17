@@ -15,7 +15,11 @@
 	div.mce-inline-toolbar-grp {
 		z-index:1260100;
 	}
+	#wp-link-backdrop {
+		z-index:1260100 !important;
+	}
+	#wp-link-wrap {
+		z-index:1260101 !important;
+	}
 }
-#wp-link-wrap {
-	z-index:1260101;
-}
+

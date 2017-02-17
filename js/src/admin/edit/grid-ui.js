@@ -482,7 +482,6 @@
 		},
 		render: function() {
 			wp.media.View.prototype.render.apply( this, arguments );
-			console.log(this.toolbar);
 			this.toolbar.render();
 			this.$el.append( this.toolbar.$el );
 			this.$el.append( this.grid.$el );
