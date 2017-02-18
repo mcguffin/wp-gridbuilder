@@ -1503,7 +1503,7 @@
 
 	_.extend( exports.grid.controller.Grid, Backbone.Events);
 
-})(jQuery,window)
+})(jQuery,window);
 (function( $, grid ){
 	var GridObject, GridCollection,
 		options	= gridbuilder.options,
@@ -3887,8 +3887,7 @@
 		'Cell'		: Cell,
 		'Widget'	: Widget
 	};
-})(jQuery,window.grid)
-
+})(jQuery,window.grid);
 (function($,grid) {
 	var l10n = gridbuilder.l10n, 
 		default_widget = gridbuilder.options.default_widget,
@@ -3964,4 +3963,4 @@
 			toggleGridEditor();
 		});
 		
-})(jQuery,window.grid)
+})(jQuery,window.grid);

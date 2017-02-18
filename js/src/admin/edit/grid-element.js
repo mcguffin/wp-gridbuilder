@@ -722,4 +722,4 @@
 		'Cell'		: Cell,
 		'Widget'	: Widget
 	};
-})(jQuery,window.grid)
+})(jQuery,window.grid);

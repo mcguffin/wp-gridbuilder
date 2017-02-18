@@ -33,9 +33,13 @@ class Admin {
 		add_action( 'admin_init' , array( &$this , 'admin_init' ) );
 		add_action( "admin_init" , array( &$this , 'register_assets' ) );
 
+		/*
 		add_action( 'load-page.php', array( &$this, 'enqueue_grid_assets' ) );
 		add_action( 'load-post.php', array( &$this, 'enqueue_grid_assets' ) );
 		add_action( 'load-post-new.php', array( &$this, 'enqueue_grid_assets' ) );
+		/*/
+		add_action( 'wp_enqueue_media', array( &$this, 'enqueue_grid_assets' ) );
+		//*/
 
 		add_action( 'print_media_templates',  array( &$this, 'print_media_templates' ) );
 
@@ -298,9 +302,11 @@ class Admin {
 	 *	@action load-post-new.php
 	 */
 	function enqueue_grid_assets(){
+/*
 		if ( ! did_action( 'wp_enqueue_media' ) ) {
 			wp_enqueue_media();
 		}
+*/
 		wp_enqueue_script( 'gridbuilder-admin' );
 		wp_enqueue_style( 'gridbuilder-admin' );
 	}
@@ -343,7 +349,7 @@ class Admin {
 
 				wp_register_script( 'gridbuilder-ui', 
 					plugins_url( 'js/src/admin/edit/grid-ui.js' , GRIDBUILDER_FILE ), 
-					array( 'gridbuilder-model','media-views'), 
+					array( 'gridbuilder-model'), 
 				$version );
 
 				wp_register_script( 'gridbuilder-dialog-views', 
@@ -407,29 +413,13 @@ class Admin {
 					'delete_template_nonce'	=> wp_create_nonce( 'gridbuilder-delete-template' ),
 					'get_widget_nonce'		=> wp_create_nonce( 'gridbuilder-get-widget' ),
 
-					/*
-					// right sidebar settings
-					'settings' => array(
-						'container'		=> $this->prioritySortSettings( gridbuilder_container_settings() ),
-						'row'			=> $this->prioritySortSettings( gridbuilder_row_settings() ),
-						'cell'			=> $this->prioritySortSettings( gridbuilder_cell_settings() ),
-						'widget'		=> $this->prioritySortSettings( gridbuilder_widget_settings() ),
-					),
-					// main editor settings
-					'editors' => array(
-						'container'		=> $this->prioritySortEditor( gridbuilder_container_editor() ),
-						'row'			=> $this->prioritySortEditor( gridbuilder_row_editor() ),
-						'cell'			=> $this->prioritySortEditor( gridbuilder_cell_editor() ),
-						'widget'		=> $this->prioritySortEditor( gridbuilder_widget_editor() ),
-					),
-					/*/
+
 					'editors'	=> array(
 						'container'	=> EditorSettings::container(),
 						'row'		=> EditorSettings::row(),
 						'cell'		=> EditorSettings::cell(),
 						'widget'	=> EditorSettings::widget(),
 					),
-					//*/
 					// element templates
 					'templates' => array(
 						'container'		=> TemplateSettings::container(),

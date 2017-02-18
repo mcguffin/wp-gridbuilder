@@ -169,4 +169,4 @@
 
 	_.extend( exports.grid.controller.Grid, Backbone.Events);
 
-})(jQuery,window)
+})(jQuery,window);

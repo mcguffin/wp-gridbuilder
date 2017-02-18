@@ -1,8 +1,15 @@
-.vcenter-container {
-	@include vcenter-container();
-	.vcenter {
-		@include vcenter();
-	}
+// .vcenter-container {
+// 	@include vcenter-container();
+// 	.vcenter {
+// 		@include vcenter();
+// 	}
+// }
+
+.vcenter {
+    display: -webkit-flex;
+    display: flex;
+	-webkit-align-items: center;
+    align-items: center;
 }
 
 .hcenter {

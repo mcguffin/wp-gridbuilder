@@ -106,6 +106,7 @@ class Core {
 			'after_title'	=> false,
 		);
 		foreach ( $grid_data['items'] as $container ) {
+			$container['type'] = 'container';
 			$container = wp_parse_args( $container, $attr_defaults );
 			$container = wp_parse_args( $container, $bg_defaults );
 			$container = wp_parse_args( $container, $container_defaults );
@@ -137,6 +138,7 @@ class Core {
 			$output .= apply_filters( 'gridbuilder_inside_container_before', '', $container );
 
 			foreach ( $container['items'] as $row ) {
+				$row['type'] = 'row';
 				$row = wp_parse_args( $row, $attr_defaults );
 				$row = wp_parse_args( $row, $bg_defaults );
 				$row = wp_parse_args( $row, $row_defaults );
@@ -154,6 +156,7 @@ class Core {
 				$output .= $this->background_elements( $row );
 
 				foreach ( $row['items'] as $cell ) {
+					$cell['type'] = 'cell';
 					$cell = wp_parse_args( $cell, $attr_defaults );
 					$cell = wp_parse_args( $cell, $bg_defaults );
 					$cell = wp_parse_args( $cell, $cell_defaults );
@@ -172,6 +175,7 @@ class Core {
 					$output .= $this->background_elements( $cell );
 
 					foreach ( $cell['items'] as $widget ) {
+						$widget['type'] = 'widget';
 						$widget = wp_parse_args( $widget, $attr_defaults );
 						$widget = wp_parse_args( $widget, $bg_defaults );
 						$widget = wp_parse_args( $widget, $widget_defaults );
@@ -194,7 +198,8 @@ class Core {
 
 							ob_start();
 							$wp_widget->widget( $widget, $widget['instance'] );
-							$output .= ob_get_clean();
+							$widget_output = ob_get_clean();
+							$output .= $widget_output;
 							$output .= '</div>'; // end widget
 						}
 					}
@@ -315,9 +320,9 @@ class Core {
 				$this->mk_background_classes( $item )
 			);
 			$attr['style'] = $this->mk_background_styles( $item );
-			if ( ! empty( $item['attr_style'] ) ) {
-				$attr['style'][] = trim( $item['attr_style'], " \t\n\r\0\x0B;" );
-			}
+		}
+		if ( ! empty( $item['attr_style'] ) ) {
+			$attr['style'][] = trim( $item['attr_style'], " \t\n\r\0\x0B;" );
 		}
 		return $attr;
 	}
@@ -361,10 +366,12 @@ class Core {
 	 */
 	private function mk_background_styles( $item ) {
 		$styles = array();
+/*
 		if ( $item['background_image'] && $item['background_attachment'] === 'fixed' ) {
 			$img_src = wp_get_attachment_url( $item['background_image'], $item['background_image_size'] );
 			$styles[ 'background-image' ] = sprintf( 'url("%s")', $img_src );
 		}
+*/
 		if ( $item[ 'background_color' ] ) {
 			$color = $this->mk_color( $item[ 'background_color' ], $item[ 'background_opacity' ] );
 			$styles[ 'background-color' ] = $color;
@@ -384,10 +391,12 @@ class Core {
 		$has_overlay = ( $item['background_image'] || $item['background_video'] ) && $item[ 'background_color' ];
 		$has_overlay = apply_filters( 'gridbuilder_force_background_overlay', $has_overlay, $item );
 		$output .= apply_filters( 'gridbuilder_before_background_elements', '', $item );
-		if ( $item['background_image'] && $item['background_attachment'] !== 'fixed' ) {
+		if ( $item['background_image'] /*&& $item['background_attachment'] !== 'fixed'*/ ) {
 			// attach image
 			$output .= wp_get_attachment_image( $item['background_image'], 'full' );
 		}
+
+
 /*
 image
 -------
@@ -395,6 +404,8 @@ video
 -------
 color overlay
 */
+
+
 		if ( $item['background_video'] ) {
 			if ( $item[ 'background_video' ] ) {
 				add_filter('wp_video_shortcode', array( $this, 'wp_video_shortcode_rm_controls' ), 10, 5 );
@@ -416,7 +427,7 @@ color overlay
 			);
 		}
 		$output .= apply_filters( 'gridbuilder_after_background_elements', '', $item );
-		return $output;
+		return apply_filters( 'gridbuilder_background_elements', $output, $item );
 	}
 	/**
 	 *	Remove `controls` attibute from wp-video shortcode.

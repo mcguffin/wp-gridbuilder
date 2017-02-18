@@ -1,71 +1,35 @@
 .fullscreen {
   min-height: 100vh; }
 
+.background-attachment-fixed .container {
+  position: relative; }
+
+.background-wrap {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: -1; }
+  .background-attachment-fixed .background-wrap {
+    clip: rect(0, auto, auto, 0); }
+  .background-wrap img {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%; }
+    .background-attachment-fixed .background-wrap img {
+      position: fixed; }
+    .background-attachment-scroll .background-wrap img {
+      position: absolute; }
+    .background-size-cover .background-wrap img {
+      -webkit-object-fit: cover;
+      -moz-object-fit: cover;
+      object-fit: cover; }
+
 .background-image-container {
   position: relative;
   overflow: hidden; }
-  .background-image-container > img {
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
-    z-index: -1; }
-  .background-image-container.background-size-contain > img {
-    -o-object-fit: contain;
-    object-fit: contain; }
-  .background-image-container.background-size-cover > img {
-    -o-object-fit: cover;
-    object-fit: cover; }
-  .background-image-container.background-size-fill > img {
-    -o-object-fit: fill;
-    object-fit: fill; }
-  .background-image-container.background-attachment-fixed {
-    background-attachment: fixed; }
-    .background-image-container.background-attachment-fixed.background-position-left-top {
-      background-position: left top; }
-    .background-image-container.background-attachment-fixed.background-position-left-center {
-      background-position: left center; }
-    .background-image-container.background-attachment-fixed.background-position-left-bottom {
-      background-position: left bottom; }
-    .background-image-container.background-attachment-fixed.background-position-center-top {
-      background-position: center top; }
-    .background-image-container.background-attachment-fixed.background-position-center-center {
-      background-position: center center; }
-    .background-image-container.background-attachment-fixed.background-position-center-bottom {
-      background-position: center bottom; }
-    .background-image-container.background-attachment-fixed.background-position-right-top {
-      background-position: right top; }
-    .background-image-container.background-attachment-fixed.background-position-right-center {
-      background-position: right center; }
-    .background-image-container.background-attachment-fixed.background-position-right-bottom {
-      background-position: right bottom; }
-    .background-image-container.background-attachment-fixed.background-size-fill {
-      background-size: 100% 100%; }
-    .background-image-container.background-attachment-fixed.background-size-contain {
-      background-size: contain; }
-    .background-image-container.background-attachment-fixed.background-size-cover {
-      background-size: cover; }
-  .background-image-container.background-position-left-top > img {
-    object-position: left top; }
-  .background-image-container.background-position-left-center > img {
-    object-position: left center; }
-  .background-image-container.background-position-left-bottom > img {
-    object-position: left bottom; }
-  .background-image-container.background-position-center-top > img {
-    object-position: center top; }
-  .background-image-container.background-position-center-center > img {
-    object-position: center center; }
-  .background-image-container.background-position-center-bottom > img {
-    object-position: center bottom; }
-  .background-image-container.background-position-right-top > img {
-    object-position: right top; }
-  .background-image-container.background-position-right-center > img {
-    object-position: right center; }
-  .background-image-container.background-position-right-bottom > img {
-    object-position: right bottom; }
 
 .background-overlay {
   position: absolute;

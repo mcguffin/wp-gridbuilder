@@ -73,4 +73,4 @@
 			toggleGridEditor();
 		});
 		
-})(jQuery,window.grid)
+})(jQuery,window.grid);
