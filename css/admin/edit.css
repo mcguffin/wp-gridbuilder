@@ -794,10 +794,10 @@ body.grid-modal-open {
     content: '';
     display: block;
     position: absolute;
-    left: 15px;
     top: 25px;
-    right: 25px;
+    right: 20px;
     bottom: 0;
+    left: 10px;
     border-top: 1px solid #0085ba;
     background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMjAwMDBweCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiPjxsaW5lIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSIgc3R5bGU9InN0cm9rZTojMDA4NWJhO3N0cm9rZS13aWR0aDoxcHgiIHgxPSI1MCIgeTE9IjAiIHgyPSI1MCIgeTI9IjIwMDAwIi8+PC9zdmc+");
     background-repeat: repeat-x;
@@ -912,8 +912,6 @@ body.grid-modal-open {
           border-right-color: rgba(0, 133, 186, 0.5); }
         .grid-view .cell .offset-handle:hover::after, .grid-view .cell .offset-handle:active::after {
           border-left-color: rgba(0, 133, 186, 0.5); }
-    .grid-view .cell > .collection {
-      margin-right: 10px; }
   .grid-view .widget {
     min-height: 75px;
     background: #f0f0f0;

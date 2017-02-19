@@ -4,6 +4,9 @@ WP Gridbuilder ToDo:
  - [x] Bring Back Templates
  - [x] Enqueue styles in frontend if option is on
  - [ ] Provide CSS / SCSS Framework for theme development (via @include)
+ - [ ] Bugs
+ 	- [ ] JS
+ 		- [ ] Clone > Events 
  - [ ] Releasing
 	- [x] JS Compression
 	- [ ] PHP docblocks
@@ -16,12 +19,6 @@ WP Gridbuilder ToDo:
 	- [ ] Customizer based Editor
 	- [ ] Undo (keep model state in user settings)
 	- [ ] Roles: Template editing capability
-	- [x] BG-image
-		- [x] Select Align
-		- [x] Use <img>, srcset, sizes where possible (not fixed images!)
 	- [ ] Widgets
-		- [x] Support BlackStudio TinyMce Widget
-		- [-] Make compatible with ACF Widgets 
-			Nope. Won't work.
 		- [x] Widget: editable col-xx-n classes
-		- [ ] Maybe: Widget Toolbox
+		- [ ] Apply col-xx-n classes
