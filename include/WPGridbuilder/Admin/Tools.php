@@ -24,7 +24,7 @@ class Tools {
 	/**
 	 * Private constructor
 	 */
-	private function __construct() {
+	protected function __construct() {
 		add_action( 'admin_menu' , array( &$this , 'add_admin_page' ) );
 	}
 

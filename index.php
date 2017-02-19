@@ -42,7 +42,7 @@ define( 'GRIDBUILDER_DIRECTORY', plugin_dir_path(__FILE__) );
 
 require_once plugin_dir_path(__FILE__) . 'include/vendor/autoload.php';
 
-Core::instance();
+Core\Core::instance();
 
 if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 	Admin\Admin::instance();

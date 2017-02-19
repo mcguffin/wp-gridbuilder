@@ -2,7 +2,7 @@
 
 namespace WPGridbuilder\Admin;
 
-use WPGridbuilder\Core as Gridbuilder;
+use WPGridbuilder\Core\Core as Gridbuilder;
 use WPGridbuilder\Settings\Templates as TemplateSettings;
 use WPGridbuilder\Settings\Editors as EditorSettings;
 use WPGridbuilder\Settings\Core as CoreSettings;
@@ -29,7 +29,7 @@ class Admin {
 	/**
 	 * Private constructor
 	 */
-	private function __construct() {
+	protected function __construct() {
 		add_action( 'admin_init' , array( &$this , 'admin_init' ) );
 		add_action( "admin_init" , array( &$this , 'register_assets' ) );
 

@@ -1,25 +1,15 @@
 <?php
 
-namespace WPGridbuilder;
+namespace WPGridbuilder\Core;
 
-class Core {
-	private static $_instance = null;
+use WPGridbuilder\Settings;
 
-	/**
-	 * Getting a singleton.
-	 *
-	 * @return object single instance of Gridbuilder
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) )
-			self::$_instance = new self();
-		return self::$_instance;
-	}
+class Core extends Singleton {
 
 	/**
 	 *	Private constructor
 	 */
-	private function __construct() {
+	protected function __construct() {
 		add_action( 'plugins_loaded' , array( &$this , 'load_textdomain' ) );
 		add_action( 'init' , array( &$this , 'init' ) );
 		add_action( 'wp_enqueue_scripts' , array( &$this , 'wp_enqueue_style' ) );
@@ -30,7 +20,7 @@ class Core {
 		
 		add_filter( 'the_content', array( $this,'the_content' ) );
 	}
-	
+
 	/**
 	 *	Load frontend styles and scripts
 	 *
@@ -44,7 +34,7 @@ class Core {
 			wp_enqueue_style( 'gridbuilder-frontend', plugins_url( 'css/frontend.css', GRIDBUILDER_FILE ) );
 		}
 	}
-	
+
 	/**
 	 *	Output Grid generated HTML
 	 *
@@ -56,7 +46,7 @@ class Core {
 		}
 		return $the_content;
 	}
-	
+
 	/**
 	 *	Returns Grid HTML
 	 *	
