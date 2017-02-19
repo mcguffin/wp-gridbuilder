@@ -19,9 +19,10 @@
 	var inputPrototype = {
 		render: function( ) {
 			wp.media.View.prototype.render.apply(this,arguments);
-			var self = this;
+			var self = this,
+				value = ( 'undefined' !== typeof this.options.value && this.options.value !== null ) ? this.options.value : this.options.settings.default;
 			this.$el.addClass( 'input-' + this.options.settings.name );
-			this.setValue( this.options.value || this.options.settings.default );
+			this.setValue( value );
 			switch ( this.options.settings.type ) {
 				case 'number':
 					_.each( ['min','max','step'], function(attr) {
@@ -472,7 +473,7 @@
 				input = new InputWrap({
 					controller	: self.controller,
 					settings	: setting,
-					value		: !! value ? value : null,
+					value		: ( 'undefined' !== typeof value) ? value : null,
 					locked		: !! self.model.get( name+':locked' ),
 					model		: self.model
 				});

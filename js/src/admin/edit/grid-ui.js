@@ -593,7 +593,7 @@
 				data = data || {},
 				itemModel = new grid.model.GridObject( data ),
 				item = new itemClass({
-					controller:	this.controller,
+					controller:	this,
 					model:		itemModel,
 					parent:		parent
 				}),

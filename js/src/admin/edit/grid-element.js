@@ -114,6 +114,7 @@
 		},
 		edit: function( e ) {
 			if ( features.locks || !this.model.get( 'locked' ) ) {
+
 				this.controller
 					.setSelected( this )
 					.editItem();
@@ -305,7 +306,6 @@
 		getCurrentOffset: function() {
 			var viewSize = this.controller.toolbar.whichView(),
 				self = this, did = false, offset = false;
-
 			offset_key = _.find( offsetkeys, function(prop,sizeKey) {
 				var _offset = self.model.get( prop );
 				if ( ! did && !! _offset ) {
@@ -378,6 +378,7 @@
 		},
 		setOffset: function( offset, viewSize ) {
 			this.setOffsetClass( offset, viewSize );
+
 			this.model.set( 'offset_' + viewSize, offset );
 			this.hasChanged();
 		},
@@ -537,7 +538,6 @@
 						if ( prevOffset != offset ) {
 							self.setOffset( offset, viewSize );
 						}
-
 						event.stopPropagation();
 						event.stopImmediatePropagation();
 					})
