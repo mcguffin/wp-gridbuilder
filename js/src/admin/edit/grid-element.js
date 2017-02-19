@@ -6,6 +6,7 @@
 	
 	var Grid, Container, Row, Cell, Widget,
 		CollectionView, 
+		ColumnCollectionView,
 		SelectorDisplay, TemplateDisplay,
 		classMap,
 		l10n		= gridbuilder.l10n,
@@ -130,7 +131,7 @@
 
 			var self = this,
 				cls = this.collectionView(),
-				$collection = this.$('>.collection');
+				$collection = this.$('>.collection,>*>.collection').first();
 
 			if ( ! features.locks && this.model.get('locked') ) {
 				this.$el.addClass('locked');
@@ -228,56 +229,20 @@
 		}
 	});
 
-	Widget = grid.view.element.Widget = CollectionView.extend({
-		template: wp.template('grid-element-widget'),
-		className:'widget grid-item',
-		tagName:'li',
-		attributes: {
-			'tabindex': 0
-		},
-
-		updateDisplay: function() {
-			CollectionView.prototype.updateDisplay.apply( this, arguments );
-			this.$('.widget-type').text( this.getTitle() );
-
-			var title = this.model.get('instance').title;
-			this.$('.widget-title').text(title);
-			return this;
-		},
-		collectionView: function() { return false },
-		getTitle: function( ) {
-			var widgetClass = this.model.get('widget_class');
-			try {
-				return options.widgets[ unescape( widgetClass ) ].name;
-			} catch( err ) {
-				return l10n.unkonwnWidget + ' ' + widgetClass;
-			}
-		}
-	});
-
-	Cell = grid.view.element.Cell = CollectionView.extend({
-		template: wp.template('grid-element-cell'),
-		className:'cell grid-item',
-		tagName:'li',
-		attributes: {
-			'tabindex': 0
-		},
-
+	ColumnCollectionView = CollectionView.extend({
 		initialize: function() {
 			var ret = CollectionView.prototype.initialize.apply(this,arguments);
-			this.listenTo( this.model.items, 'update', this.itemsChanged );
 			return ret;
 		},
-		itemsChanged: function() {
-			// let row adjust cell heights
-			this.parent().adjustCellSize();
+		updateDisplay: function() {
+			CollectionView.prototype.updateDisplay.apply( this, arguments );
+			this.updateColLockClasses();
+			this.updateSizeClasses();
+			this.updateOffsetClasses();
 		},
 		render: function() {
+			var self = this;
 			CollectionView.prototype.render.apply(this,arguments);
-
-			var self = this, $dragged, eventProp = 'screenX',
-				dragStartX, startOffset;
-
 			_.each( sizekeys, function( sizekey, viewSize ) {
 				var size = self.model.get( sizekey );
 				if ( !! size ) {
@@ -290,74 +255,7 @@
 					self.setOffsetClass( offset, viewSize );
 				}
 			} );
-
-			// FF does not include pointer position in drag events.
-			// need to get back to good old mousemove
-			function mousemove( e ) {
-				var $e = $.Event( 'drag', {
-					pageX: e.pageX,
-					pageY: e.pagey,
-					screenX: e.screenX,
-					screenY: e.screeny,
-					clientX: e.clientX,
-					clienty: e.clienty
-				} );
-				$dragged.trigger( $e );
-			}
-			function mouseup( e ) {
-				$(document).off( 'mousemove', mousemove );
-				$(document).off( 'mouseup', mouseup );
-			}
-			if ( features.locks || ! this.model.get('locked') ) {
-	
-				this.$('.resize-handle, .offset-handle')
-					.on( 'mousedown', function( e ) {
-						// add move listener
-						var viewSize	= self.controller.toolbar.whichView(),
-							propname	= ( $(this).is('.offset-handle') ? 'offset_' : 'size_' ) + viewSize;
-						if ( features.lock || ! self.model.get( propname+':locked' ) ) {
-							dragStartX = e.screenX;
-							startOffset = self.getCurrentOffset();
-							$dragged = $(this);
-							$(document).on( 'mousemove', mousemove );
-							$(document).on( 'mouseup', mouseup );
-						}
-						e.preventDefault();
-					} );
-
-
-				this.$('.resize-handle')
-					.on( "drag", function( event ) {
-						var colWidth	= $(this).closest('.row').width() / options.screensizes.columns,
-							viewSize	= self.controller.toolbar.whichView(),
-							cols		= Math.max( 1, Math.min( options.screensizes.columns, Math.round( ( event.pageX - self.$el.offset().left ) / colWidth ) ) ),
-							prevCols	= self.model.get( 'size_'+viewSize );
-
-						if ( prevCols != cols ) {
-							self.setSize( cols, viewSize );
-						}
-
-						event.stopPropagation();
-					} );
-
-				this.$('.offset-handle')
-					.on('drag',function( event ) {
-						var colWidth	= $(this).closest('.row').width() / options.screensizes.columns;
-							viewSize	= self.controller.toolbar.whichView(),
-							diff 		= dragStartX - event.screenX;
-							offsetDiff	= Math.round( diff / colWidth ),
-							offset		= Math.min( 11, Math.max( 0, startOffset - offsetDiff ) ),
-							prevOffset	= self.model.get( 'offset_' + viewSize );
-
-						if ( prevOffset != offset ) {
-							self.setOffset( offset, viewSize );
-						}
-
-						event.stopPropagation();
-						event.stopImmediatePropagation();
-					})
-    		}
-    		return this;
+			return this;
 		},
 		getCurrentSize: function() {
 			var viewSize = this.controller.toolbar.whichView(),
@@ -373,8 +271,26 @@
 				}
 			} );
 
-			console.log(size,did);
 			return size || options.screensizes.columns ;
+		},
+
+		hasColClass: function() {
+
+			var classname,
+				viewSize	= '(\\w+)',
+				size		= '(\\d+)';
+
+			if ( arguments[0] ) {
+				viewSize = arguments[0];
+				if ( arguments[1] ) {
+					size = arguments[1];
+				}
+			}
+
+			classname = options.screensizes.size_class_template({ screensize: viewSize, size: size });
+
+			return !! this.$el.attr('class').match( new RegExp(classname,'g') );
+			
 		},
 		setColClass: function( size, viewSize ) {
 			var className;
@@ -465,12 +381,6 @@
 			this.model.set( 'offset_' + viewSize, offset );
 			this.hasChanged();
 		},
-		updateDisplay: function() {
-			CollectionView.prototype.updateDisplay.apply( this, arguments );
-			this.updateColLockClasses();
-			this.updateSizeClasses();
-			this.updateOffsetClasses();
-		},
 		updateSizeClasses: function() {
 			var self = this;
 			_.each( options.screensizes.sizes, function( siteOptions, screenSize ) {
@@ -507,8 +417,135 @@
 			});
 			this.$el.removeClass( rm_classes.join(' ') ).addClass( add_classes.join(' ') );
 		},
+	});
+
+	Widget = grid.view.element.Widget = ColumnCollectionView.extend({
+		template: wp.template('grid-element-widget'),
+		className:'widget grid-item',
+		tagName:'li',
+		attributes: {
+			'tabindex': 0
+		},
+
+		updateDisplay: function() {
+			ColumnCollectionView.prototype.updateDisplay.apply( this, arguments );
+
+			this.$('.widget-type').text( this.getTitle() );
+
+			var title = this.model.get('instance').title;
+			this.$('.widget-title').text(title);
+			if ( ! this.hasColClass() ) {
+				this.setColClass( options.screensizes.columns, _.keys( options.screensizes.sizes)[0] );
+			}
+
+			return this;
+		},
+		collectionView: function() { return false },
+		getTitle: function( ) {
+			var widgetClass = this.model.get('widget_class');
+			try {
+				return options.widgets[ unescape( widgetClass ) ].name;
+			} catch( err ) {
+				return l10n.unkonwnWidget + ' ' + widgetClass;
+			}
+		}
+	});
+
+	Cell = grid.view.element.Cell = ColumnCollectionView.extend({
+		template: wp.template('grid-element-cell'),
+		className:'cell grid-item',
+		tagName:'li',
+		attributes: {
+			'tabindex': 0
+		},
+
+		initialize: function() {
+			var ret = ColumnCollectionView.prototype.initialize.apply(this,arguments);
+			this.listenTo( this.model.items, 'update', this.itemsChanged );
+			return ret;
+		},
+		itemsChanged: function() {
+			// let row adjust cell heights
+			this.parent().adjustCellSize();
+		},
+		render: function() {
+
+			ColumnCollectionView.prototype.render.apply(this,arguments);
+
+			var self = this, $dragged, eventProp = 'screenX',
+				dragStartX, startOffset;
+
+
+			// FF does not include pointer position in drag events.
+			// need to get back to good old mousemove
+			function mousemove( e ) {
+				var $e = $.Event( 'drag', {
+					pageX: e.pageX,
+					pageY: e.pagey,
+					screenX: e.screenX,
+					screenY: e.screeny,
+					clientX: e.clientX,
+					clienty: e.clienty
+				} );
+				$dragged.trigger( $e );
+			}
+			function mouseup( e ) {
+				$(document).off( 'mousemove', mousemove );
+				$(document).off( 'mouseup', mouseup );
+			}
+			if ( features.locks || ! this.model.get('locked') ) {
+	
+				this.$('.resize-handle, .offset-handle')
+					.on( 'mousedown', function( e ) {
+						// add move listener
+						var viewSize	= self.controller.toolbar.whichView(),
+							propname	= ( $(this).is('.offset-handle') ? 'offset_' : 'size_' ) + viewSize;
+						if ( features.lock || ! self.model.get( propname+':locked' ) ) {
+							dragStartX = e.screenX;
+							startOffset = self.getCurrentOffset();
+							$dragged = $(this);
+							$(document).on( 'mousemove', mousemove );
+							$(document).on( 'mouseup', mouseup );
+						}
+						e.preventDefault();
+					} );
+
+
+				this.$('.resize-handle')
+					.on( "drag", function( event ) {
+						var colWidth	= $(this).closest('.row').width() / options.screensizes.columns,
+							viewSize	= self.controller.toolbar.whichView(),
+							cols		= Math.max( 1, Math.min( options.screensizes.columns, Math.round( ( event.pageX - self.$el.offset().left ) / colWidth ) ) ),
+							prevCols	= self.model.get( 'size_'+viewSize );
+
+						if ( prevCols != cols ) {
+							self.setSize( cols, viewSize );
+						}
+
+						event.stopPropagation();
+					} );
+
+				this.$('.offset-handle')
+					.on('drag',function( event ) {
+						var colWidth	= $(this).closest('.row').width() / options.screensizes.columns;
+							viewSize	= self.controller.toolbar.whichView(),
+							diff 		= dragStartX - event.screenX;
+							offsetDiff	= Math.round( diff / colWidth ),
+							offset		= Math.min( 11, Math.max( 0, startOffset - offsetDiff ) ),
+							prevOffset	= self.model.get( 'offset_' + viewSize );
+
+						if ( prevOffset != offset ) {
+							self.setOffset( offset, viewSize );
+						}
+
+						event.stopPropagation();
+						event.stopImmediatePropagation();
+					})
+    		}
+    		return this;
+		},
 		collectionView: function(){ return Widget },
-	}, CollectionView );
+	});
 
 	Row = grid.view.element.Row = CollectionView.extend({
 		template: wp.template('grid-element-row'),
@@ -676,7 +713,6 @@
 
 						// update view
 						itemView.options.parent = view;
-
 						e.stopPropagation();
 					} )
 					.on( 'remove', function( e ) {

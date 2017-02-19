@@ -6,10 +6,12 @@ if ( ! defined('ABSPATH') )
 ?>
 	<script type="text/html" id="tmpl-grid-element-widget">
 		<div class="sort-handle"></div>
-		<div class="display-attributes">
-			<span class="display-id"></span>
-			<span class="display-class"></span>
+		<div class="info">
+			<div class="display-attributes">
+				<span class="display-id"></span>
+				<span class="display-class"></span>
+			</div>
+			<div class="widget-title"></div>
+			<div class="widget-type"></div>
 		</div>
-		<div class="widget-title"></div>
-		<div class="widget-type"></div>
 	</script>

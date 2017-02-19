@@ -42,10 +42,14 @@ class Core extends Singleton {
 	 */
 	public function the_content( $the_content ) {
 		if ( get_post_meta( get_the_ID(), '_grid_enabled', true )  && ( $grid_data = get_post_meta( get_the_ID(), '_grid_data', true ) ) ) {
-			$grid = new Element\Grid( $grid_data );
-			return $grid->render_content( $grid_data );
+			return $this->get_content( $grid_data );
 		}
 		return $the_content;
+	}
+	
+	public function get_content( $grid_data ) {
+		$grid = new Element\Grid( $grid_data );
+		return $grid->render_content( $grid_data );
 	}
 
 	/**

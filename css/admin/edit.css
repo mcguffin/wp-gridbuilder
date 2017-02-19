@@ -665,7 +665,7 @@ body.grid-modal-open {
   .grid-view .grid-toolbar[data-sticky="true"] + .containers {
     margin-top: 91px; }
   .grid-view .widgets {
-    padding: 25px 20px 5px 10px; }
+    padding: 25px 20px 15px 10px; }
   .grid-view .container,
   .grid-view .row,
   .grid-view .cell,
@@ -790,14 +790,27 @@ body.grid-modal-open {
         height: 0; }
     .grid-view .container:focus {
       background-color: #f3f7f9; }
+  .grid-view .widgets:before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 15px;
+    top: 25px;
+    right: 25px;
+    bottom: 0;
+    border-top: 1px solid #0085ba;
+    background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMjAwMDBweCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiPjxsaW5lIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSIgc3R5bGU9InN0cm9rZTojMDA4NWJhO3N0cm9rZS13aWR0aDoxcHgiIHgxPSI1MCIgeTE9IjAiIHgyPSI1MCIgeTI9IjIwMDAwIi8+PC9zdmc+");
+    background-repeat: repeat-x;
+    background-position: center center;
+    background-size: 8.33333333% 100%; }
   .grid-view .row {
-    border-color: #fff;
-    border-style: solid;
-    background-color: #f5f5f5;
     background-image: url("data:image/svg+xml;charset=utf-8;base64,PHN2ZyB3aWR0aD0iMTAwcHgiIGhlaWdodD0iMjAwMDBweCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiPjxsaW5lIHZlY3Rvci1lZmZlY3Q9Im5vbi1zY2FsaW5nLXN0cm9rZSIgc3R5bGU9InN0cm9rZTojZDVkNWQ1O3N0cm9rZS13aWR0aDoxcHgiIHgxPSI1MCIgeTE9IjAiIHgyPSI1MCIgeTI9IjIwMDAwIi8+PC9zdmc+");
     background-repeat: repeat-x;
     background-position: center center;
     background-size: 8.33333333% 100%;
+    border-color: #fff;
+    border-style: solid;
+    background-color: #f5f5f5;
     border-top: 1px solid #d5d5d5;
     border-bottom: 1px solid #d5d5d5;
     padding-top: 5px;
@@ -860,8 +873,6 @@ body.grid-modal-open {
     .grid-view .cell.locked .resize-handle,
     .grid-view .cell.locked .offset-handle {
       display: none; }
-    .grid-view .cell .widgets {
-      padding-bottom: 15px; }
     .grid-view .cell .resize-handle {
       position: absolute;
       right: 0;
@@ -907,14 +918,23 @@ body.grid-modal-open {
     min-height: 75px;
     background: #f0f0f0;
     border: 2px solid #ccc;
-    padding: 10px;
+    padding: 0;
     margin-bottom: 5px; }
+    .grid-view .widget .info {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px;
+      overflow: hidden; }
     .grid-view .widget .sort-handle {
       position: absolute;
       left: 0;
       top: 0;
       right: 0;
-      bottom: 0; }
+      bottom: 0;
+      z-index: 1; }
     .grid-view .widget .widget-title {
       font-weight: bold; }
     .grid-view .widget .widget-type {
@@ -923,6 +943,10 @@ body.grid-modal-open {
       box-shadow: 0 0 20px rgba(0, 133, 186, 0.8);
       border-color: #0085ba;
       color: #003c54; }
+      .grid-view .widget:focus .info {
+        right: auto;
+        bottom: auto;
+        background: rgba(240, 240, 240, 0.7); }
   .grid-view .ghost {
     opacity: 0.4; }
 
