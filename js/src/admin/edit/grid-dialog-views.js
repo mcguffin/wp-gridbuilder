@@ -262,11 +262,16 @@
 		},
 
 		prepareMCE: function(){
-			var self = this;
+			var self = this,
+				modal = this.$el.closest('.grid-ui-modal').get(0);
 			this._prevMCE = {};
 			
+			if ( ! modal ) {
+				return;
+			}
+
 			// set tinymce z-index higher than modal z-index
-			mceZIndex = 1000 + parseInt( window.getComputedStyle( this.$el.closest('.grid-ui-modal').get(0) ).getPropertyValue("z-index") );
+			mceZIndex = 1000 + parseInt( window.getComputedStyle( modal ).getPropertyValue("z-index") );
 
 			// floatpanels (like menus)
 			this._prevMCE.FloatPanelZindex = tinyMCE.ui.FloatPanel.zIndex;
@@ -297,10 +302,12 @@
 			}
 		},
 		resetMCE: function(){
-			!! this._prevMCE.FloatPanelZindex		&& ( tinyMCE.ui.FloatPanel.zIndex					= this._prevMCE.FloatPanelZindex );
-			!! this._prevMCE.TooltipRepaint			&& ( tinyMCE.ui.Tooltip.prototype.repaint			= this._prevMCE.TooltipRepaint );
-			!! this._prevMCE.NotificationpRepaint	&& ( tinyMCE.ui.Notification.prototype.repaint		= this._prevMCE.NotificationpRepaint );
-			!! this._prevMCE.wpLinkRenderHtml		&& ( tinymce.ui.WPLinkPreview.prototype.renderHtml	= this._prevMCE.wpLinkRenderHtml );
+			if ( !! this._prevMCE ) {
+				!! this._prevMCE.FloatPanelZindex		&& ( tinyMCE.ui.FloatPanel.zIndex					= this._prevMCE.FloatPanelZindex );
+				!! this._prevMCE.TooltipRepaint			&& ( tinyMCE.ui.Tooltip.prototype.repaint			= this._prevMCE.TooltipRepaint );
+				!! this._prevMCE.NotificationpRepaint	&& ( tinyMCE.ui.Notification.prototype.repaint		= this._prevMCE.NotificationpRepaint );
+				!! this._prevMCE.wpLinkRenderHtml		&& ( tinymce.ui.WPLinkPreview.prototype.renderHtml	= this._prevMCE.wpLinkRenderHtml );
+			}
 		}
 	} );
 
