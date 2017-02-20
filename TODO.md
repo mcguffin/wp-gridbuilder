@@ -3,7 +3,6 @@ WP Gridbuilder ToDo:
  - [x] Plugin Settings page
  - [x] Bring Back Templates
  - [x] Enqueue styles in frontend if option is on
- - [ ] Provide CSS / SCSS Framework for theme development (via @include)
  - [ ] Releasing
 	- [x] JS Compression
 	- [ ] PHP docblocks
@@ -16,3 +15,4 @@ WP Gridbuilder ToDo:
 	- [ ] Customizer based Editor
 	- [ ] Undo (keep model state in user settings)
 	- [ ] Roles: Template editing capability
+	- [ ] Provide CSS / SCSS Framework for theme development (via @include)

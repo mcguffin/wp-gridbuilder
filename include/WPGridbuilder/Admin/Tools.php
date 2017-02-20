@@ -282,12 +282,12 @@ class Tools {
 	 *	@action	load-{$page_hook}
 	 */
 	function enqueue_admin_page_assets() {
-		wp_enqueue_style( 'gridbuilder-tools-page' , plugins_url( '/css/admin/tools.css' , dirname(__FILE__) ) );
+		wp_enqueue_style( 'gridbuilder-tools-page' , plugins_url( 'css/admin/tools.css' , GRIDBUILDER_FILE ) );
 
 		if ( defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ) {
-			wp_enqueue_script( 'gridbuilder-tools-page' , plugins_url( 'js/admin/tools.js' , dirname(__FILE__) ) );
+			wp_enqueue_script( 'gridbuilder-tools-page' , plugins_url( 'js/admin/tools.js' , GRIDBUILDER_FILE ) );
 		} else {
-			wp_enqueue_script( 'gridbuilder-tools-page' , plugins_url( 'js/admin/tools.min.js' , dirname(__FILE__) ) );
+			wp_enqueue_script( 'gridbuilder-tools-page' , plugins_url( 'js/admin/tools.min.js' , GRIDBUILDER_FILE ) );
 		}
 //		wp_localize_script('gridbuilder-tools-page' , 'gridbuilder_tools_page' , array( ) );
 	}
