@@ -6,7 +6,7 @@ use WPGridbuilder\Settings;
 
 
 abstract class Element {
-
+	private static $_counter = 0;
 	protected $type;
 
 	protected $grid_data;
@@ -14,6 +14,8 @@ abstract class Element {
 	private $parent_element = null;
 
 	public function __construct( $grid_data, $parent = null ) {
+
+		self::$_counter++;
 
 		$attr_defaults = array(
 			'attr_id'		=> '',
@@ -41,7 +43,7 @@ abstract class Element {
 		$this->parent_element		= $parent;
 
 		$this->grid_data['type']	= $this->type;
-
+		
 	}
 
 	abstract function get_element_defaults();
@@ -52,6 +54,9 @@ abstract class Element {
 		return $this->parent_element;
 	}
 
+	protected function getCount() {
+		return self::$_counter;
+	}
 
 	/**
 	 *	Generate Visibility classes like 'visible-sm' or 'hidden-lg'

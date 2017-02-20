@@ -13,12 +13,14 @@ class Widget extends Element {
 
 		$output = '';
 
-		$widget_class = rawurldecode( $this->grid_data['widget_class'] );
-
+		$widget_class	= rawurldecode( $this->grid_data['widget_class'] );
+		
+		
 		if ( isset( $wp_widget_factory->widgets[ $widget_class ] ) ) {
 			$wp_widget = $wp_widget_factory->widgets[ $widget_class ];
+			$widget_id		= isset( $row['attr_id'] ) ? $row['attr_id'] : ( $wp_widget->id_base . '-' . $this->getCount());
 			$widget_attr = array(
-				'id'	=> $row['attr_id'],
+				'id'	=> $widget_id,
 				'class'	=> array_merge( 
 					array( 'widget', 'widget-'.$wp_widget->id_base, $this->grid_data['attr_class'] ), 
 					$this->mk_grid_classes( $this->grid_data )
