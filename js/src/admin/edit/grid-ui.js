@@ -802,7 +802,9 @@
 					// add to template select
 					grid.templates[type].add( template );
 
-					toolbar.update();
+					self.toolbar.update();
+
+					self.toolbar.setupTemplateSelects();
 
 					self.grid.hasChanged();
 				})
