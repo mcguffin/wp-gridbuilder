@@ -46,6 +46,7 @@ Core\Core::instance();
 
 if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 	Admin\Admin::instance();
+	Admin\Templates::instance();
 	Admin\Tools::instance();
 	Admin\Settings::instance();
 

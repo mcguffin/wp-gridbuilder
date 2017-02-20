@@ -2,29 +2,15 @@
 
 namespace WPGridbuilder\Admin;
 
-use WPGridbuilder\Core\Core as Gridbuilder;
-use WPGridbuilder\Settings\Templates as TemplateSettings;
-use WPGridbuilder\Settings\Editors as EditorSettings;
-use WPGridbuilder\Settings\Core as CoreSettings;
-use WPGridbuilder\Settings\Widgets as WidgetSettings;
+use WPGridbuilder\Core;
+use WPGridbuilder\Settings;
 
 
 
-class Admin {
-	private static $_instance = null;
+class Admin extends Core\Singleton {
 	
 	private $tool_page_name = 'gridbuilder-management';
 	
-	/**
-	 * Getting a singleton.
-	 *
-	 * @return object single instance of GridbuilderAdmin
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) )
-			self::$_instance = new self();
-		return self::$_instance;
-	}
 
 	/**
 	 * Private constructor
@@ -48,15 +34,7 @@ class Admin {
 
 		add_action( 'edit_form_top', array( &$this, 'edit_form_top' ) );
 
-		add_action( 'wp_ajax_gridbuilder-create-template', array( &$this, 'ajax_save_template' ) );
-		add_action( 'wp_ajax_gridbuilder-update-template', array( &$this, 'ajax_save_template' ) );
-		add_action( 'wp_ajax_gridbuilder-delete-template', array( &$this, 'ajax_delete_template' ) );
 		add_action( 'wp_ajax_gridbuilder-get-widget', array( &$this, 'ajax_get_widget' ) );
-
-		add_option( 'gridbuilder_container_templates', array() );
-		add_option( 'gridbuilder_row_templates', array() );
-		add_option( 'gridbuilder_cell_templates', array() );
-		add_option( 'gridbuilder_widget_templates', array() );
 
 		add_option( 'gridbuilder_post_types', array('post','page') );
 	}
@@ -149,73 +127,6 @@ class Admin {
 		die('');
 	}
 
-	/**
-	 *	Ajax: Delete a template
-	 */
-	function ajax_delete_template() {
-		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'template' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) {
-			$template = json_decode( stripslashes( $_POST[ 'template' ] ), true );
-			
-			$template = wp_parse_args($template, array(
-				'slug'	=> '',
-				'type'	=> false,
-			));
-			$type = in_array( $template['type'], array( 'container', 'row', 'cell', 'widget' ) ) ? $template['type'] : false;
-			if ( $type !== false && ! empty( $template['slug'] ) ) {
-				$templates = get_option( "gridbuilder_{$type}_templates" );
-				if ( isset( $templates[ $template['slug'] ] ) ) {
-					unset( $templates[ $template['slug'] ] );
-					update_option( "gridbuilder_{$type}_templates", $templates );
-				}
-				header( 'Content-Type: application/json' );
-				echo json_encode( array( 'success' => true ) );
-			}
-		}
-		die('');
-	}
-
-	/**
-	 *	Ajax: Create or update a template
-	 */
-	function ajax_save_template() {
-		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'template' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) {
-
-
-			$template = json_decode( stripslashes( $_POST[ 'template' ] ), true );
-			
-			$template = wp_parse_args($template, array(
-				'name'	=> '',
-				'slug'	=> '',
-				'data'	=> (object) array(),
-				'type'	=> false,
-			));
-			$type = in_array( $template['type'], array( 'container', 'row', 'cell', 'widget' ) ) ? $template['type'] : false;
-
-			if ( $type !== false && ! empty( $template['name'] ) && ! empty( $template['slug'] ) && ! empty( $template['data'] ) ) {
-				$templates = get_option( "gridbuilder_{$type}_templates" );
-
-				$template['name'] = sanitize_text_field( $template['name'] );
-
-				// use unique slug if create
-				if ( $_REQUEST[ 'action' ] == 'gridbuilder-create-template' && isset( $templates[ $template['slug'] ] ) ) {
-					$i = 1;
-					while ( isset( $templates[ $template['slug'] . '-' . $i ] ) ) {
-						$i++;
-					}
-					$template['slug'] = $template['slug'] . '-' . $i;
-				} else {
-					$template['slug'] = sanitize_title( $template['slug'] );
-				}
-
-				$templates[ $template['slug'] ] = $template;
-				update_option( "gridbuilder_{$type}_templates", $templates );
-			}
-			
-			header( 'Content-Type: application/json' );
-			echo json_encode( $template );
-		}
-		die('');
-	}
 
 	/**
 	 *	Hidden input field in post editor
@@ -258,7 +169,7 @@ class Admin {
 	function pre_post_content( $value ) {
 		if ( $this->is_enabled_for_post_type() && isset( $_POST['_grid_data'], $_POST['_grid_enabled'] ) && intval( $_POST['_grid_enabled'] ) ) {
 			$grid_data = json_decode( stripslashes( $_POST['_grid_data'] ), true );
-			$value = Gridbuilder::instance()->get_content( $grid_data );
+			$value = Core\Core::instance()->get_content( $grid_data );
 		}
 		return $value;
 	}
@@ -373,75 +284,66 @@ class Admin {
 				wp_register_script( $script_id, plugins_url( 'js/admin/edit.min.js' , GRIDBUILDER_FILE ), array('jquery', 'wp-backbone', 'wp-color-picker', 'media-views' ), $version );
 			}
 
-			wp_localize_script ( $script_id, 'gridbuilder' , array(
-				'l10n'		=> array(
-					'Edit'				=> __( 'Edit',  'wp-gridbuilder' ),
+			$script_l10n = array(
+				'Edit'				=> __( 'Edit',  'wp-gridbuilder' ),
 
-					'EditGrid'			=> __( 'Edit Grid',  'wp-gridbuilder' ),
-					'EditText'			=> __( 'Edit Text',  'wp-gridbuilder' ),
-					'Done'				=> __( 'Done',  'wp-gridbuilder' ),
-					'Delete'			=> __( 'Delete',  'wp-gridbuilder' ),
+				'EditGrid'			=> __( 'Edit Grid',  'wp-gridbuilder' ),
+				'EditText'			=> __( 'Edit Text',  'wp-gridbuilder' ),
+				'Done'				=> __( 'Done',  'wp-gridbuilder' ),
+				'Delete'			=> __( 'Delete',  'wp-gridbuilder' ),
+			
+				'Grid'				=> __( 'Grid',  'wp-gridbuilder' ),
+				'Container'			=> __( 'Container',  'wp-gridbuilder' ),
+				'Row'				=> __( 'Row',  'wp-gridbuilder' ),
+				'Cell'				=> __( 'Cell',  'wp-gridbuilder' ),
+				'Widget'			=> __( 'Widget',  'wp-gridbuilder' ),
+
+				'EditContainer'		=> __( 'Edit Container',  'wp-gridbuilder' ),
+				'EditRow'			=> __( 'Edit Row',  'wp-gridbuilder' ),
+				'EditCell'			=> __( 'Edit Cell',  'wp-gridbuilder' ),
+				'EditWidget'		=> __( 'Edit Widget',  'wp-gridbuilder' ),
+
+				'WidgetTypes'		=> __( 'Widget Types',  'wp-gridbuilder' ),
+				'SelectWidget'		=> __( 'Select Widget',  'wp-gridbuilder' ),
 				
-					'Grid'				=> __( 'Grid',  'wp-gridbuilder' ),
-					'Container'			=> __( 'Container',  'wp-gridbuilder' ),
-					'Row'				=> __( 'Row',  'wp-gridbuilder' ),
-					'Cell'				=> __( 'Cell',  'wp-gridbuilder' ),
-					'Widget'			=> __( 'Widget',  'wp-gridbuilder' ),
+				'unkonwnWidget'		=> __( 'Unknown Widget:',  'wp-gridbuilder' ),
+			);
 
-					'EditContainer'		=> __( 'Edit Container',  'wp-gridbuilder' ),
-					'EditRow'			=> __( 'Edit Row',  'wp-gridbuilder' ),
-					'EditCell'			=> __( 'Edit Cell',  'wp-gridbuilder' ),
-					'EditWidget'		=> __( 'Edit Widget',  'wp-gridbuilder' ),
+			$script_options = array(
+				'ajaxurl'				=> admin_url( 'admin-ajax.php' ),
+				'create_template_nonce'	=> wp_create_nonce( 'gridbuilder-create-template' ),
+				'update_template_nonce'	=> wp_create_nonce( 'gridbuilder-update-template' ),
+				'delete_template_nonce'	=> wp_create_nonce( 'gridbuilder-delete-template' ),
+				'get_widget_nonce'		=> wp_create_nonce( 'gridbuilder-get-widget' ),
 
-					'Template'			=> __( 'Template',  'wp-gridbuilder' ),
-					'Templates'			=> __( 'Templates',  'wp-gridbuilder' ),
-					'ManageTemplates'
-										=> __( 'Manage Templates',  'wp-gridbuilder' ),
-					'TemplateName'		=> __( 'Template Name',  'wp-gridbuilder' ),
-					'CreateTemplateDescription'
-										=> __( 'The Template will be available at blahblah...',  'wp-gridbuilder' ),
-				
-					'WidgetTypes'		=> __( 'Widget Types',  'wp-gridbuilder' ),
-					'SelectWidget'		=> __( 'Select Widget',  'wp-gridbuilder' ),
-					
-					'unkonwnWidget'		=> __( 'Unknown Widget:',  'wp-gridbuilder' ),
+
+				'editors'	=> array(
+					'container'	=> Settings\Editors::container(),
+					'row'		=> Settings\Editors::row(),
+					'cell'		=> Settings\Editors::cell(),
+					'widget'	=> Settings\Editors::widget(),
 				),
-				'options'	=> array(
-					'ajaxurl'				=> admin_url( 'admin-ajax.php' ),
-					'create_template_nonce'	=> wp_create_nonce( 'gridbuilder-create-template' ),
-					'update_template_nonce'	=> wp_create_nonce( 'gridbuilder-update-template' ),
-					'delete_template_nonce'	=> wp_create_nonce( 'gridbuilder-delete-template' ),
-					'get_widget_nonce'		=> wp_create_nonce( 'gridbuilder-get-widget' ),
 
-
-					'editors'	=> array(
-						'container'	=> EditorSettings::container(),
-						'row'		=> EditorSettings::row(),
-						'cell'		=> EditorSettings::cell(),
-						'widget'	=> EditorSettings::widget(),
-					),
-					// element templates
-					'templates' => array(
-						'container'		=> TemplateSettings::container(),
-						'row'			=> TemplateSettings::row(),
-						'cell'			=> TemplateSettings::cell(),
-						'widget'		=> TemplateSettings::widget(),
-					),
-
-					// allowed
-					'widgets'			=> WidgetSettings::types(),
-					'screensizes'		=> CoreSettings::screen_sizes(),
-					'default_widget'	=> apply_filters( 'gridbuilder_default_widget', 'WP_Widget_Text'),
-					'default_widget_content_property'	
-										=> apply_filters( 'gridbuilder_default_widget_content_property', 'description'),
-					'features'			=> array(
-						// manage templates
-						'templates'	=> current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ),
-						// locking
-						'locks'		=> get_user_setting( 'gridbuilder_features_locks', false ),
-					),
+				// allowed
+				'widgets'			=> Settings\Widgets::types(),
+				'screensizes'		=> Settings\Core::screen_sizes(),
+				'default_widget'	=> apply_filters( 'gridbuilder_default_widget', 'WP_Widget_Text'),
+				'default_widget_content_property'	
+									=> apply_filters( 'gridbuilder_default_widget_content_property', 'description'),
+				'features'			=> array(
+					// manage templates
+					'templates'	=> current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ),
+					// locking
+					'locks'		=> get_user_setting( 'gridbuilder_features_locks', false ),
 				),
-			) );
+			);
+
+			$script_settings = array(
+				'l10n'		=> apply_filters( 'gridbuilder_edit_script_l10n', $script_l10n ),
+				'options'	=> apply_filters( 'gridbuilder_edit_script_options', $script_options ),
+			);
+
+			wp_localize_script ( $script_id, 'gridbuilder' , $script_settings );
 		}
 	}
 
