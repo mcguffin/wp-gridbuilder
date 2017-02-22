@@ -10,6 +10,10 @@ class Cell extends Element {
 	public function render_content() {
 		$output = '';
 
+		if ( ! $this->grid_data[ 'active' ] ) {
+			return $output;
+		}
+
 		$cell_attr = array(
 			'id'	=> $this->grid_data['attr_id'],
 			'class'	=> array_merge(  

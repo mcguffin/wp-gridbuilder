@@ -16,6 +16,11 @@ class Editors {
 
 	private static function container_sidebar() {
 		$settings = array(
+			'status'	=> array(
+				'title'			=> __( 'Status','wp-gridbuilder' ),
+				'description'	=> '',
+				'items'			=> self::status_settings(),
+			),
 			'attributes'	=> array(
 				'title'			=> __( 'Attributes','wp-gridbuilder' ),
 				'description'	=> '',
@@ -75,6 +80,11 @@ class Editors {
 
 	private static function row_sidebar() {
 		$settings = array(
+			'status'	=> array(
+				'title'			=> __( 'Status','wp-gridbuilder' ),
+				'description'	=> '',
+				'items'			=> self::status_settings(),
+			),
 			'attributes'	=> array(
 				'title'			=> __( 'Attributes','wp-gridbuilder' ),
 				'description'	=> '',
@@ -115,6 +125,11 @@ class Editors {
 
 	private static function cell_sidebar() {
 		$settings = array(
+			'status'	=> array(
+				'title'			=> __( 'Status','wp-gridbuilder' ),
+				'description'	=> '',
+				'items'			=> self::status_settings(),
+			),
 			'attributes'	=> array(
 				'title'			=> __( 'Attributes','wp-gridbuilder' ),
 				'description'	=> '',
@@ -152,6 +167,11 @@ class Editors {
 
 	private static function widget_sidebar() {
 		$settings = array(
+			'status'	=> array(
+				'title'			=> __( 'Status','wp-gridbuilder' ),
+				'description'	=> '',
+				'items'			=> self::status_settings(),
+			),
 			'attributes'	=> array(
 				'title'			=> __( 'Attributes','wp-gridbuilder' ),
 				'description'	=> '',
@@ -210,6 +230,23 @@ class Editors {
 	//	--------------------------------------------- 
 	//	Atomic settings
 	//	--------------------------------------------- 
+
+	/**
+	 *	HTML Element attribtues id, class, style
+	 */
+	private static function status_settings() {
+		$settings = array(
+			'active'	=> array(
+				'title'			=> __('Active', 'wp-gridbuilder'),
+				'type'			=> 'checkbox',
+				'description'	=> '',
+				'priority'		=> 5,
+				'default'		=> true,
+			),
+		);
+		return apply_filters( 'gridbuilder_status_settings', $settings );
+	}
+
 
 	/**
 	 *	HTML Element attribtues id, class, style

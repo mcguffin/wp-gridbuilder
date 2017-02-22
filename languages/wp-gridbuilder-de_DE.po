@@ -1,0 +1,551 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP GridBuilder\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-20 18:33+0100\n"
+"PO-Revision-Date: 2017-02-20 18:36+0100\n"
+"Last-Translator: Jörn Lund <joern@podpirate.org>\n"
+"Language-Team: \n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.8.1\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
+"X-Poedit-Basepath: ../\n"
+"X-Textdomain-Support: yes\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: node_modules\n"
+
+#: include/WPGridbuilder/Admin/Admin.php:72
+#: include/WPGridbuilder/Admin/Admin.php:76
+msgid "Gridbuilder Locks"
+msgstr "Sperrungen"
+
+#: include/WPGridbuilder/Admin/Admin.php:79
+msgid "Enable Element locking"
+msgstr "Sperrungen aktivieren"
+
+#: include/WPGridbuilder/Admin/Admin.php:82
+msgid ""
+"If checked you can lock certain elements and properties of a page layout."
+msgstr ""
+"Wenn ausgewählt kannst Du einzelne Elemente und Eigenschaften von der "
+"Bearbeitung ausschließen."
+
+#: include/WPGridbuilder/Admin/Admin.php:114
+#, php-format
+msgid "Widget “%s” is unavailable. This is what you entered."
+msgstr "Widget “%s” ist nicht verfügbar. Das hier hast Du eingatragen:"
+
+#: include/WPGridbuilder/Admin/Admin.php:288
+#: include/template/ui/toolbar.php:57
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: include/WPGridbuilder/Admin/Admin.php:290
+msgid "Edit Grid"
+msgstr "Raster bearbeiten"
+
+#: include/WPGridbuilder/Admin/Admin.php:291
+msgid "Edit Text"
+msgstr "Text bearbeiten"
+
+#: include/WPGridbuilder/Admin/Admin.php:292
+msgid "Done"
+msgstr "Fertig"
+
+#: include/WPGridbuilder/Admin/Admin.php:293
+#: include/template/ui/toolbar.php:59
+msgid "Delete"
+msgstr "Löschen"
+
+#: include/WPGridbuilder/Admin/Admin.php:295
+msgid "Grid"
+msgstr "Raster"
+
+#: include/WPGridbuilder/Admin/Admin.php:296
+msgid "Container"
+msgstr "Container"
+
+#: include/WPGridbuilder/Admin/Admin.php:297
+msgid "Row"
+msgstr "Reihe"
+
+#: include/WPGridbuilder/Admin/Admin.php:298
+msgid "Cell"
+msgstr "Zelle"
+
+#: include/WPGridbuilder/Admin/Admin.php:299
+#: include/WPGridbuilder/Settings/Editors.php:166
+msgid "Widget"
+msgstr "Widget"
+
+#: include/WPGridbuilder/Admin/Admin.php:301
+msgid "Edit Container"
+msgstr "Container bearbeiten"
+
+#: include/WPGridbuilder/Admin/Admin.php:302
+msgid "Edit Row"
+msgstr "Reihe bearbeiten"
+
+#: include/WPGridbuilder/Admin/Admin.php:303
+msgid "Edit Cell"
+msgstr "Zelle bearbeiten"
+
+#: include/WPGridbuilder/Admin/Admin.php:304
+msgid "Edit Widget"
+msgstr "Wiget bearbeiten"
+
+#: include/WPGridbuilder/Admin/Admin.php:306
+msgid "Widget Types"
+msgstr "Widget Typen"
+
+#: include/WPGridbuilder/Admin/Admin.php:307
+msgid "Select Widget"
+msgstr "Wiget auswählen"
+
+#: include/WPGridbuilder/Admin/Admin.php:309
+msgid "Unknown Widget:"
+msgstr "Unbekanntes Widget:"
+
+#: include/WPGridbuilder/Admin/Settings.php:45
+#: include/WPGridbuilder/Admin/Settings.php:56
+msgid "GridBuilder Options"
+msgstr "Gridbuilder Einstellungen"
+
+#: include/WPGridbuilder/Admin/Settings.php:45
+#: include/WPGridbuilder/Admin/Tools.php:37
+msgid "GridBuilder"
+msgstr "GridBuilder"
+
+#: include/WPGridbuilder/Admin/Settings.php:53
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: include/WPGridbuilder/Admin/Settings.php:62
+msgid "Save Settings"
+msgstr "Einstellunge speichern"
+
+#: include/WPGridbuilder/Admin/Settings.php:83
+msgid "Enqueue Bootstrap CSS and JS"
+msgstr "Bootstrap CSS und JS laden"
+
+#: include/WPGridbuilder/Admin/Templates.php:49
+msgid "Template"
+msgstr "Vorlage"
+
+#: include/WPGridbuilder/Admin/Templates.php:50
+msgid "Templates"
+msgstr "Vorlagen"
+
+#: include/WPGridbuilder/Admin/Templates.php:52
+#: include/template/ui/toolbar.php:36
+msgid "Manage Templates"
+msgstr "Vorlagen verwalten"
+
+#: include/WPGridbuilder/Admin/Templates.php:53
+msgid "Template Name"
+msgstr "Name"
+
+#: include/WPGridbuilder/Admin/Templates.php:55
+msgid "The Template will be available at blahblah..."
+msgstr ""
+
+#: include/WPGridbuilder/Admin/Tools.php:37
+msgid "WP GridBuilder"
+msgstr "WP GridBuilder"
+
+#: include/WPGridbuilder/Admin/Tools.php:53
+msgid "Done!"
+msgstr "Fertig!"
+
+#: include/WPGridbuilder/Admin/Tools.php:100
+#, php-format
+msgid "%d Page updated"
+msgid_plural "%d Pages updated"
+msgstr[0] "%d Seite aktualisiert"
+msgstr[1] "%d Seiten aktualisiert"
+
+#: include/WPGridbuilder/Admin/Tools.php:141
+#, php-format
+msgid "One template added."
+msgid_plural "%d templates added."
+msgstr[0] "Eine Vorlage hinzugefügt."
+msgstr[1] "%d Vorlagen hinzugefügt."
+
+#: include/WPGridbuilder/Admin/Tools.php:144
+#, php-format
+msgid "One template updated."
+msgid_plural "%d templates updated."
+msgstr[0] "Eine Vorlage aktualisiert."
+msgstr[1] "%d Vorlagen aktualisiert."
+
+#: include/WPGridbuilder/Admin/Tools.php:149
+msgid "Invalid import File"
+msgstr "Ungültige Importdatei"
+
+#: include/WPGridbuilder/Admin/Tools.php:153
+msgid "Empty Import File"
+msgstr "Leere Importdate"
+
+#: include/WPGridbuilder/Admin/Tools.php:190
+msgid "Insufficient permission."
+msgstr "Unzureichende Berechtigungen."
+
+#: include/WPGridbuilder/Admin/Tools.php:206
+msgid "GridBuilder Import / Export"
+msgstr "GridBuilder Import / Export"
+
+#: include/WPGridbuilder/Admin/Tools.php:210
+msgid "Export Templates"
+msgstr "Vorlagen Exportieren"
+
+#: include/WPGridbuilder/Admin/Tools.php:211
+msgid "Hit the export Button to download your Grid object templates."
+msgstr ""
+"Klicke den Export-Button um Deine Layout-Raster-Objekte herunterzuladen."
+
+#: include/WPGridbuilder/Admin/Tools.php:214
+msgid "Export"
+msgstr "Export"
+
+#: include/WPGridbuilder/Admin/Tools.php:219
+msgid "Import Object Templates"
+msgstr "Objekt-Vorlage importieren"
+
+#: include/WPGridbuilder/Admin/Tools.php:222
+msgid ""
+"Import a set of predefined grid object like containers, rows, cells or "
+"widgets."
+msgstr ""
+
+#: include/WPGridbuilder/Admin/Tools.php:225
+msgid ""
+"If you enable the checkbox below your current template settings will be "
+"deleted first."
+msgstr ""
+
+#: include/WPGridbuilder/Admin/Tools.php:231
+msgid "Existing templates:"
+msgstr ""
+
+#: include/WPGridbuilder/Admin/Tools.php:234
+msgid "Keep"
+msgstr "Behalten"
+
+#: include/WPGridbuilder/Admin/Tools.php:237
+msgid "Update"
+msgstr "Aktualisieren"
+
+#: include/WPGridbuilder/Admin/Tools.php:240
+msgid "Delete first"
+msgstr "Zuerst löschen"
+
+#: include/WPGridbuilder/Admin/Tools.php:245
+msgid "Select File"
+msgstr "Datei auswählen"
+
+#: include/WPGridbuilder/Admin/Tools.php:250
+msgid "Import"
+msgstr "Import"
+
+#: include/WPGridbuilder/Admin/Tools.php:256
+msgid "Migrate Domain"
+msgstr "Domain migrieren"
+
+#: include/WPGridbuilder/Admin/Tools.php:258
+msgid "This will change all Links and image sources to the new domain name."
+msgstr ""
+
+#: include/WPGridbuilder/Admin/Tools.php:260
+msgid "Use this tool after changing the site URL."
+msgstr ""
+
+#: include/WPGridbuilder/Admin/Tools.php:263
+msgid "From Domain"
+msgstr ""
+
+#: include/WPGridbuilder/Admin/Tools.php:267
+msgid "To domain"
+msgstr ""
+
+#: include/WPGridbuilder/Admin/Tools.php:272
+msgid "Migrate"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Core.php:21
+msgid "Smartphone"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Core.php:25
+msgid "Tablet"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Core.php:29
+msgid "Tablet (landscape)"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Core.php:33
+msgid "Desktop"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:20
+#: include/WPGridbuilder/Settings/Editors.php:79
+#: include/WPGridbuilder/Settings/Editors.php:119
+#: include/WPGridbuilder/Settings/Editors.php:156
+msgid "Attributes"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:25
+#: include/WPGridbuilder/Settings/Editors.php:84
+#: include/WPGridbuilder/Settings/Editors.php:124
+#: include/WPGridbuilder/Settings/Editors.php:161
+msgid "Background"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:36
+msgid "Container Tag"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:39
+msgid "Div"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:40
+msgid "Section"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:41
+msgid "Article"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:48
+msgid "Fluid"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:50
+msgid "If checked the container content will adapt to the screen width"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:54
+#: include/WPGridbuilder/Settings/Editors.php:95
+#: include/WPGridbuilder/Settings/Editors.php:135
+msgid "Fullscreen"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:55
+#: include/WPGridbuilder/Settings/Editors.php:96
+#: include/WPGridbuilder/Settings/Editors.php:136
+msgid "If checked the container will be at least one viewport high."
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:170
+msgid "Before Widget"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:175
+msgid "After Widget"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:180
+msgid "Before Title"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:185
+msgid "After Title"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:220
+msgid "ID"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:222
+msgid "A custom ID."
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:226
+msgid "Classname"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:228
+msgid "A CSS classname"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:232
+msgid "Custom CSS"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:246
+msgid "Color"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:252
+msgid "Color Opacity"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:260
+msgid "Image"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:266
+msgid "Image Size"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:269
+msgid "Tiled Image"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:270
+msgid "Contain"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:271
+msgid "Cover"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:272
+msgid "Fill (scale unproportional)"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:276
+#: include/WPGridbuilder/Settings/Editors.php:289
+msgid "How the background image is displayed."
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:281
+msgid "Image Alignment"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:284
+msgid "Scroll"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:285
+msgid "Fixed"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:294
+msgid "Horizontal Position"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:297
+msgid "Left"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:298
+#: include/WPGridbuilder/Settings/Editors.php:309
+msgid "Center"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:299
+msgid "Right"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:305
+msgid "Vertical Position"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:308
+msgid "Top"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:310
+msgid "Bottom"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:316
+msgid "Background Video"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:344
+msgid "Visibility"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:350
+msgid "Size"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:356
+msgid "Offset"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:376
+#: include/template/ui/toolbar.php:48
+msgid "Default"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:377
+#: include/template/ui/toolbar.php:51
+msgid "Visible"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:378
+#: include/template/ui/toolbar.php:54
+msgid "Hidden"
+msgstr ""
+
+#: include/template/ui/input/media.php:9
+msgid "Select Media"
+msgstr ""
+
+#: include/template/ui/modal.php:3
+msgid "Previous"
+msgstr ""
+
+#: include/template/ui/modal.php:4
+msgid "Next"
+msgstr ""
+
+#: include/template/ui/modal.php:5
+msgid "Close"
+msgstr ""
+
+#: include/template/ui/prompt.php:17
+msgid "Cancel"
+msgstr ""
+
+#: include/template/ui/prompt.php:18
+msgid "Okay"
+msgstr ""
+
+#: include/template/ui/toolbar.php:12
+msgid "Add Container"
+msgstr ""
+
+#: include/template/ui/toolbar.php:14 include/template/ui/toolbar.php:19
+#: include/template/ui/toolbar.php:23 include/template/ui/toolbar.php:27
+msgid "▼"
+msgstr ""
+
+#: include/template/ui/toolbar.php:17
+msgid "Add Row"
+msgstr ""
+
+#: include/template/ui/toolbar.php:21
+msgid "Add Cell"
+msgstr ""
+
+#: include/template/ui/toolbar.php:25
+msgid "Add Widget"
+msgstr ""
+
+#: include/template/ui/toolbar.php:34
+msgid "Create Template"
+msgstr ""
+
+#: include/template/ui/toolbar.php:35
+msgid "Update Template"
+msgstr ""
+
+#: include/template/ui/toolbar.php:45
+msgid "Visibility:"
+msgstr ""
+
+#: include/template/ui/toolbar.php:58
+msgid "Clone"
+msgstr ""

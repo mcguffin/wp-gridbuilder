@@ -17,6 +17,9 @@ abstract class Element {
 
 		self::$_counter++;
 
+		$status_defaults = array(
+			'active'	=> true,
+		);
 		$attr_defaults = array(
 			'attr_id'		=> '',
 			'attr_class'	=> '',
@@ -34,12 +37,13 @@ abstract class Element {
 			'background_position_vertical'		=> 'center',
 		);
 
+		$grid_data = wp_parse_args( $grid_data, $status_defaults );
 		$grid_data = wp_parse_args( $grid_data, $attr_defaults );
 		$grid_data = wp_parse_args( $grid_data, $bg_defaults );
 		$grid_data = wp_parse_args( $grid_data, $this->get_element_defaults() );
 
 		$this->grid_data			= $grid_data;
-		
+
 		$this->parent_element		= $parent;
 
 		$this->grid_data['type']	= $this->type;

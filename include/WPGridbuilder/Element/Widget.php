@@ -9,6 +9,10 @@ class Widget extends Element {
 
 	public function render_content() {
 
+		if ( ! $this->grid_data[ 'active' ] ) {
+			return $output;
+		}
+
 		global $wp_widget_factory;
 
 		$output = '';

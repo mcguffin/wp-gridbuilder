@@ -10,6 +10,9 @@ class Container extends Element {
 	public function render_content() {
 		$output = '';
 
+		if ( ! $this->grid_data[ 'active' ] ) {
+			return $output;
+		}
 		
 		// container wrap
 		$container_wrap_attr = array(
