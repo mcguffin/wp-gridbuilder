@@ -9,6 +9,15 @@
 	border-bottom:1px solid #e5e5e5;
 	@include transition( box-shadow 0.2s linear );
 	box-sizing: border-box;
+	
+	.set-autosave {
+		display:none;
+		[date-grid-editor-mode="true"] & {
+			display:block;
+		}
+	}
+
+	
 	&[data-sticky="true"] {
 		position:fixed;
 		top: 33px;
