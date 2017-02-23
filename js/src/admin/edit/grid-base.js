@@ -99,6 +99,7 @@
 	}
 
 	var options		= gridbuilder.options,
+		features	= gridbuilder.options.features,
 		l10n		= gridbuilder.l10n,
 		grid		= exports.grid = {};
 
@@ -163,10 +164,15 @@
 		},
 		onChangeModel:	function() {
 			var val = JSON.stringify( this.model.toJSON() );
+
 			// push to undo!
 			this.$input.val( val );
+
+			if ( features.autosave ) {
+				this.save( val );
+			}
 		},
-		autosave: 		function() {
+		save:			function( data ) {
 			$.ajax({
 				method: 	'post',
 				url: 		options.ajaxurl,
@@ -181,7 +187,7 @@
 				data: {
 					action:		'gridbuilder-autosave',
 					nonce:		options.autosave_nonce,
-					grid_data:	JSON.stringify( this.model.toJSON() ),
+					grid_data:	data,
 					post_id:	this.postID
 				},
 			});

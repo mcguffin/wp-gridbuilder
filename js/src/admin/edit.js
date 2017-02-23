@@ -1,6 +1,5 @@
 (function($,grid) {
 	var l10n			= gridbuilder.l10n, 
-		options			= gridbuilder.options,
 		features		= gridbuilder.options.features,
 		default_widget	= gridbuilder.options.default_widget,
 		default_widget_content_property = gridbuilder.options.default_widget_content_property,
@@ -87,14 +86,18 @@
 
 		})
 		.on('click','.toggle-grid-editor',function( e ) {
+
 			toggleGridEditor();
+
 		})
 		.on('change','[name="grid_autosave"]',function( e ) {
+
 			var state = !! $( this ).prop('checked');
-			console.log(state);
+
 			features.autosave = state;
+
 			window.setUserSetting( 'grid-autosave', state );
-		})
-		;
+
+		});
 		
 })(jQuery,window.grid);

@@ -167,7 +167,8 @@ class Admin extends Core\Singleton {
 			}
 
 			// validate griddata
-			$grid_data = json_decode( $_POST[ 'grid_data' ] );
+			$grid_data = json_decode( stripslashes( $_POST['grid_data'] ), true );
+
 			if ( ! $grid_data ) {
 				echo json_encode( array(
 					'success'	=> false,
@@ -376,6 +377,7 @@ class Admin extends Core\Singleton {
 				'update_template_nonce'	=> wp_create_nonce( 'gridbuilder-update-template' ),
 				'delete_template_nonce'	=> wp_create_nonce( 'gridbuilder-delete-template' ),
 				'get_widget_nonce'		=> wp_create_nonce( 'gridbuilder-get-widget' ),
+				'autosave_nonce'		=> wp_create_nonce( 'gridbuilder-autosave' ),
 
 
 				'editors'	=> array(

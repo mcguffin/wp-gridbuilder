@@ -28,18 +28,20 @@ if ( ! defined('ABSPATH') )
 					</select>
 				</div>
 			</div>
-			<?php if ( current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) { ?>
 			<div class="toolbar-right">
-				<div class="btn-group add">
-					<button class="create-template btn small button-secondary"><?php _e( 'Create Template', 'wp-gridbuilder' ); ?></button>
-					<button class="update-template btn small button-secondary"><?php _e( 'Update Template', 'wp-gridbuilder' ); ?></button>
-					<button class="manage-templates btn small button-secondary"><?php _e( 'Manage Templates', 'wp-gridbuilder' ); ?></button>
-				</div>
+				<button disabled="disabled" class="item-action btn small edit button-primary"><?php _e('Edit','wp-gridbuilder') ?></button>
+				<button disabled="disabled" class="item-action btn small clone button-secondary"><?php _e('Clone','wp-gridbuilder') ?></button>
+				<button disabled="disabled" class="item-action btn small delete red button-secondary"><?php _e('Delete','wp-gridbuilder') ?></button>
+				<?php if ( get_user_setting( 'gridbuilder_features_locks', false ) ) { ?>
+					<input disabled="disabled" class="item-action lock" type="checkbox" id="element-lock" />
+					<label for="element-lock" class="btn small lock button-secondary">
+						<span class="dashicons dashicons-unlock"></span>
+					</button>
+				<?php } ?>
 			</div>
-			<?php } ?>
 		</div>
-		<hr />
 		<div class="toolbar-row">
+			<hr />
 			<div class="btn-group viewswitcher toolbar-left"></div>
 			<div class="btn-group set-visibility toolbar-center item-action">
 				<?php _e( 'Visibility:', 'wp-gridbuilder' ) ?>
@@ -53,16 +55,14 @@ if ( ! defined('ABSPATH') )
 				<input disabled="disabled" type="radio" value="hidden" name="set-visibility" id="sogrid-visibility-hidden" />
 				<label for="sogrid-visibility-hidden"><?php _e( 'Hidden', 'wp-gridbuilder' ) ?></label>
 			</div>
+			<?php if ( current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ) { ?>
 			<div class="toolbar-right">
-				<button disabled="disabled" class="item-action btn small edit button-primary"><?php _e('Edit','wp-gridbuilder') ?></button>
-				<button disabled="disabled" class="item-action btn small clone button-secondary"><?php _e('Clone','wp-gridbuilder') ?></button>
-				<button disabled="disabled" class="item-action btn small delete red button-secondary"><?php _e('Delete','wp-gridbuilder') ?></button>
-				<?php if ( get_user_setting( 'gridbuilder_features_locks', false ) ) { ?>
-					<input disabled="disabled" class="item-action lock" type="checkbox" id="element-lock" />
-					<label for="element-lock" class="btn small lock button-secondary">
-						<span class="dashicons dashicons-unlock"></span>
-					</button>
-				<?php } ?>
+				<div class="btn-group add">
+					<button class="create-template btn small button-secondary"><?php _e( 'Create Template', 'wp-gridbuilder' ); ?></button>
+					<button class="update-template btn small button-secondary"><?php _e( 'Update Template', 'wp-gridbuilder' ); ?></button>
+					<button class="manage-templates btn small button-secondary"><?php _e( 'Manage Templates', 'wp-gridbuilder' ); ?></button>
+				</div>
 			</div>
+			<?php } ?>
 		</div>
 	</script>
