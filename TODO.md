@@ -11,8 +11,8 @@ WP Gridbuilder ToDo:
 	- [ ] Plugin API Docs
 	- [ ] l10n
  - [ ] Future
-	- [ ] Autosave
-		- [ ] Autosave checkbox in grid editor toolbarbar
+	- [x] Autosave
+		- [x] Autosave checkbox in grid editor toolbarbar
 	- [ ] Export / Import Grid + Elements
 	- [ ] Customizer based Editor
 	- [ ] Undo (keep model state in user settings)
