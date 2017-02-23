@@ -525,6 +525,10 @@
     display: table; }
   .grid-toolbar:after {
     clear: both; }
+  .grid-toolbar .set-autosave {
+    display: none; }
+    [date-grid-editor-mode="true"] .grid-toolbar .set-autosave {
+      display: block; }
   .grid-toolbar[data-sticky="true"] {
     position: fixed;
     top: 33px;

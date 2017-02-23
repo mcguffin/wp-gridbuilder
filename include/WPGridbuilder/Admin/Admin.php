@@ -36,6 +36,8 @@ class Admin extends Core\Singleton {
 
 		add_action( 'wp_ajax_gridbuilder-get-widget', array( &$this, 'ajax_get_widget' ) );
 
+		add_action( 'wp_ajax_gridbuilder-autosave', array( &$this, 'ajax_autosave' ) );
+
 		add_option( 'gridbuilder_post_types', array('post','page') );
 	}
 
@@ -57,6 +59,7 @@ class Admin extends Core\Singleton {
 	 */
 	function user_profile_update( $user_id ) {
 		set_user_setting( 'gridbuilder_features_locks', isset( $_POST['gridbuilder_features_locks'] ) );
+//		set_user_setting( 'gridbuilder_features_autosave', isset( $_POST['gridbuilder_features_autosave'] ) );
 	}
 	
 	/**
@@ -84,6 +87,25 @@ class Admin extends Core\Singleton {
 						</fieldset>
 					</td>
 				</tr>
+<?php /*
+				<tr class="gridbuilder-user-features-autosave">
+					<th scope="row"><?php 
+						_e( 'Gridbuilder Autosave', 'wp-gridbuilder' );
+					?></th>
+					<td>
+						<fieldset>
+							<legend class="screen-reader-text"><span><?php _e( 'Gridbuilder Autosave', 'wp-gridbuilder' ) ?></span></legend>
+							<label for="gridbuilder-features-autosave">
+							<input name="gridbuilder_features_autosave" type="checkbox" id="gridbuilder-features-autosave" value="1" <?php checked( get_user_setting( 'gridbuilder_features_autosave', false ) ) ?>>
+								<?php _e( 'Save Gridbuilder settings autmatically', 'wp-gridbuilder' ) ?>
+							</label>
+							<p class="description"><?php 
+								_e( 'If checked your Grid settings will be saved after each editing.', 'wp-gridbuilder' );
+							?></p>
+						</fieldset>
+					</td>
+				</tr>
+*/ ?>
 			</tbody>
 		</table><?php
 	}
@@ -93,10 +115,10 @@ class Admin extends Core\Singleton {
 	 *
 	 *	@action wp_ajax_gridbuilder-get-widget
 	 */
-	function ajax_get_widget() {
+	public function ajax_get_widget() {
 		global $wp_widget_factory;
 
-		if ( isset( $_POST[ 'nonce' ],  $_POST[ 'widget_class' ], $_POST[ 'instance' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( 'edit_posts' ) ) {
+		if ( isset( $_POST[ 'nonce' ], $_POST[ 'widget_class' ], $_POST[ 'instance' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( 'edit_posts' ) ) {
 			$instance = json_decode( stripslashes( $_POST[ 'instance' ] ), true );
 			header( 'Content-Type: text/html' );
 			$widget_class = str_replace( '\\\\', '\\', rawurldecode( $_POST[ 'widget_class'] ) );
@@ -127,13 +149,52 @@ class Admin extends Core\Singleton {
 		die('');
 	}
 
+	/**
+	 *	Ajax: Get Widget form.
+	 *
+	 *	@action wp_ajax_gridbuilder-autosave
+	 */
+	public function ajax_autosave() {
+		if ( isset( $_POST[ 'nonce' ], $_POST[ 'post_id' ], $_POST[ 'grid_data' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( 'edit_posts' ) ) {
+			// check get post
+			$post_id = intval( $_POST[ 'post_id' ] );
+			if ( ! $post = get_post( intval( $_POST[ 'post_id' ] ) ) ) {
+				echo json_encode( array(
+					'success'	=> false,
+					'message'	=> __( 'No such post', 'wp-gridbuilder' ),
+				) );
+				die('');
+			}
+
+			// validate griddata
+			$grid_data = json_decode( stripslashes( $_POST['grid_data'] ), true );
+
+			if ( ! $grid_data ) {
+				echo json_encode( array(
+					'success'	=> false,
+					'message'	=> __( 'Invalid Griddata', 'wp-gridbuilder' ),
+				) );
+				die('');
+			}
+
+			// save postmeta
+			update_post_meta(  $_POST[ 'post_id' ], '_grid_data', $grid_data );
+
+			// return success / fail
+			echo json_encode( array(
+				'success'	=> true,
+				'message'	=> '',
+			) );
+			die('');
+		}
+	}
 
 	/**
 	 *	Hidden input field in post editor
 	 *
 	 *	@action edit_form_top
 	 */
-	function edit_form_top() {
+	public function edit_form_top() {
 		if ( $this->is_enabled_for_post_type() ) {
 			if ( $post_id = get_the_ID() ) {
 				$grid_data		= get_post_meta( $post_id, '_grid_data', true );
@@ -286,6 +347,7 @@ class Admin extends Core\Singleton {
 
 			$script_l10n = array(
 				'Edit'				=> __( 'Edit',  'wp-gridbuilder' ),
+				'Autosave'			=> __( 'Autosave',  'wp-gridbuilder' ),
 
 				'EditGrid'			=> __( 'Edit Grid',  'wp-gridbuilder' ),
 				'EditText'			=> __( 'Edit Text',  'wp-gridbuilder' ),
@@ -315,6 +377,7 @@ class Admin extends Core\Singleton {
 				'update_template_nonce'	=> wp_create_nonce( 'gridbuilder-update-template' ),
 				'delete_template_nonce'	=> wp_create_nonce( 'gridbuilder-delete-template' ),
 				'get_widget_nonce'		=> wp_create_nonce( 'gridbuilder-get-widget' ),
+				'autosave_nonce'		=> wp_create_nonce( 'gridbuilder-autosave' ),
 
 
 				'editors'	=> array(
@@ -335,6 +398,7 @@ class Admin extends Core\Singleton {
 					'templates'	=> current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ),
 					// locking
 					'locks'		=> get_user_setting( 'gridbuilder_features_locks', false ),
+					'autosave'	=> get_user_setting( 'gridbuilder_features_autosave', false ),
 				),
 			);
 

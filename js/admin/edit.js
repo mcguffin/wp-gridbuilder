@@ -1456,14 +1456,15 @@
 
 
 	exports.grid.controller.Grid = function( ) {
-		this.$input = $('[name="_grid_data"]');
-		var self = this,
-			raw = this.$input.attr('value')
-			data = JSON.parse( raw );// || [];
+		this.$input	= $('[name="_grid_data"]');
+		this.postID	= $('[name="post_ID"]').val();
+		var self	= this,
+			raw		= this.$input.attr('value')
+			data	= JSON.parse( raw );// || [];
 		
-		this.model = new grid.model.GridObject( data );
-		this.subviews = new Backbone.Collection([]);
-		this.selected = false;
+		this.model		= new grid.model.GridObject( data );
+		this.subviews	= new Backbone.Collection([]);
+		this.selected	= false;
 
 		this.listenTo( this.model, 'change', this.onChangeModel );
 
@@ -1483,21 +1484,42 @@
 	};
 
 	_.extend( exports.grid.controller.Grid.prototype, {
-		whichView:function(){
+		whichView:	function() {
 			return this.view.whichView();
 		},
-		getSelected:function( what ) {
+		getSelected:	function( what ) {
 			return this.selected;
 		},
-		setSelected:function( what ) {
+		setSelected:	function( what ) {
 //			console.log(this.selected.$el);
 			this.selected = what;
 			return this;
 		},
-		onChangeModel : function() {
+		onChangeModel:	function() {
 			var val = JSON.stringify( this.model.toJSON() );
 			// push to undo!
 			this.$input.val( val );
+		},
+		autosave: 		function() {
+			$.ajax({
+				method: 	'post',
+				url: 		options.ajaxurl,
+				complete:	function(xhr,status){ },
+				success: 	function( data, status, xhr ) {
+					if ( data.success ) {
+						// Yeah!
+					} else {
+						// show message
+					}
+				},
+				data: {
+					action:		'gridbuilder-autosave',
+					nonce:		options.autosave_nonce,
+					grid_data:	JSON.stringify( this.model.toJSON() ),
+					post_id:	this.postID
+				},
+			});
+		
 		}
 	}, Backbone.Events);
 
@@ -1562,14 +1584,14 @@
 		save: function( ) {
 			var self = this;
 			$.ajax({
-				method: 'post',
-				url: options.ajaxurl,
-				complete:function(xhr,status){},
-				success:function( data, status, xhr ) {
+				method: 	'post',
+				url: 		options.ajaxurl,
+				complete:	function(xhr,status){},
+				success:	function( data, status, xhr ) {
 					_.each( data, function( value, prop ){ self.set( prop, value ) } );
 					self.trigger('sync');
 				},
-				data: {
+				data:	{
 					action : this.isNew() ? 'gridbuilder-create-template' : 'gridbuilder-update-template',
 					nonce  : this.isNew() ? options.create_template_nonce : options.update_template_nonce,
 					template: JSON.stringify( this.toJSON() )
@@ -1579,10 +1601,10 @@
 		destroy: function( ) {
 			var self = this;
 			$.ajax({
-				method: 'post',
-				url: options.ajaxurl,
-				complete:function(xhr,status){},
-				success:function( data, status, xhr ) {
+				method: 	'post',
+				url: 		options.ajaxurl,
+				complete:	function(xhr,status){},
+				success:	function( data, status, xhr ) {
 					self.trigger('destroy', self, self.collection );
 				},
 				data: {
@@ -2421,7 +2443,9 @@
 					// add to template select
 					grid.templates[type].add( template );
 
-					toolbar.update();
+					self.toolbar.update();
+
+					self.toolbar.setupTemplateSelects();
 
 					self.grid.hasChanged();
 				})
@@ -2744,11 +2768,16 @@
 		},
 
 		prepareMCE: function(){
-			var self = this;
+			var self = this,
+				modal = this.$el.closest('.grid-ui-modal').get(0);
 			this._prevMCE = {};
 			
+			if ( ! modal ) {
+				return;
+			}
+
 			// set tinymce z-index higher than modal z-index
-			mceZIndex = 1000 + parseInt( window.getComputedStyle( this.$el.closest('.grid-ui-modal').get(0) ).getPropertyValue("z-index") );
+			mceZIndex = 1000 + parseInt( window.getComputedStyle( modal ).getPropertyValue("z-index") );
 
 			// floatpanels (like menus)
 			this._prevMCE.FloatPanelZindex = tinyMCE.ui.FloatPanel.zIndex;
@@ -2779,10 +2808,12 @@
 			}
 		},
 		resetMCE: function(){
-			!! this._prevMCE.FloatPanelZindex		&& ( tinyMCE.ui.FloatPanel.zIndex					= this._prevMCE.FloatPanelZindex );
-			!! this._prevMCE.TooltipRepaint			&& ( tinyMCE.ui.Tooltip.prototype.repaint			= this._prevMCE.TooltipRepaint );
-			!! this._prevMCE.NotificationpRepaint	&& ( tinyMCE.ui.Notification.prototype.repaint		= this._prevMCE.NotificationpRepaint );
-			!! this._prevMCE.wpLinkRenderHtml		&& ( tinymce.ui.WPLinkPreview.prototype.renderHtml	= this._prevMCE.wpLinkRenderHtml );
+			if ( !! this._prevMCE ) {
+				!! this._prevMCE.FloatPanelZindex		&& ( tinyMCE.ui.FloatPanel.zIndex					= this._prevMCE.FloatPanelZindex );
+				!! this._prevMCE.TooltipRepaint			&& ( tinyMCE.ui.Tooltip.prototype.repaint			= this._prevMCE.TooltipRepaint );
+				!! this._prevMCE.NotificationpRepaint	&& ( tinyMCE.ui.Notification.prototype.repaint		= this._prevMCE.NotificationpRepaint );
+				!! this._prevMCE.wpLinkRenderHtml		&& ( tinymce.ui.WPLinkPreview.prototype.renderHtml	= this._prevMCE.wpLinkRenderHtml );
+			}
 		}
 	} );
 
@@ -3935,12 +3966,14 @@
 		.ready(function() {
 
 			var gridController, gridState = !! parseInt($('[name="_grid_enabled"]').val( )),
-				gridOn = '<input type="hidden" name="_grid_enabled" value="'+( gridState ? 1 : 0 ).toString()+'" />',
-				btnOpen = '<button type="button" id="edit-content-grid" class="button-secondary toggle-grid-editor">'+l10n.EditGrid+'</button>',
-				btnClose = '<button type="button" id="edit-content-text" class="button-secondary toggle-grid-editor">'+l10n.EditText+'</button>',
-				initial_val = $('[name="_grid_data"]').val( ),
-				is_initial = ! JSON.parse( initial_val ),
-				gridController = null;
+				gridOn			= '<input type="hidden" name="_grid_enabled" value="'+( gridState ? 1 : 0 ).toString()+'" />',
+				btnOpen			= '<button type="button" id="edit-content-grid" class="button-secondary toggle-grid-editor">'+l10n.EditGrid+'</button>',
+				btnClose		= '<button type="button" id="edit-content-text" class="button-secondary toggle-grid-editor">'+l10n.EditText+'</button>',
+				initial_val		= $('[name="_grid_data"]').val( ),
+				is_initial		= ! JSON.parse( initial_val ),
+				gridController	= null,
+				toggleWrapHtml	= '',
+				autosave		= window.getUserSetting( 'grid-autosave' );
 
 			toggleGridEditor = function( state ) {
 				var newState = _.isUndefined( state ) ? ($('#postdivrich').attr('date-grid-editor-mode') !== 'true') : state,
@@ -3984,9 +4017,22 @@
 				}
 			}
 
+			toggleWrapHtml += '<div id="grid-toggle-wrap" class="grid-toolbar">';;
+			toggleWrapHtml += 	'<div class="toolbar-left">';
+			toggleWrapHtml += 		'<label class="set-autosave" for="grid_autosave">';
+			toggleWrapHtml += 			'<input type="checkbox" name="grid_autosave" id="grid_autosave" value="1" '+( autosave ? 'checked' , '' )+' />';
+			toggleWrapHtml += 			l10n.Autosave;
+			toggleWrapHtml += 		'</label>';
+			toggleWrapHtml += 	'</div>';
+			toggleWrapHtml += 	'<div class="toolbar-right">';
+			toggleWrapHtml += 		gridOn;
+			toggleWrapHtml += 		btnOpen;
+			toggleWrapHtml += 		btnClose;
+			toggleWrapHtml += 	'</div>';
+			toggleWrapHtml += '</div>';
 			$('#postdivrich')
 				.attr('date-grid-editor-mode', gridState.toString() )
-				.prepend('<div id="grid-toggle-wrap" class="grid-toolbar"><div class="toolbar-right">' + gridOn + btnOpen + btnClose + '</div></div>');
+				.prepend( toggleWrapHtml );
 
 			toggleGridEditor( gridState );
 

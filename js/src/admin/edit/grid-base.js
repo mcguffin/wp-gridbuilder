@@ -99,6 +99,7 @@
 	}
 
 	var options		= gridbuilder.options,
+		features	= gridbuilder.options.features,
 		l10n		= gridbuilder.l10n,
 		grid		= exports.grid = {};
 
@@ -122,14 +123,15 @@
 
 
 	exports.grid.controller.Grid = function( ) {
-		this.$input = $('[name="_grid_data"]');
-		var self = this,
-			raw = this.$input.attr('value')
-			data = JSON.parse( raw );// || [];
+		this.$input	= $('[name="_grid_data"]');
+		this.postID	= $('[name="post_ID"]').val();
+		var self	= this,
+			raw		= this.$input.attr('value')
+			data	= JSON.parse( raw );// || [];
 		
-		this.model = new grid.model.GridObject( data );
-		this.subviews = new Backbone.Collection([]);
-		this.selected = false;
+		this.model		= new grid.model.GridObject( data );
+		this.subviews	= new Backbone.Collection([]);
+		this.selected	= false;
 
 		this.listenTo( this.model, 'change', this.onChangeModel );
 
@@ -149,21 +151,47 @@
 	};
 
 	_.extend( exports.grid.controller.Grid.prototype, {
-		whichView:function(){
+		whichView:	function() {
 			return this.view.whichView();
 		},
-		getSelected:function( what ) {
+		getSelected:	function( what ) {
 			return this.selected;
 		},
-		setSelected:function( what ) {
+		setSelected:	function( what ) {
 //			console.log(this.selected.$el);
 			this.selected = what;
 			return this;
 		},
-		onChangeModel : function() {
+		onChangeModel:	function() {
 			var val = JSON.stringify( this.model.toJSON() );
+
 			// push to undo!
 			this.$input.val( val );
+
+			if ( features.autosave ) {
+				this.save( val );
+			}
+		},
+		save:			function( data ) {
+			$.ajax({
+				method: 	'post',
+				url: 		options.ajaxurl,
+				complete:	function(xhr,status){ },
+				success: 	function( data, status, xhr ) {
+					if ( data.success ) {
+						// Yeah!
+					} else {
+						// show message
+					}
+				},
+				data: {
+					action:		'gridbuilder-autosave',
+					nonce:		options.autosave_nonce,
+					grid_data:	data,
+					post_id:	this.postID
+				},
+			});
+		
 		}
 	}, Backbone.Events);
 

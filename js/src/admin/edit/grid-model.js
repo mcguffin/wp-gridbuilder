@@ -56,14 +56,14 @@
 		save: function( ) {
 			var self = this;
 			$.ajax({
-				method: 'post',
-				url: options.ajaxurl,
-				complete:function(xhr,status){},
-				success:function( data, status, xhr ) {
+				method: 	'post',
+				url: 		options.ajaxurl,
+				complete:	function(xhr,status){},
+				success:	function( data, status, xhr ) {
 					_.each( data, function( value, prop ){ self.set( prop, value ) } );
 					self.trigger('sync');
 				},
-				data: {
+				data:	{
 					action : this.isNew() ? 'gridbuilder-create-template' : 'gridbuilder-update-template',
 					nonce  : this.isNew() ? options.create_template_nonce : options.update_template_nonce,
 					template: JSON.stringify( this.toJSON() )
@@ -73,10 +73,10 @@
 		destroy: function( ) {
 			var self = this;
 			$.ajax({
-				method: 'post',
-				url: options.ajaxurl,
-				complete:function(xhr,status){},
-				success:function( data, status, xhr ) {
+				method: 	'post',
+				url: 		options.ajaxurl,
+				complete:	function(xhr,status){},
+				success:	function( data, status, xhr ) {
 					self.trigger('destroy', self, self.collection );
 				},
 				data: {
