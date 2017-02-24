@@ -13,12 +13,12 @@ class Container extends Element {
 		if ( ! $this->grid_data[ 'active' ] ) {
 			return $output;
 		}
-		
+
 		// container wrap
 		$container_wrap_attr = array(
 			'id'	=> $this->grid_data['attr_id'],
 			'class'	=> array_merge( 
-					array( 'container-wrap', $container['attr_class'] ), 
+					array( 'container-wrap', $this->grid_data['attr_class'] ), 
 					$this->mk_visibility_classes( $this->grid_data ),
 					$this->mk_fullscreen_classes( $this->grid_data )
 			),
