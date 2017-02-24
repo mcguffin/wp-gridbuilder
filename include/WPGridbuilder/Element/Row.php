@@ -18,6 +18,7 @@ class Row extends Element {
 			'id'	=> $this->grid_data['attr_id'],
 			'class'	=> array_merge( 
 				array( 'row', $this->grid_data['attr_class'] ), 
+				$this->mk_visibility_classes( $this->grid_data ),
 				$this->mk_fullscreen_classes( $this->grid_data )
 			),
 		);

@@ -19,6 +19,7 @@ class Container extends Element {
 			'id'	=> $this->grid_data['attr_id'],
 			'class'	=> array_merge( 
 					array( 'container-wrap', $container['attr_class'] ), 
+					$this->mk_visibility_classes( $this->grid_data ),
 					$this->mk_fullscreen_classes( $this->grid_data )
 			),
 		);

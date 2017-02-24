@@ -19,6 +19,7 @@ class Cell extends Element {
 			'class'	=> array_merge(  
 				array( 'cell', $this->grid_data['attr_class'] ),
 				$this->mk_grid_classes( $this->grid_data ),
+				$this->mk_visibility_classes( $this->grid_data ),
 				$this->mk_fullscreen_classes( $this->grid_data )
 			),
 		);

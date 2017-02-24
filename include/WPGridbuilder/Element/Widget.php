@@ -27,6 +27,7 @@ class Widget extends Element {
 				'id'	=> $widget_id,
 				'class'	=> array_merge( 
 					array( 'widget', 'widget-'.$wp_widget->id_base, $this->grid_data['attr_class'] ), 
+					$this->mk_visibility_classes( $this->grid_data ),
 					$this->mk_grid_classes( $this->grid_data )
 				),
 			);
