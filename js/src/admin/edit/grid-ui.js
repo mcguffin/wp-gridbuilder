@@ -581,7 +581,8 @@
 				itemClass = current.getClass(),
 				parent = current.parent(),
 				data = current.model.toJSON();
-			delete(data.idx);
+
+			data.idx++;
 
 			this._addItem( itemClass, parent, data );
 

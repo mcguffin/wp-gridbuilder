@@ -1433,6 +1433,7 @@
 	}
 
 	var options		= gridbuilder.options,
+		features	= gridbuilder.options.features,
 		l10n		= gridbuilder.l10n,
 		grid		= exports.grid = {};
 
@@ -1497,10 +1498,15 @@
 		},
 		onChangeModel:	function() {
 			var val = JSON.stringify( this.model.toJSON() );
+
 			// push to undo!
 			this.$input.val( val );
+
+			if ( features.autosave ) {
+				this.save( val );
+			}
 		},
-		autosave: 		function() {
+		save:			function( data ) {
 			$.ajax({
 				method: 	'post',
 				url: 		options.ajaxurl,
@@ -1515,7 +1521,7 @@
 				data: {
 					action:		'gridbuilder-autosave',
 					nonce:		options.autosave_nonce,
-					grid_data:	JSON.stringify( this.model.toJSON() ),
+					grid_data:	data,
 					post_id:	this.postID
 				},
 			});
@@ -2222,8 +2228,8 @@
 				itemClass = current.getClass(),
 				parent = current.parent(),
 				data = current.model.toJSON();
-			delete(data.idx);
-			
+
+			data.idx++;
 
 			this._addItem( itemClass, parent, data );
 
@@ -3957,8 +3963,9 @@
 	};
 })(jQuery,window.grid);
 (function($,grid) {
-	var l10n = gridbuilder.l10n, 
-		default_widget = gridbuilder.options.default_widget,
+	var l10n			= gridbuilder.l10n, 
+		features		= gridbuilder.options.features,
+		default_widget	= gridbuilder.options.default_widget,
 		default_widget_content_property = gridbuilder.options.default_widget_content_property,
 		toggleGridEditor;
 	
@@ -3973,7 +3980,7 @@
 				is_initial		= ! JSON.parse( initial_val ),
 				gridController	= null,
 				toggleWrapHtml	= '',
-				autosave		= window.getUserSetting( 'grid-autosave' );
+				autosave		= gridbuilder.options.features.autosave = !! window.getUserSetting( 'grid-autosave' );
 
 			toggleGridEditor = function( state ) {
 				var newState = _.isUndefined( state ) ? ($('#postdivrich').attr('date-grid-editor-mode') !== 'true') : state,
@@ -4020,7 +4027,7 @@
 			toggleWrapHtml += '<div id="grid-toggle-wrap" class="grid-toolbar">';;
 			toggleWrapHtml += 	'<div class="toolbar-left">';
 			toggleWrapHtml += 		'<label class="set-autosave" for="grid_autosave">';
-			toggleWrapHtml += 			'<input type="checkbox" name="grid_autosave" id="grid_autosave" value="1" '+( autosave ? 'checked' , '' )+' />';
+			toggleWrapHtml += 			'<input type="checkbox" name="grid_autosave" id="grid_autosave" value="1" ' + ( autosave ? 'checked' : '' ) + ' />';
 			toggleWrapHtml += 			l10n.Autosave;
 			toggleWrapHtml += 		'</label>';
 			toggleWrapHtml += 	'</div>';
@@ -4043,7 +4050,18 @@
 
 		})
 		.on('click','.toggle-grid-editor',function( e ) {
+
 			toggleGridEditor();
+
+		})
+		.on('change','[name="grid_autosave"]',function( e ) {
+
+			var state = !! $( this ).prop('checked');
+
+			features.autosave = state;
+
+			window.setUserSetting( 'grid-autosave', state );
+
 		});
 		
 })(jQuery,window.grid);
