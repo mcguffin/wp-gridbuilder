@@ -2390,6 +2390,8 @@
 			current.remove();
 			parent.model.items.remove( current.model );
 
+			this.setSelected( parent );
+
 			this.grid.hasChanged();
 
 			return false;
