@@ -11,8 +11,6 @@
   bottom: 0;
   right: 0;
   z-index: -1; }
-  .background-attachment-fixed .background-wrap {
-    clip: rect(0, auto, auto, 0); }
   .background-wrap img {
     left: 0;
     top: 0;
