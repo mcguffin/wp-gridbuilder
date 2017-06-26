@@ -5021,7 +5021,9 @@ button.close {
   top: 0;
   bottom: 0;
   right: 0;
-  z-index: -1; }
+  z-index: 0; }
+  .background-wrap ~ * {
+    z-index: 1; }
   .background-wrap img {
     left: 0;
     top: 0;
