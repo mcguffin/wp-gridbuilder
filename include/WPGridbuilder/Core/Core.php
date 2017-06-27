@@ -30,7 +30,7 @@ class Core extends Singleton {
 		if ( get_option( 'gridbuilder_frontend_enqueue_bootstrap' ) ) {
 			wp_enqueue_style( 'gridbuilder-frontend', plugins_url( 'css/frontend-bootstrap.css', GRIDBUILDER_FILE ) );
 			wp_enqueue_script( 'bootstrap', plugins_url( 'js/bootstrap/bootstrap.min.js', GRIDBUILDER_FILE ), array( 'jquery' ) );
-		} else {
+		} else if ( get_option( 'gridbuilder_frontend_enqueue_style' ) ) {
 			wp_enqueue_style( 'gridbuilder-frontend', plugins_url( 'css/frontend.css', GRIDBUILDER_FILE ) );
 		}
 	}

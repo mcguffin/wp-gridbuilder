@@ -33,6 +33,8 @@ class Settings {
 
 		add_option( 'gridbuilder_frontend_enqueue_bootstrap' , false, '', false );
 		
+		add_option( 'gridbuilder_frontend_enqueue_styles' , true, '', false );
+		
 		add_option( 'gridbuilder_manage_templates_capability' , 'edit_theme_options' );
 	}
 
@@ -72,6 +74,21 @@ class Settings {
 		$settings_section = 'gridbuilder_settings';
 		
 		add_settings_section( $settings_section, null, null, $this->optionset );
+
+		$setting_name = 'gridbuilder_frontend_enqueue_styles';
+		// more settings go here ...
+		register_setting( $this->optionset, $setting_name, 'intval' );
+
+		// ... and here
+		add_settings_field(
+			$setting_name,
+			__( 'Enqueue Frontend Styles',  'wp-gridbuilder' ),
+			array( $this, 'setting_checkbox_ui' ),
+			$this->optionset,
+			$settings_section,
+			$setting_name
+		);
+
 		
 		$setting_name = 'gridbuilder_frontend_enqueue_bootstrap';
 		// more settings go here ...
