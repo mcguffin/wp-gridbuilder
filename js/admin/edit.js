@@ -1461,9 +1461,14 @@
 		this.postID	= $('[name="post_ID"]').val();
 		var self	= this,
 			raw		= this.$input.attr('value')
-			data	= JSON.parse( raw );// || [];
+			data	= JSON.parse( raw ),
+			types	= [ 'grid', 'container', 'row', 'cell', 'widget' ];// || [];
 		
 		this.model		= new grid.model.GridObject( data );
+		// fix item types
+		this.model.recurse( function( depth ) {
+			this.set( 'type', types[depth] );
+		});
 		this.subviews	= new Backbone.Collection([]);
 		this.selected	= false;
 
@@ -1564,6 +1569,18 @@
 			var ret = Backbone.Model.prototype.toJSON.apply( this, arguments );
 			ret.items = this.items.toJSON(options)
 			return ret;
+		},
+		
+		recurse: function() {
+			var cb = arguments[0],
+				d = arguments[1] || 0;
+
+			cb.apply( this, [ d ] );
+
+			this.items.each( function( item ) {
+//				console.log(arguments);
+				item.recurse( cb, d + 1 );
+			});
 		}
 	});
 
@@ -1700,9 +1717,9 @@
 	Modal = grid.view.ui.Modal = wp.media.view.Modal.extend({
 		template: wp.template('grid-ui-modal'),
 		events: {
-			'click .media-modal-prev': 'prev',
-			'click .media-modal-next': 'next',
-			'click .media-modal-backdrop, .media-modal-close': 'escapeHandler',
+			'click .grid-dialog-prev': 'prev',
+			'click .grid-dialog-next': 'next',
+			'click .media-modal-backdrop, .grid-dialog-close': 'escapeHandler',
 			'keydown': 'keydown'
 		},
 		initialize: function() {
@@ -1713,10 +1730,10 @@
 		render: function() {
 			var ret = wp.media.view.Modal.prototype.render.apply( this, arguments );
 			if ( this.prevnext ) {
-				this.$('.media-modal-prev').prop( 'disabled', ! this.options.prev );
-				this.$('.media-modal-next').prop( 'disabled', ! this.options.next );
+				this.$('.grid-dialog-prev').prop( 'disabled', ! this.options.prev );
+				this.$('.grid-dialog-next').prop( 'disabled', ! this.options.next );
 			} else {
-				this.$('.media-modal-prev, .media-modal-next').remove();
+				this.$('.grid-dialog-prev, .grid-dialog-next').remove();
 			}
 			return ret;
 		},
@@ -2164,7 +2181,7 @@
 		 */
 		addContainer:function( ) {
 			var template = arguments.length ? grid.templates.get( 'container', arguments[0] ) : false,
-				val = template ? template.get('data') : {};
+				val = template ? template.get('data') : { type: 'container' };
 			
 			this._addItem( grid.view.element.Container, this.grid, val );
 			
@@ -2174,7 +2191,7 @@
 			var current		= this.getSelected(),
 				parent		= current.closest( grid.view.element.Container ),
 				template	= arguments.length ? grid.templates.get( 'row', arguments[0] ) : false,
-				val			= template ? template.get('data') : {};
+				val			= template ? template.get('data') : { type: 'row' };
 
 			this._addItem( grid.view.element.Row, parent, val );
 
@@ -2184,7 +2201,7 @@
 			var current	= this.getSelected(),
 				parent	= current.closest( grid.view.element.Row ),
 				template = arguments.length ? grid.templates.get( 'cell', arguments[0] ) : false,
-				val = template ? template.get('data') : { size_xs: options.screensizes.columns };
+				val = template ? template.get('data') : { size_xs: options.screensizes.columns, type: 'cell' };
 
 			this._addItem( grid.view.element.Cell, parent, val );
 
@@ -2195,7 +2212,7 @@
 				current		= this.getSelected(),
 				parent		= current.closest( grid.view.element.Cell ),
 				template	= arguments.length ? grid.templates.get( 'widget', arguments[0] ) : false,
-				val			= template ? template.get('data') : { instance: {} },
+				val			= template ? template.get('data') : { instance: {}, type: 'widget' },
 				model		= new Backbone.Model(), dialog;
 
 			if ( !! template ) {
@@ -3969,20 +3986,21 @@
 		features		= gridbuilder.options.features,
 		default_widget	= gridbuilder.options.default_widget,
 		default_widget_content_property = gridbuilder.options.default_widget_content_property,
-		toggleGridEditor;
+		gridController, toggleGridEditor;
 	
 	$(document)
 		.ready(function() {
 
-			var gridController, gridState = !! parseInt($('[name="_grid_enabled"]').val( )),
+			var gridState = !! parseInt($('[name="_grid_enabled"]').val( )),
 				gridOn			= '<input type="hidden" name="_grid_enabled" value="'+( gridState ? 1 : 0 ).toString()+'" />',
 				btnOpen			= '<button type="button" id="edit-content-grid" class="button-secondary toggle-grid-editor">'+l10n.EditGrid+'</button>',
 				btnClose		= '<button type="button" id="edit-content-text" class="button-secondary toggle-grid-editor">'+l10n.EditText+'</button>',
 				initial_val		= $('[name="_grid_data"]').val( ),
 				is_initial		= ! JSON.parse( initial_val ),
-				gridController	= null,
 				toggleWrapHtml	= '',
 				autosave		= gridbuilder.options.features.autosave = !! window.getUserSetting( 'grid-autosave' );
+
+			gridController	= null;
 
 			toggleGridEditor = function( state ) {
 				var newState = _.isUndefined( state ) ? ($('#postdivrich').attr('date-grid-editor-mode') !== 'true') : state,
@@ -4064,6 +4082,25 @@
 
 			window.setUserSetting( 'grid-autosave', state );
 
-		});
+		})
+
+		.on('copy', function(e) {
+			var sel = gridController.getSelected(),
+				data;
+
+			if ( !! sel /* && sel.is( grid.view.element.Grid )*/ ) {
+				data = JSON.stringify( sel.model.toJSON() )
+				e.originalEvent.clipboardData.setData( 'text/plain', data );
+				e.preventDefault();
+			}
+		})
+		.on('paste', function(e) {
+			var sel = gridController.getSelected(),
+				data;
+
+			if ( !! sel ) {
+			}
+		})
+	;
 		
 })(jQuery,window.grid);
