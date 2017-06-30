@@ -1,8 +1,9 @@
 var gulp = require('gulp');
 var concat = require('gulp-concat');  
 var uglify = require('gulp-uglify');  
-//var sass = require('gulp-sass');
-var sass = require('gulp-ruby-sass');
+var sass = require('gulp-sass');
+//var sass = require('gulp-ruby-sass');
+var nodeSass = require('node-sass');
 
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
@@ -35,48 +36,70 @@ var files = {
 };
 
 
+
+var sassOptions = {
+	outputStyle: 'compressed',
+	precision: 8,
+	stopOnError: true,
+	functions: {
+		'base64Encode($string)': function($string) {
+			var buffer = new Buffer( $string.getValue() );
+			return nodeSass.types.String( buffer.toString('base64') );
+		}
+	}
+
+};
+
 gulp.task( 'js:edit', function(){
 	return gulp.src( files.js )
+		.pipe( sourcemaps.init() )
 		.pipe( concat( 'edit.js' ) )
 		.pipe( gulp.dest( './js/admin/' ) )
 		.pipe( uglify() )
 		.pipe( rename({suffix:'.min'}) )
+        .pipe( sourcemaps.write() )
 		.pipe( gulp.dest( './js/admin/' ) );
 } );
 
 gulp.task( 'js:tools', function(){
 	return gulp.src( './js/src/admin/tools.js' )
+		.pipe( sourcemaps.init() )
 		.pipe( gulp.dest( './js/admin/' ) )
 		.pipe( uglify() )
 		.pipe( rename({suffix:'.min'}) )
+        .pipe( sourcemaps.write() )
 		.pipe( gulp.dest( './js/admin/' ) );
 } );
 
 gulp.task( 'scss:admin:dev', function() { 
-	return sass( files.scss.admin, {
-			precision: 8,
-			stopOnError: true,
-			require: './scss/library/base64-encode.rb'
-		})
-		.on('error', sass.logError)
-		.pipe( gulp.dest('./css/admin'));
-
+    return gulp.src( files.scss.admin )
+		.pipe(sourcemaps.init())
+        .pipe( 
+        	sass( sassOptions )
+        	.on('error', sass.logError) 
+        )
+        .pipe( sourcemaps.write() )
+        .pipe( gulp.dest('./css/admin'));
 });
+
 gulp.task( 'scss:frontend:dev', function() {
-	return sass( files.scss.frontend, {
-			precision: 8,
-			stopOnError: true,
-			require: './scss/library/base64-encode.rb'
-		})
-		.on('error', sass.logError)
-		.pipe( gulp.dest('./css'));
+    return gulp.src( files.scss.frontend )
+		.pipe(sourcemaps.init())
+        .pipe( 
+        	sass( sassOptions )
+        	.on('error', sass.logError) 
+        )
+        .pipe( sourcemaps.write() )
+        .pipe( gulp.dest('./css'));
 });
 
-gulp.task('default', function() {
+gulp.task('watch',function(){
 	gulp.watch('js/src/**/*.js', [ 
 		'js:tools', 
 		'js:edit' 
 	] );
 	gulp.watch('scss/**/*.scss', [ 'scss:admin:dev', 'scss:frontend:dev' ] );
 });
+
+gulp.task('default', [ 'js:tools', 'js:edit', 'scss:admin:dev', 'scss:frontend:dev', 'watch' ] );
 
