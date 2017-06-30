@@ -517,7 +517,7 @@
 		 */
 		addContainer:function( ) {
 			var template = arguments.length ? grid.templates.get( 'container', arguments[0] ) : false,
-				val = template ? template.get('data') : {};
+				val = template ? template.get('data') : { type: 'container' };
 			
 			this._addItem( grid.view.element.Container, this.grid, val );
 			
@@ -527,7 +527,7 @@
 			var current		= this.getSelected(),
 				parent		= current.closest( grid.view.element.Container ),
 				template	= arguments.length ? grid.templates.get( 'row', arguments[0] ) : false,
-				val			= template ? template.get('data') : {};
+				val			= template ? template.get('data') : { type: 'row' };
 
 			this._addItem( grid.view.element.Row, parent, val );
 
@@ -537,7 +537,7 @@
 			var current	= this.getSelected(),
 				parent	= current.closest( grid.view.element.Row ),
 				template = arguments.length ? grid.templates.get( 'cell', arguments[0] ) : false,
-				val = template ? template.get('data') : { size_xs: options.screensizes.columns };
+				val = template ? template.get('data') : { size_xs: options.screensizes.columns, type: 'cell' };
 
 			this._addItem( grid.view.element.Cell, parent, val );
 
@@ -548,7 +548,7 @@
 				current		= this.getSelected(),
 				parent		= current.closest( grid.view.element.Cell ),
 				template	= arguments.length ? grid.templates.get( 'widget', arguments[0] ) : false,
-				val			= template ? template.get('data') : { instance: {} },
+				val			= template ? template.get('data') : { instance: {}, type: 'widget' },
 				model		= new Backbone.Model(), dialog;
 
 			if ( !! template ) {

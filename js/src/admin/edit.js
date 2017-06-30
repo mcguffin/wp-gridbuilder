@@ -3,20 +3,21 @@
 		features		= gridbuilder.options.features,
 		default_widget	= gridbuilder.options.default_widget,
 		default_widget_content_property = gridbuilder.options.default_widget_content_property,
-		toggleGridEditor;
+		gridController, toggleGridEditor;
 	
 	$(document)
 		.ready(function() {
 
-			var gridController, gridState = !! parseInt($('[name="_grid_enabled"]').val( )),
+			var gridState = !! parseInt($('[name="_grid_enabled"]').val( )),
 				gridOn			= '<input type="hidden" name="_grid_enabled" value="'+( gridState ? 1 : 0 ).toString()+'" />',
 				btnOpen			= '<button type="button" id="edit-content-grid" class="button-secondary toggle-grid-editor">'+l10n.EditGrid+'</button>',
 				btnClose		= '<button type="button" id="edit-content-text" class="button-secondary toggle-grid-editor">'+l10n.EditText+'</button>',
 				initial_val		= $('[name="_grid_data"]').val( ),
 				is_initial		= ! JSON.parse( initial_val ),
-				gridController	= null,
 				toggleWrapHtml	= '',
 				autosave		= gridbuilder.options.features.autosave = !! window.getUserSetting( 'grid-autosave' );
+
+			gridController	= null;
 
 			toggleGridEditor = function( state ) {
 				var newState = _.isUndefined( state ) ? ($('#postdivrich').attr('date-grid-editor-mode') !== 'true') : state,
@@ -98,6 +99,25 @@
 
 			window.setUserSetting( 'grid-autosave', state );
 
-		});
+		})
+
+		.on('copy', function(e) {
+			var sel = gridController.getSelected(),
+				data;
+
+			if ( !! sel /* && sel.is( grid.view.element.Grid )*/ ) {
+				data = JSON.stringify( sel.model.toJSON() )
+				e.originalEvent.clipboardData.setData( 'text/plain', data );
+				e.preventDefault();
+			}
+		})
+		.on('paste', function(e) {
+			var sel = gridController.getSelected(),
+				data;
+
+			if ( !! sel ) {
+			}
+		})
+	;
 		
 })(jQuery,window.grid);

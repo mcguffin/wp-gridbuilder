@@ -30,6 +30,18 @@
 			var ret = Backbone.Model.prototype.toJSON.apply( this, arguments );
 			ret.items = this.items.toJSON(options)
 			return ret;
+		},
+		
+		recurse: function() {
+			var cb = arguments[0],
+				d = arguments[1] || 0;
+
+			cb.apply( this, [ d ] );
+
+			this.items.each( function( item ) {
+//				console.log(arguments);
+				item.recurse( cb, d + 1 );
+			});
 		}
 	});
 

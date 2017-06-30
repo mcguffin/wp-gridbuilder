@@ -127,9 +127,14 @@
 		this.postID	= $('[name="post_ID"]').val();
 		var self	= this,
 			raw		= this.$input.attr('value')
-			data	= JSON.parse( raw );// || [];
+			data	= JSON.parse( raw ),
+			types	= [ 'grid', 'container', 'row', 'cell', 'widget' ];// || [];
 		
 		this.model		= new grid.model.GridObject( data );
+		// fix item types
+		this.model.recurse( function( depth ) {
+			this.set( 'type', types[depth] );
+		});
 		this.subviews	= new Backbone.Collection([]);
 		this.selected	= false;
 
