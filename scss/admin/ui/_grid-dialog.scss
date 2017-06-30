@@ -1,3 +1,50 @@
+.grid-dialog-prev,
+.grid-dialog-next,
+.grid-dialog-close {
+	position: absolute;
+    top: 0;
+	width: 50px;
+	height: 50px;
+	margin: 0;
+	padding: 0;
+	border: 1px solid transparent;
+	background: none;
+	color: #666;
+	z-index: 1000;
+	cursor: pointer;
+	outline: none;
+	-webkit-transition: color .1s ease-in-out, background .1s ease-in-out;
+	transition: color .1s ease-in-out, background .1s ease-in-out;
+	border-left: 1px solid #ddd;
+	&:hover {
+		background: #ddd;
+		border-color: #ccc;
+		color: #000;
+		outline: none;
+		-webkit-box-shadow: none;
+		box-shadow: none;
+	}
+}
+
+.grid-dialog-prev,
+.grid-dialog-next {
+	&:hover {
+		.dashicons:before {
+//			color: #00a0d2;
+    	}
+	}
+}
+.grid-dialog-prev {
+    right: 100px;
+}
+.grid-dialog-next {
+    right: 50px;
+}
+.grid-dialog-close {
+	right: 0;
+}
+
+
 .grid-dialog-title {
 	position: absolute;
     top: 0;
@@ -52,26 +99,6 @@
     padding:15px 20px;
     box-sizing:border-box;
     text-align:right;
-}
-.media-modal-prev,
-.media-modal-next {
-	position: absolute;
-    top: 0;
-    width: 50px;
-    height: 50px;
-	z-index: 1000;
-	&:hover {
-		.dashicons:before {
-			color: #00a0d2;
-    	}
-	}
-}
-
-.media-modal-prev {
-    right: 100px;
-}
-.media-modal-next {
-    right: 50px;
 }
 
 .size-half,
@@ -340,8 +367,6 @@
 		}
 	}
 }
-
-
 
 
 .input-widget_class {

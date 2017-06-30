@@ -53,9 +53,9 @@
 	Modal = grid.view.ui.Modal = wp.media.view.Modal.extend({
 		template: wp.template('grid-ui-modal'),
 		events: {
-			'click .media-modal-prev': 'prev',
-			'click .media-modal-next': 'next',
-			'click .media-modal-backdrop, .media-modal-close': 'escapeHandler',
+			'click .grid-dialog-prev': 'prev',
+			'click .grid-dialog-next': 'next',
+			'click .media-modal-backdrop, .grid-dialog-close': 'escapeHandler',
 			'keydown': 'keydown'
 		},
 		initialize: function() {
@@ -66,10 +66,10 @@
 		render: function() {
 			var ret = wp.media.view.Modal.prototype.render.apply( this, arguments );
 			if ( this.prevnext ) {
-				this.$('.media-modal-prev').prop( 'disabled', ! this.options.prev );
-				this.$('.media-modal-next').prop( 'disabled', ! this.options.next );
+				this.$('.grid-dialog-prev').prop( 'disabled', ! this.options.prev );
+				this.$('.grid-dialog-next').prop( 'disabled', ! this.options.next );
 			} else {
-				this.$('.media-modal-prev, .media-modal-next').remove();
+				this.$('.grid-dialog-prev, .grid-dialog-next').remove();
 			}
 			return ret;
 		},
