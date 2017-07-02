@@ -483,7 +483,14 @@
 		render: function() {
 			wp.media.View.prototype.render.apply( this, arguments );
 			this.toolbar.render();
+			//*
+			var $toolbarWrap = $('<div class="grid-toolbar-wrap"></div>');
+			this.$el.append( $toolbarWrap );
+			$toolbarWrap.append( this.toolbar.$el );
+			$toolbarWrap.height( $toolbarWrap.height() );
+			/*/
 			this.$el.append( this.toolbar.$el );
+			//*/
 			this.$el.append( this.grid.$el );
 			this.grid.render();
 		},
