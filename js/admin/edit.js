@@ -1497,7 +1497,7 @@
 			return this.selected;
 		},
 		setSelected:	function( what ) {
-//			console.log(this.selected.$el);
+			console.trace(this.selected.$el);
 			this.selected = what;
 			return this;
 		},
@@ -2047,6 +2047,11 @@
 			},
 			'focusin *': function( e ) {
 				var view = $(e.target).data('view');
+				if ( $(e.target).is('.locked') ) {
+					$(e.target).blur();
+					e.preventDefault();
+					return;
+				}
 				if ( !! view ) {
 					this.setSelected( view );
 				}

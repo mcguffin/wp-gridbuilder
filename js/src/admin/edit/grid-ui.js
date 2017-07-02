@@ -383,6 +383,11 @@
 			},
 			'focusin *': function( e ) {
 				var view = $(e.target).data('view');
+				if ( $(e.target).is('.locked') ) {
+					$(e.target).blur();
+					e.preventDefault();
+					return;
+				}
 				if ( !! view ) {
 					this.setSelected( view );
 				}

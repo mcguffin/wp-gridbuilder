@@ -163,7 +163,7 @@
 			return this.selected;
 		},
 		setSelected:	function( what ) {
-//			console.log(this.selected.$el);
+			console.trace(this.selected.$el);
 			this.selected = what;
 			return this;
 		},
