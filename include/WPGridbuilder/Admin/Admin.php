@@ -16,27 +16,27 @@ class Admin extends Core\Singleton {
 	 * Private constructor
 	 */
 	protected function __construct() {
-		add_action( 'admin_init' , array( &$this , 'admin_init' ) );
-		add_action( "admin_init" , array( &$this , 'register_assets' ) );
+		add_action( 'admin_init' , array( $this , 'admin_init' ) );
+		add_action( "admin_init" , array( $this , 'register_assets' ) );
 
 		/*
 		add_action( 'load-page.php', array( &$this, 'enqueue_grid_assets' ) );
 		add_action( 'load-post.php', array( &$this, 'enqueue_grid_assets' ) );
 		add_action( 'load-post-new.php', array( &$this, 'enqueue_grid_assets' ) );
 		/*/
-		add_action( 'wp_enqueue_media', array( &$this, 'enqueue_grid_assets' ) );
+		add_action( 'wp_enqueue_media', array( $this, 'enqueue_grid_assets' ) );
 		//*/
 
-		add_action( 'print_media_templates',  array( &$this, 'print_media_templates' ) );
+		add_action( 'print_media_templates',  array( $this, 'print_media_templates' ) );
 
-		add_action( 'save_post', array( &$this, 'save_post' ) );
-		add_action( 'pre_post_content', array( &$this, 'pre_post_content' ) );
+		add_action( 'save_post', array( $this, 'save_post' ) );
+		add_action( 'pre_post_content', array( $this, 'pre_post_content' ) );
 
-		add_action( 'edit_form_top', array( &$this, 'edit_form_top' ) );
+		add_action( 'edit_form_top', array( $this, 'edit_form_top' ) );
 
-		add_action( 'wp_ajax_gridbuilder-get-widget', array( &$this, 'ajax_get_widget' ) );
+		add_action( 'wp_ajax_gridbuilder-get-widget', array( $this, 'ajax_get_widget' ) );
 
-		add_action( 'wp_ajax_gridbuilder-autosave', array( &$this, 'ajax_autosave' ) );
+		add_action( 'wp_ajax_gridbuilder-autosave', array( $this, 'ajax_autosave' ) );
 
 		add_option( 'gridbuilder_post_types', array('post','page') );
 	}
@@ -123,9 +123,12 @@ class Admin extends Core\Singleton {
 			header( 'Content-Type: text/html' );
 			$widget_class = str_replace( '\\\\', '\\', rawurldecode( $_POST[ 'widget_class'] ) );
 
-			if ( class_exists( $widget_class ) && isset( $wp_widget_factory->widgets[ $widget_class ] ) ) {
-				$widget = $wp_widget_factory->widgets[ $widget_class ];
-				printf( '<div id="%s" class="widget">', $widget->id );
+			if ( $widget = $this->get_widget_instance( $widget_class ) ) {
+//				$widget = $wp_widget_factory->widgets[ $widget_class ];
+				printf('<input type="hidden" name="id_base" value="%s" class="id_base" />', $widget->id_base );
+				printf('<input type="hidden" name="id" value="%s" class="widget-id" />', $widget->id );
+
+				printf( '<div id="%s" class="widget widget-content">', $widget->id );
 				$widget->form( $instance );
 				echo '</div>';
 				//*/
@@ -148,7 +151,13 @@ class Admin extends Core\Singleton {
 		}
 		die('');
 	}
-
+	private function get_widget_instance( $widget_class ) {
+		global $wp_widget_factory;
+		if ( class_exists( $widget_class ) && isset( $wp_widget_factory->widgets[ $widget_class ] ) ) {
+			return $wp_widget_factory->widgets[ $widget_class ];
+		}
+		return null;
+	}
 	/**
 	 *	Ajax: Get Widget form.
 	 *
@@ -281,6 +290,19 @@ class Admin extends Core\Singleton {
 */
 		wp_enqueue_script( 'gridbuilder-admin' );
 		wp_enqueue_style( 'gridbuilder-admin' );
+
+		$this->call_widgets_method( 'enqueue_admin_scripts' );
+	}
+	
+	private function call_widgets_method( $method_name ) {
+		$widget_types = Settings\Widgets::types();
+		foreach ( array_keys( $widget_types ) as $widget_class ) {
+			$w = $this->get_widget_instance( $widget_class );
+			$cb = array( $w, $method_name );
+			if ( is_callable( $cb ) ) {
+				call_user_func( $cb );
+			}
+		}
 	}
 
 	/**
@@ -310,7 +332,7 @@ class Admin extends Core\Singleton {
 
 				wp_register_script( $script_id, 
 					plugins_url( 'js/src/admin/edit/grid-base.js' , GRIDBUILDER_FILE ), 
-					array( 'wp-backbone' ), 
+					array( 'wp-backbone', 'media-widgets' ), 
 				$version );
 
 				wp_register_script( 'gridbuilder-model', 
@@ -342,7 +364,7 @@ class Admin extends Core\Singleton {
 			} else {
 				$script_id = 'gridbuilder-admin';
 
-				wp_register_script( $script_id, plugins_url( 'js/admin/edit.min.js' , GRIDBUILDER_FILE ), array('jquery', 'wp-backbone', 'wp-color-picker', 'media-views' ), $version );
+				wp_register_script( $script_id, plugins_url( 'js/admin/edit.min.js' , GRIDBUILDER_FILE ), array('jquery', 'wp-backbone', 'wp-color-picker', 'media-views', 'media-widgets' ), $version );
 			}
 
 			$script_l10n = array(
@@ -395,10 +417,10 @@ class Admin extends Core\Singleton {
 									=> apply_filters( 'gridbuilder_default_widget_content_property', 'description'),
 				'features'			=> array(
 					// manage templates
-					'templates'	=> current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ),
+					'templates'	=> boolval( current_user_can( get_option( 'gridbuilder_manage_templates_capability' ) ) ),
 					// locking
-					'locks'		=> get_user_setting( 'gridbuilder_features_locks', false ),
-					'autosave'	=> get_user_setting( 'gridbuilder_features_autosave', false ),
+					'locks'		=> boolval( get_user_setting( 'gridbuilder_features_locks', false ) ),
+					'autosave'	=> boolval( get_user_setting( 'gridbuilder_features_autosave', false ) ),
 				),
 			);
 
@@ -421,6 +443,7 @@ class Admin extends Core\Singleton {
 			foreach ( glob( $rp, GLOB_BRACE ) as $template_file ) {	
 				include $template_file;
 			}
+			$this->call_widgets_method( 'render_control_template_scripts' );
 		}
 	}
 

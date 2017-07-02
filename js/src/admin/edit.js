@@ -3,7 +3,8 @@
 		features		= gridbuilder.options.features,
 		default_widget	= gridbuilder.options.default_widget,
 		default_widget_content_property = gridbuilder.options.default_widget_content_property,
-		gridController, toggleGridEditor;
+		gridController, toggleGridEditor,
+		element		= grid.view.element;
 	
 	$(document)
 		.ready(function() {
@@ -101,23 +102,135 @@
 
 		})
 
-		.on('copy', function(e) {
+		.on('copy cut', function(e) {
 			var sel = gridController.getSelected(),
-				data;
+				data, editor;
 
-			if ( !! sel /* && sel.is( grid.view.element.Grid )*/ ) {
-				data = JSON.stringify( sel.model.toJSON() )
-				e.originalEvent.clipboardData.setData( 'text/plain', data );
-				e.preventDefault();
+			if ( ! sel ) {
+				return;
 			}
+
+			data = JSON.stringify( sel.model.toJSON() )
+			e.originalEvent.clipboardData.setData( 'application/json', data );
+			if ( e.type === 'cut' ) {
+				editor = grid.getActiveEditor();
+				editor._deleteItem( sel );
+			}
+			e.preventDefault();
 		})
 		.on('paste', function(e) {
-			var sel = gridController.getSelected(),
-				data;
+			var gridEl = grid.view.element,
+				sel = gridController.getSelected(),
+				dataStr = e.originalEvent.clipboardData.getData( 'application/json' ),
+				data, editor,				
+				itemClass, parent, after;
 
-			if ( !! sel ) {
+			if ( ! sel ) {
+				return;
 			}
-		})
-	;
-		
+
+			try {
+				data = JSON.parse( dataStr )
+			} catch( err ) {
+				return;
+			}
+			if ( ! data || [ 'grid','container','row','cell','widget' ].indexOf(data.type) === -1 ) {
+				return;
+			}
+
+			if ( data.type == 'grid' && sel.is( gridEl.Grid ) ) {
+				// replace entire grid
+				return;
+			}
+
+			if ( data.type === 'container' ) {
+				// append to grid
+				itemClass = element.Container;
+				if ( sel.is( element.Grid ) ) {
+					// append to sel
+					parent = sel;
+				} else if (  sel.is( element.Container ) ) {
+					// insert after sel
+					after = sel;
+					parent = sel.parent();
+				} else {
+					return;
+				}
+			}
+			if ( data.type === 'row' ) {
+				// append to grid
+				itemClass = element.Row;
+				if ( sel.is( element.Container ) ) {
+					// append to sel
+					parent = sel;
+				} else if (  sel.is( element.Row ) ) {
+					// insert after sel
+					after = sel;
+					parent = sel.parent();
+				} else {
+					return;
+				}
+			}
+			if ( data.type === 'cell' ) {
+				// append to grid
+				itemClass = element.Cell;
+				if ( sel.is( element.Row ) ) {
+					// append to sel
+					parent = sel;
+				} else if (  sel.is( element.Cell ) ) {
+					// insert after sel
+					after = sel;
+					parent = sel.parent();
+				} else {
+					return;
+				}
+			}
+			if ( data.type === 'widget' ) {
+				// append to grid
+				itemClass = element.Widget;
+				if ( sel.is( element.Cell ) ) {
+					// append to sel
+					parent = sel;
+				} else if ( sel.is( element.Widget ) ) {
+					// insert after sel
+					after = sel;
+					parent = sel.parent();
+				} else {
+					return;
+				}
+			}
+			editor = grid.getActiveEditor();
+			editor._addItem( itemClass, parent, data, after );
+		});
+
+	// extend mce
+	$( document ).on( 'tinymce-editor-setup', function( event, editor ) {
+		var props = [
+			'body_class',
+			'content_css',
+			'entities',
+			'entity_encoding',
+			'formats',
+			'language',
+			'plugins',
+			'preview_styles',
+			'toolbar1',
+			'toolbar2',
+			'toolbar3',
+			'toolbar4',
+			'wp_lang_attr',
+			'wp_shortcut_labels'
+		];
+//		console.log(editor.settings);
+		$.each(props, function( i, prop ) {
+			editor.settings[prop] = tinyMCEPreInit.mceInit.content[ prop ];
+		});
+
+// 		if ( editor.settings.toolbar1 && -1 === editor.settings.toolbar1.indexOf( 'blockquote' ) ) {
+// 			editor.settings.toolbar1 += ',blockquote';
+// 		}
+	});
+
+
+
 })(jQuery,window.grid);

@@ -12,14 +12,23 @@
 
 
 .grid-modal-open {
-	div.mce-inline-toolbar-grp {
-		z-index:1260100;
+	.mce-tooltip {
+		z-index:160100 !important;
 	}
+	.mce-container {
+		z-index:160201 !important;
+		& + #mce-modal-block {
+			z-index:160200 !important;
+		}
+	}
+// 	div.mce-inline-toolbar-grp {
+// 		z-index:160100;
+// 	}
 	#wp-link-backdrop {
-		z-index:1260100 !important;
+		z-index:160300 !important;
 	}
 	#wp-link-wrap {
-		z-index:1260101 !important;
+		z-index:160301 !important;
 	}
 }
 

@@ -16,6 +16,7 @@
 		mceZIndex;
 
 
+
 	var inputPrototype = {
 		render: function( ) {
 			wp.media.View.prototype.render.apply(this,arguments);
@@ -187,12 +188,20 @@
 	} );
 
 	inputs.widget_instance = wp.media.View.extend( {
-		tagName: 'form',
-		className: 'widget-instance',
+		tagName: 'div',
+		className: 'widget-instance widget-inside',
 		
 		initialize: function( ) {
 			wp.media.View.prototype.initialize.apply(this,arguments);
-			this.$el.append( '<span class="spinner" style="visibility:visible;float:none"></span>' );
+			this.$form = $('<form />');
+			this.$spinner = $( '<span class="spinner" style="visibility:visible;float:none"></span>' );
+//			this.$content = $( '<div class="widget-content"></div>' );
+//			this.$form.append( '<span class="spinner" style="visibility:visible;float:none"></span>' );
+
+			this.$el.append( this.$spinner );
+			this.$el.append( this.$form );
+//			this.$form.append( this.$content );
+
 			this.$widget	= null;
 
 			var self		= this;
@@ -203,10 +212,13 @@
 				url: options.ajaxurl,
 				complete:function(xhr,status){},
 				success: function( data, status, xhr ) {
+					self.$spinner.remove();
 					self.$widget = $(data);
-					self.$el.html('').append( self.$widget );
+					self.$form.html('').append( self.$widget );
 					self.prepareMCE();
-					$(document).trigger( 'widget-added', [ self.$widget ] ); // necessary for tinymce widget
+					wp.mediaWidgets.handleWidgetAdded( {}, self.$el.parent() );
+					wp.textWidgets.handleWidgetAdded( {}, self.$el.parent() );
+//					$(document).trigger( 'widget-added', [ self.$widget ] ); // necessary for tinymce widget
 				},
 				data: {
 					action : 'gridbuilder-get-widget',
@@ -241,10 +253,12 @@
 				ed.save();
 			});
 
-			_.each( this.$el.serializeArray(), function( val ) {
+			_.each( this.$form.serializeArray(), function( val ) {
 				var name, matches = val.name.match( /\[([a-z0-9-_]+)\]$/g );
-				name = matches.length ? matches[0].replace(/[\[\]]+/g,'') : val.name;
-				ret[ name ] = val.value;
+				if ( matches ) {
+					name = matches.length ? matches[0].replace(/[\[\]]+/g,'') : val.name;
+					ret[ name ] = val.value;
+				}
 			});
 			return ret;
 		},
@@ -252,11 +266,21 @@
 			return this;
 		},
 		dismiss: function() {
+			var widgetId = this.$el.parent().find('.widget-inside > form, .widget-inside > .form').find(' > .widget-id').val();
+			if ( wp.mediaWidgets.widgetControls[ widgetId ] ) {
+				delete( wp.mediaWidgets.widgetControls[ widgetId ] );
+			}
+			if ( wp.textWidgets.widgetControls[ widgetId ] ) {
+				delete( wp.textWidgets.widgetControls[ widgetId ] );
+			}
+
 			$(document).trigger( {type:'widget-removed',target: this.$widget } ); // necessary for tinymce widget
 			// remove tinymce.
 			_.each( this.getMCE(), function(ed){
 				tinymce.remove( ed );
 			});
+
+			
 			this.resetMCE();
 			return this;
 		},
@@ -295,10 +319,12 @@
 			}
 			
 			// wplink
-			this._prevMCE.wpLinkRenderHtml = tinymce.ui.WPLinkPreview.prototype.renderHtml;
-			tinymce.ui.WPLinkPreview.prototype.renderHtml = function() {
-				var ret = self._prevMCE.wpLinkRenderHtml.apply(this,arguments);
-				return ret.replace('class="wp-link-preview"','class="wp-link-preview in-grid-modal"');
+			if ( !! tinymce.ui.WPLinkPreview ) {
+				this._prevMCE.wpLinkRenderHtml = tinymce.ui.WPLinkPreview.prototype.renderHtml;
+				tinymce.ui.WPLinkPreview.prototype.renderHtml = function() {
+					var ret = self._prevMCE.wpLinkRenderHtml.apply(this,arguments);
+					return ret.replace('class="wp-link-preview"','class="wp-link-preview in-grid-modal"');
+				}
 			}
 		},
 		resetMCE: function(){

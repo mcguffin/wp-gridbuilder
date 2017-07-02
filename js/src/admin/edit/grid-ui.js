@@ -588,7 +588,7 @@
 
 			return false;
 		},
-		_addItem: function( itemClass, parent, data ) {
+		_addItem: function( itemClass, parent, data, after ) {
 			var current = this.getSelected() || this,
 				data = data || {},
 				itemModel = new grid.model.GridObject( data ),
@@ -599,13 +599,14 @@
 				}),
 				$collection, after;
 
-			after = current.closest( itemClass );
+			after = after || current.closest( itemClass );
 
 			// add DOM elements
 			$collection = parent.$('>.collection');
 
 			if ( !!after ) {
 				item.render().$el.insertAfter( after.$el );
+				$collection.trigger('sort'); 
 			} else {
 				$collection.append( item.render().$el );
 			}
@@ -737,13 +738,16 @@
 			e && e.preventDefault();
 
 			var current = this.getSelected(),
-				parent = current.parent(),
-				itemClass = parent.getClass();
+				parent = current.parent();
 
-			current.remove();
-			parent.model.items.remove( current.model );
-
+			this._deleteItem( this.getSelected() );
 			this.setSelected( parent );
+		},
+		_deleteItem: function(item) {
+			var parent = item.parent();
+
+			item.remove();
+			parent.model.items.remove( item.model );
 
 			this.grid.hasChanged();
 
