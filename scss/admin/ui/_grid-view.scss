@@ -183,7 +183,7 @@ body {
 		background-repeat:repeat-x;
 		background-position:center center;
 		background-size:percentage( 1 / 12 ) 100%;
-		
+		opacity:0.3;
 	}
 	.row {
 		$svg: '<svg width="100px" height="20000px" xmlns="http://www.w3.org/2000/svg" version="1.1"><line vector-effect="non-scaling-stroke" style="stroke:#d5d5d5;stroke-width:1px" x1="50" y1="0" x2="50" y2="20000"/></svg>';
@@ -200,7 +200,10 @@ body {
  		padding-top:5px;
  		padding-bottom:5px;
 		&:focus {
-			background-color:#f3f7f9;
+//			background-color:#f3f7f9;
+		}
+		&.locked {
+			background-color:rgba(#f5f5f5,0.75);
 		}
 	}
 	@for $i from 1 through 24 {
@@ -217,6 +220,11 @@ body {
 			.resize-handle,
 			.offset-handle {
 				display:none;
+			}
+			border:1px solid rgba($color-wp-blue,0.35);
+			background:rgba($color-wp-blue,0.1);
+			.widgets:before {
+				opacity:0.15;
 			}
 		}
 		.resize-handle {
@@ -282,6 +290,10 @@ body {
 		border:2px solid #ccc;
 		padding:0;
 		margin-bottom:5px;
+		&.locked {
+			background:rgba(#f0f0f0,0.75);
+			border:2px solid rgba(#ccc,0.5);
+		}
 // 		&:focus {
 // 		}
 		.info {
