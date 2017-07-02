@@ -1497,7 +1497,6 @@
 			return this.selected;
 		},
 		setSelected:	function( what ) {
-			console.trace(this.selected.$el);
 			this.selected = what;
 			return this;
 		},

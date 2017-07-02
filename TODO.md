@@ -1,18 +1,13 @@
 WP Gridbuilder ToDo:
 ====================
- - [x] Plugin Settings page
- - [x] Bring Back Templates
- - [x] Enqueue styles in frontend if option is on
  - [ ] Releasing
-	- [x] JS Compression
 	- [ ] PHP docblocks
 	- [ ] Filter docs
 	- [ ] JS docblocks
 	- [ ] Plugin API Docs
 	- [ ] l10n
  - [ ] Future
-	- [x] Autosave
-		- [x] Autosave checkbox in grid editor toolbarbar
+	- [x] Copy / Paste Grid elements
 	- [ ] Export / Import Grid + Elements
 	- [ ] Customizer based Editor
 	- [ ] Undo (keep model state in user settings)
