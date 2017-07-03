@@ -285,15 +285,21 @@ body {
 		}
 	}
 	.widget {
-		min-height:75px;
+		min-height:95px;
 		background:#f0f0f0;
 		border:2px solid #ccc;
 		padding:0;
 		margin-bottom:5px;
+		clear:left;
+		&[class*=" col-"],
+		&[class^="col-"] {
+			clear:none;
+		}
 		&.locked {
 			background:rgba(#f0f0f0,0.75);
 			border:2px solid rgba(#ccc,0.5);
 		}
+		
 // 		&:focus {
 // 		}
 		.info {
@@ -304,6 +310,18 @@ body {
 			bottom:0;
 			padding:10px;
 			overflow:hidden;
+			-webkit-hyphens:auto;
+			-moz-hyphens:auto;
+			-ms-hyphens:auto;
+			hyphens:auto;
+			.dashicons {
+				font-size:2em;
+				width:40px;
+				height:40px;
+				float:left;
+				margin-right:5px;
+				opacity:0.6;
+			}
 		}
 		.sort-handle {
 			position:absolute;
@@ -324,9 +342,12 @@ body {
 			border-color:$color-wp-blue;
 			color:darken($color-wp-blue, 20% );
 			.info {
-				right:auto;
-				bottom:auto;
+//				right:auto;
+//				bottom:auto;
 				background:rgba( #f0f0f0, 0.7 );
+			}
+			.dashicons {
+				opacity:1;
 			}
 		}
 	}

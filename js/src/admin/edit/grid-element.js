@@ -427,19 +427,22 @@
 		attributes: {
 			'tabindex': 0
 		},
-
 		updateDisplay: function() {
-			ColumnCollectionView.prototype.updateDisplay.apply( this, arguments );
+			var title, event, widget_class,
+				widget_type, icon;
 
-			this.$('.widget-type').text( this.getTitle() );
-
-			var title = this.model.get('instance').title;
-			this.$('.widget-title').text(title);
 			if ( ! this.hasColClass() ) {
 				this.setColClass( options.screensizes.columns, _.keys( options.screensizes.sizes)[0] );
 			}
 
+			// update as grid object
+			ColumnCollectionView.prototype.updateDisplay.apply( this, arguments );
+
+			// re-render tempalte
+			wp.media.View.prototype.render.apply( this, arguments );
+
 			return this;
+
 		},
 		collectionView: function() { return false },
 		getTitle: function( ) {
@@ -749,7 +752,6 @@
 
 		
 	});
-
 
 	classMap	= {
 		'Grid'		: Grid,

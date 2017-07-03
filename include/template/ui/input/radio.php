@@ -10,8 +10,11 @@ if ( ! defined('ABSPATH') )
 				<input id="input-{{{ data.settings.name }}}-{{{ name }}}" type="radio" name="{{{ data.settings.name }}}" value="{{{ name }}}" />
 				<label for="input-{{{ data.settings.name }}}-{{{ name }}}"><#
 					if ( 'object' === typeof data.settings.options[name] ) {
+						!!data.settings.options[name].icon && print( '<span class="dashicons '+data.settings.options[name].icon+'"></span>' );
+						print( '<span>' );
 						!!data.settings.options[name].name && print( data.settings.options[name].name );
 						!!data.settings.options[name].description && print( '<small>' + data.settings.options[name].description + '</small>' );
+						print( '</span>' );
 					} else if ( 'string' === typeof data.settings.options[name] ) {
 						print( data.settings.options[name] );
 					}

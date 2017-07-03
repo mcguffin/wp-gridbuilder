@@ -75,6 +75,7 @@ class Templates extends Core\Singleton {
 					unset( $templates[ $template['slug'] ] );
 					update_option( "gridbuilder_{$type}_templates", $templates );
 				}
+				$this->delete_from_theme( $template['slug'], $type );
 				header( 'Content-Type: application/json' );
 				echo json_encode( array( 'success' => true ) );
 			}
@@ -118,7 +119,13 @@ class Templates extends Core\Singleton {
 				$template[ 'data' ]['template'] = $template['slug'];
 
 				$templates[ $template['slug'] ] = $template;
+
+				ksort( $templates );
+
 				update_option( "gridbuilder_{$type}_templates", $templates );
+
+				// maybe save to theme
+				$this->save_to_theme( $template['slug'], $template );
 			}
 
 			header( 'Content-Type: application/json' );
@@ -127,5 +134,29 @@ class Templates extends Core\Singleton {
 		die('');
 	}
 
+	private function save_to_theme( $slug, $template_data ) {
+		$tpl_path = get_stylesheet_directory() . '/wp-gridbuilder';
+		if ( ! file_exists( $tpl_path ) ) {
+			return;
+		}
 
+		$template_data['_updated'] = time();
+
+		$save_path = $tpl_path . '/' . $template_data[ 'type' ] . '/';
+		wp_mkdir_p( $save_path );
+		$save_data = json_encode( $template_data, JSON_PRETTY_PRINT );
+		file_put_contents($save_path . $slug . '.json', $save_data);
+	}
+
+	private function delete_from_theme( $slug, $type ) {
+		$tpl_path = get_stylesheet_directory() . '/wp-gridbuilder';
+		if ( ! file_exists( $tpl_path ) ) {
+			return;
+		}
+		$file = $tpl_path . '/' . $type . '/' . $slug . '.json';
+
+		if ( file_exists( $file ) ) {
+			unlink( $file );
+		}
+	}
 }

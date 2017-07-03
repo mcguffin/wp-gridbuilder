@@ -2293,7 +2293,9 @@
 			this.grid.hasChanged();
 
 			this.setSelected( item );
-			
+
+			this.trigger( 'added:'+itemModel.get('type'), item );
+
 			return this;
 		},
 		getPrevItem: function( current ) {
@@ -2972,7 +2974,7 @@
 				this.input = new inputs[ options.settings.type ]( options );
 			} else {
 				this.input = false;
-				console.log( 'no such type', options.settings.type );
+				console.trace( 'no such input type', options.settings.type );
 			}
 		},
 		render: function() {
@@ -3245,6 +3247,7 @@
 					options: options.widgets
 				} 
 			} );
+			this.okayBtn.$el.hide();
 		},
 		render: function() {
 			grid.view.ui.Dialog.prototype.render.apply(this,arguments);
@@ -3690,19 +3693,22 @@
 		attributes: {
 			'tabindex': 0
 		},
-
 		updateDisplay: function() {
-			ColumnCollectionView.prototype.updateDisplay.apply( this, arguments );
+			var title, event, widget_class,
+				widget_type, icon;
 
-			this.$('.widget-type').text( this.getTitle() );
-
-			var title = this.model.get('instance').title;
-			this.$('.widget-title').text(title);
 			if ( ! this.hasColClass() ) {
 				this.setColClass( options.screensizes.columns, _.keys( options.screensizes.sizes)[0] );
 			}
 
+			// update as grid object
+			ColumnCollectionView.prototype.updateDisplay.apply( this, arguments );
+
+			// re-render tempalte
+			wp.media.View.prototype.render.apply( this, arguments );
+
 			return this;
+
 		},
 		collectionView: function() { return false },
 		getTitle: function( ) {
@@ -4013,7 +4019,6 @@
 		
 	});
 
-
 	classMap	= {
 		'Grid'		: Grid,
 		'Container'	: Container,
@@ -4099,6 +4104,7 @@
 			toggleWrapHtml += 		btnClose;
 			toggleWrapHtml += 	'</div>';
 			toggleWrapHtml += '</div>';
+
 			$('#postdivrich')
 				.attr('date-grid-editor-mode', gridState.toString() )
 				.prepend( toggleWrapHtml );

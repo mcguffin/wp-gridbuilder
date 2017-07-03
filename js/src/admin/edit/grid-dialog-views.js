@@ -426,7 +426,7 @@
 				this.input = new inputs[ options.settings.type ]( options );
 			} else {
 				this.input = false;
-				console.log( 'no such type', options.settings.type );
+				console.trace( 'no such input type', options.settings.type );
 			}
 		},
 		render: function() {
@@ -699,6 +699,7 @@
 					options: options.widgets
 				} 
 			} );
+			this.okayBtn.$el.hide();
 		},
 		render: function() {
 			grid.view.ui.Dialog.prototype.render.apply(this,arguments);

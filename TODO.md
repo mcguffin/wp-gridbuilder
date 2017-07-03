@@ -8,6 +8,7 @@ WP Gridbuilder ToDo:
 	- [ ] l10n
  - [ ] Future
 	- [x] Copy / Paste Grid elements
+	- [ ] Better Widget Display
 	- [ ] Export / Import Grid + Elements
 	- [ ] Customizer based Editor
 	- [ ] Undo (keep model state in user settings)

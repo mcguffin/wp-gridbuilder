@@ -15,7 +15,7 @@ if ( ! defined('ABSPATH') )
 		</div>
 		<# } #>
 		<div class="prop">
-			<div class="input"></div>
+			<div class="input wp-clearfix"></div>
 			<# if ( data.settings.description ) {  #>
 				<p class="description">{{{ data.settings.description }}}</p>
 			<# } #>

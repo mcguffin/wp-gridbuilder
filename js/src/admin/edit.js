@@ -75,6 +75,7 @@
 			toggleWrapHtml += 		btnClose;
 			toggleWrapHtml += 	'</div>';
 			toggleWrapHtml += '</div>';
+
 			$('#postdivrich')
 				.attr('date-grid-editor-mode', gridState.toString() )
 				.prepend( toggleWrapHtml );

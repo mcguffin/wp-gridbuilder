@@ -630,7 +630,9 @@
 			this.grid.hasChanged();
 
 			this.setSelected( item );
-			
+
+			this.trigger( 'added:'+itemModel.get('type'), item );
+
 			return this;
 		},
 		getPrevItem: function( current ) {

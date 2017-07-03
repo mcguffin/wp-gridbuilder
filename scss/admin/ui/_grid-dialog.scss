@@ -76,6 +76,7 @@
 	}
 	.widget-inside {
 		display:block;
+		padding:10px;
 	}
 }
 
@@ -372,6 +373,14 @@
 }
 
 
+.select-widget-dialog {
+	.input-title {
+		padding:10px;
+		font-size:1.3em;
+		color:#666;
+		font-weight:normal;
+	}
+}
 .input-widget_class {
 	.radiogroup {
 		display:block;
@@ -382,7 +391,7 @@
 		height:96px;
 
 		label {
-			font-size:16px;
+			font-size:14px;
 			display:block;
 			//height:50px;
 			
@@ -395,18 +404,38 @@
 			//@include vcenter();
 			height:100%;
 			border-radius:5px;
+			position:relative;
+			overflow: hidden;
+			&:hover {
+				color:#333;
+				border-color:#999;
+				.dashicons {
+					color:#666;
+				}
+			}
 			small {
 				display:block;
 				font-weight:normal;
 			}
+			& > span {
+				max-height:100%;
+			}
+		}
+		.dashicons {
+			font-size: 2em;
+			width: 40px;
+			height: auto;
+			position:absolute;
+			left:10px;
+			top:10px;
+			color:#999;
+			& + span {
+				padding-left:45px;
+				display:block;
+			}
 		}
 		[type="radio"] {
 			display:none;
-		}
-		[type="radio"]:checked + label {
-			background:$color-wp-blue;
-			border:1px solid darken( $color-wp-blue, 30% );
-			color:#fff;
 		}
 	}
 }
