@@ -315,7 +315,6 @@
 				self._prevMCE.NotificationpRepaint.apply(this,arguments);
 				var style = this.getEl().style;
 				style.zIndex = mceZIndex + 0xFFFF + 0XFFFF;
-				console.log(style.zIndex);
 			}
 			
 			// wplink

@@ -2863,7 +2863,6 @@
 				self._prevMCE.NotificationpRepaint.apply(this,arguments);
 				var style = this.getEl().style;
 				style.zIndex = mceZIndex + 0xFFFF + 0XFFFF;
-				console.log(style.zIndex);
 			}
 			
 			// wplink
@@ -3631,7 +3630,6 @@
 		decrementSize: function() {
 			var viewSize = this.controller.toolbar.whichView(),
 				size = this.getCurrentSize();
-			console.log(size);
 			if ( size > 1 ) {
 				this.setSize( size - 1, viewSize );
 			}

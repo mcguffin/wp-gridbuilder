@@ -8,7 +8,7 @@ if ( ! defined('ABSPATH') )
 		<div class="grid-promt-dialog-wrap">
 			<div class="grid-promt-dialog-inner">
 				<div class="grid-promt-dialog">
-					<# console.log(data);if ( !! data.title ) {   #><div class="grid-prompt-title"><h2>{{{ data.title }}}</h2></div><# } #>
+					<# if ( !! data.title ) {   #><div class="grid-prompt-title"><h2>{{{ data.title }}}</h2></div><# } #>
 					<div class="grid-prompt-value">
 						<input type="text" class="widefat" value="{{{ data.defaultValue }}}" />
 					</div>

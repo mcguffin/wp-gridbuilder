@@ -365,7 +365,6 @@
 		decrementSize: function() {
 			var viewSize = this.controller.toolbar.whichView(),
 				size = this.getCurrentSize();
-			console.log(size);
 			if ( size > 1 ) {
 				this.setSize( size - 1, viewSize );
 			}
