@@ -206,23 +206,46 @@
 
 	// extend mce
 	$( document ).on( 'tinymce-editor-setup', function( event, editor ) {
+
+
 		var props = [
+			'add_unload_trigger',
 			'body_class',
+			'branding',
+			'browser_spellcheck',
+			'cache_suffix',
 			'content_css',
+			'convert_urls',
+			'end_container_on_empty_block',
 			'entities',
 			'entity_encoding',
+			'external_plugins',
+			'fix_list_elements',
 			'formats',
+			'indent',
+			'keep_styles',
 			'language',
+			'menubar',
 			'plugins',
 			'preview_styles',
+			'relative_urls',
+			'remove_script_host',
+			'resize',
+			'selector',
+			'skin',
+			'tabfocus_elements',
+			'theme',
 			'toolbar1',
 			'toolbar2',
 			'toolbar3',
 			'toolbar4',
+			'wp_autoresize_on',
 			'wp_lang_attr',
-			'wp_shortcut_labels'
+			'wp_shortcut_labels',
+			'wpautop',
+			'wpeditimage_html5_captions',
 		];
-//		console.log(editor.settings);
+
 		$.each(props, function( i, prop ) {
 			editor.settings[prop] = tinyMCEPreInit.mceInit.content[ prop ];
 		});
