@@ -26,6 +26,7 @@ var files = {
 	js : [
 		'./js/src/Sortable/Sortable.js',
 		'./js/src/Sortable/jquery.binding.js',
+		'./js/src/mcguffin/jquery.serializeStructure.js',
 		'./js/src/admin/edit/grid-base.js',
 		'./js/src/admin/edit/grid-model.js',
 		'./js/src/admin/edit/grid-ui.js',

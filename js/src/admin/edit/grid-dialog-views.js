@@ -246,20 +246,21 @@
 		},
 		getValue: function() {
 			var self = this,
-				ret = {};
+				ret = {},
+				map = function( el, key ) {
+					if ( key.match( /^\d+$/ ) ) {
+						ret = el;
+					} else if ( _.isObject( el ) ) {
+						_.each( el, map );
+					}
+				};
 
 			// save tinymce.
 			_.each( this.getMCE(), function(ed){
 				ed.save();
 			});
 
-			_.each( this.$form.serializeArray(), function( val ) {
-				var name, matches = val.name.match( /\[([a-z0-9-_]+)\]$/g );
-				if ( matches ) {
-					name = matches.length ? matches[0].replace(/[\[\]]+/g,'') : val.name;
-					ret[ name ] = val.value;
-				}
-			});
+			_.each( this.$form.serializeStructure(), map );
 			return ret;
 		},
 		setValue: function( value ) {
@@ -413,6 +414,7 @@
 				lock: features.locks
 			} );
 			wp.media.View.prototype.initialize.apply(this,arguments);
+
 			if ( options.settings.type == 'html' ) {
 				this.$el = $(options.settings.html);
 				this.input = {

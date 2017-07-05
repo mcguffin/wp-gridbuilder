@@ -1332,6 +1332,47 @@
 	};
 });
 
+// jQuery addons
+// Serialize form fields recursively into json type object, 
+// so for example <input name="record[type][x]" value="1"> becomes { record: {type: {x: 1} } }
+// and <input name="record[type][]" value="1"> becomes { record: { type: ['1'] } }
+
+(function($) {
+	$.fn.extend( {
+		serializeStructure: function() {
+			var arr = this.serializeArray(),
+				struct = {};
+
+			$.each(arr,function(i,el) {
+				var path = el.name.replace(/\]$/,'').split( /\]?\[/ ),
+					i = 0, len = path.length, sub = struct, seg;
+
+				for (i;i<len;i++) {
+					seg = path[i];
+					if ( i == len - 1 ) {
+						if ( 'undefined' !== typeof sub.length ) {
+							sub.push( el.value );
+						} else {
+							sub[seg] = el.value;
+						}
+					} else {
+						if ( ! sub[seg] ) {
+							if ( path[i+1] === '' ) {
+								sub[seg] = [];
+							} else {
+								sub[seg] = {};
+							}
+						}
+						sub = sub[seg];
+					}
+				}
+				
+			});
+			return struct;
+		}
+	});
+
+})( jQuery );
 (function($,exports){
 	String.prototype.removeAccents = function() {
 
@@ -2556,7 +2597,7 @@
 		options		= gridbuilder.options,
 		features	= gridbuilder.options.features,
 		l10n		= gridbuilder.l10n,
-		inputTypes	= ['text','textarea','color','number','media','select','checkbox','radio', 'range', 'label'],
+		inputTypes	= ['separator', 'text', 'textarea','color','number','media','select','checkbox','radio', 'range', 'label'],
 		inputs		= {
 			inited: false,
 		},
@@ -2794,20 +2835,21 @@
 		},
 		getValue: function() {
 			var self = this,
-				ret = {};
+				ret = {},
+				map = function( el, key ) {
+					if ( key.match( /^\d+$/ ) ) {
+						ret = el;
+					} else if ( _.isObject( el ) ) {
+						_.each( el, map );
+					}
+				};
 
 			// save tinymce.
 			_.each( this.getMCE(), function(ed){
 				ed.save();
 			});
 
-			_.each( this.$form.serializeArray(), function( val ) {
-				var name, matches = val.name.match( /\[([a-z0-9-_]+)\]$/g );
-				if ( matches ) {
-					name = matches.length ? matches[0].replace(/[\[\]]+/g,'') : val.name;
-					ret[ name ] = val.value;
-				}
-			});
+			_.each( this.$form.serializeStructure(), map );
 			return ret;
 		},
 		setValue: function( value ) {
@@ -2961,6 +3003,7 @@
 				lock: features.locks
 			} );
 			wp.media.View.prototype.initialize.apply(this,arguments);
+
 			if ( options.settings.type == 'html' ) {
 				this.$el = $(options.settings.html);
 				this.input = {
@@ -2987,6 +3030,7 @@
 			this.input.render();
 			this.$('.input').append( this.input.$el );
 			this.$el.addClass('input-type-'+this.options.settings.type );
+			this.$el.addClass('input-'+this.options.settings.name );
 			
 			this.setLock( this.options.locked );
 			
@@ -3032,36 +3076,36 @@
 			this.model = options.model;
 
 			this.inputs = [];
-			_.each( options.settings.items, function( setting, name ) {
+			_.each( options.settings.items, function( setting ) {
 
 				if ( setting.type == 'matrix' ) {
-					self.initializeInputMatrix( setting, name );
+					self.initializeInputMatrix( setting );
 				} else {
-					self.initializeInputWrap( setting, name );
+					self.initializeInputWrap( setting );
 				}
 			});
 		},
-		initializeInputWrap: function( setting, name ){
+		initializeInputWrap: function( setting ) {
 			var value, input = false, self = this;
 			_.extend( setting, { 
-				name: name, 
-				lock: features.locks && setting.type != 'label'
+				name: setting.name, 
+				lock: features.locks && ['label', 'separator'].indexOf( setting.type ) === -1
 			});
 
-			if ( features.locks || ! self.model.get( name+':locked' ) ) {
-				value = self.model.get( name ),
+			if ( features.locks || ! self.model.get( setting.name+':locked' ) ) {
+				value = self.model.get( setting.name ),
 				input = new InputWrap({
 					controller	: self.controller,
 					settings	: setting,
 					value		: ( 'undefined' !== typeof value) ? value : null,
-					locked		: !! self.model.get( name+':locked' ),
+					locked		: !! self.model.get( setting.name+':locked' ),
 					model		: self.model
 				});
 				self.inputs.push( input );
 			}
 			return input;
 		},
-		initializeInputMatrix: function( setting, name ){
+		initializeInputMatrix: function( setting ){
 			var self = this,
 				_matrix = new ParentView( {
 					tagName		: 'table',
@@ -3073,12 +3117,12 @@
 					tagName	: 'tr',
 					parent	: _matrix
 				} );
-				_.each( rowData, function( cellData, name ) {
+				_.each( rowData, function( cellData ) {
 					var input, _cell = new ChildView( {
 						tagName	: 'td',
 						parent	: _row
 					} );
-					input = self.initializeInputWrap( cellData, name );
+					input = self.initializeInputWrap( cellData, setting.name );
 					input.$parent = _cell.$el;
 				} );
 			} );
@@ -3126,8 +3170,8 @@
 				settings: { title:'', items:options.editor.main }
 			});
 
-			_.each( options.editor.sidebar, function( setting, name ){
-				_.extend( setting, { name: name });
+			_.each( options.editor.sidebar, function( setting ){
+				_.extend( setting, { name: setting.name });
 
 				var inputgroup = new InputGroup({
 					controller: self,
@@ -4134,7 +4178,7 @@
 			var sel = gridController.getSelected(),
 				data, editor;
 
-			if ( ! sel ) {
+			if ( ! sel || $('body').is('.grid-modal-open') ) {
 				return;
 			}
 
@@ -4153,7 +4197,7 @@
 				data, editor,				
 				itemClass, parent, after;
 
-			if ( ! sel ) {
+			if ( ! sel || $('body').is('.grid-modal-open') ) {
 				return;
 			}
 

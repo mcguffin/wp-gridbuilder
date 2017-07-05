@@ -320,14 +320,19 @@ class Admin extends Core\Singleton {
 
 				$script_id = 'gridbuilder-base';
 
-				wp_register_script( 'sortable' , 
+				wp_register_script( 'sortable',
 					plugins_url( 'js/src/Sortable/Sortable.js' , GRIDBUILDER_FILE ), 
 					array(), 
 				$version );
 
-				wp_register_script( 'jquery-sortable' , 
+				wp_register_script( 'jquery-sortable',
 					plugins_url( 'js/src/Sortable/jquery.binding.js' , GRIDBUILDER_FILE ), 
 					array( 'jquery', 'sortable' ), 
+				$version );
+
+				wp_register_script( 'jquery-serialize-structure',
+					plugins_url( 'js/src/mcguffin/jquery.serializeStructure.js' , GRIDBUILDER_FILE ), 
+					array( 'jquery' ), 
 				$version );
 
 				wp_register_script( $script_id, 
@@ -348,7 +353,7 @@ class Admin extends Core\Singleton {
 
 				wp_register_script( 'gridbuilder-dialog-views', 
 					plugins_url( 'js/src/admin/edit/grid-dialog-views.js' , GRIDBUILDER_FILE ), 
-					array( 'wp-color-picker', 'gridbuilder-model','gridbuilder-ui'), 
+					array( 'wp-color-picker', 'gridbuilder-model','gridbuilder-ui','jquery-serialize-structure' ), 
 				$version );
 
 				wp_register_script( 'gridbuilder-element', 
