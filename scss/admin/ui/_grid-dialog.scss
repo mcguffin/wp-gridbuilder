@@ -144,6 +144,12 @@
 }
 .input-wrap {
 	margin-bottom:20px;
+
+    [type="checkbox"],
+    [type="radio"] {
+    	margin-top:0;
+    }
+
 	.lock {
 		width:30px;
 		overflow:hidden;
@@ -165,7 +171,7 @@
 			width:1px;
 			height:1px;
 			float:left;
-			margin-top:20px;
+			margin-top:15px;
 			&:checked + label.dashicons:before {
 //				content: "\f528"; // unlock
 				content:"\f160" !important; // lock
@@ -241,6 +247,15 @@
 		[name="media_id"][value] + .thumbnail {
 			display:block;
 		}
+	}
+	&.input-type-separator {
+		clear:both;
+	}
+	&.input-menu_link,
+	&.input-menu_title,
+	&.input-menu_parent {
+		float:left;
+		width:33%;
 	}
 }
 .input-matrix {
