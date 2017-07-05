@@ -107,7 +107,7 @@
 			var sel = gridController.getSelected(),
 				data, editor;
 
-			if ( ! sel ) {
+			if ( ! sel || $('body').is('.grid-modal-open') ) {
 				return;
 			}
 
@@ -126,7 +126,7 @@
 				data, editor,				
 				itemClass, parent, after;
 
-			if ( ! sel ) {
+			if ( ! sel || $('body').is('.grid-modal-open') ) {
 				return;
 			}
 
