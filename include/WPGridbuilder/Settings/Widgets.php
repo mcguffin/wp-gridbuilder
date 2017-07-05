@@ -19,6 +19,7 @@ class Widgets {
 		'WP_Widget_Tag_Cloud'		=> 'dashicons-tagcloud',
 		'WP_Widget_Text'			=> 'dashicons-text',
 	);
+
 	private static $widget_default_icon = 'dashicons-wordpress';
 	// dashicons-grid-view
 

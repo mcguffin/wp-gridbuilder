@@ -8,7 +8,7 @@
 		options		= gridbuilder.options,
 		features	= gridbuilder.options.features,
 		l10n		= gridbuilder.l10n,
-		inputTypes	= ['text','textarea','color','number','media','select','checkbox','radio', 'range', 'label'],
+		inputTypes	= ['separator', 'text', 'textarea','color','number','media','select','checkbox','radio', 'range', 'label'],
 		inputs		= {
 			inited: false,
 		},
@@ -439,6 +439,7 @@
 			this.input.render();
 			this.$('.input').append( this.input.$el );
 			this.$el.addClass('input-type-'+this.options.settings.type );
+			this.$el.addClass('input-'+this.options.settings.name );
 			
 			this.setLock( this.options.locked );
 			
@@ -484,36 +485,36 @@
 			this.model = options.model;
 
 			this.inputs = [];
-			_.each( options.settings.items, function( setting, name ) {
+			_.each( options.settings.items, function( setting ) {
 
 				if ( setting.type == 'matrix' ) {
-					self.initializeInputMatrix( setting, name );
+					self.initializeInputMatrix( setting );
 				} else {
-					self.initializeInputWrap( setting, name );
+					self.initializeInputWrap( setting );
 				}
 			});
 		},
-		initializeInputWrap: function( setting, name ){
+		initializeInputWrap: function( setting ) {
 			var value, input = false, self = this;
 			_.extend( setting, { 
-				name: name, 
-				lock: features.locks && setting.type != 'label'
+				name: setting.name, 
+				lock: features.locks && ['label', 'separator'].indexOf( setting.type ) === -1
 			});
 
-			if ( features.locks || ! self.model.get( name+':locked' ) ) {
-				value = self.model.get( name ),
+			if ( features.locks || ! self.model.get( setting.name+':locked' ) ) {
+				value = self.model.get( setting.name ),
 				input = new InputWrap({
 					controller	: self.controller,
 					settings	: setting,
 					value		: ( 'undefined' !== typeof value) ? value : null,
-					locked		: !! self.model.get( name+':locked' ),
+					locked		: !! self.model.get( setting.name+':locked' ),
 					model		: self.model
 				});
 				self.inputs.push( input );
 			}
 			return input;
 		},
-		initializeInputMatrix: function( setting, name ){
+		initializeInputMatrix: function( setting ){
 			var self = this,
 				_matrix = new ParentView( {
 					tagName		: 'table',
@@ -525,12 +526,12 @@
 					tagName	: 'tr',
 					parent	: _matrix
 				} );
-				_.each( rowData, function( cellData, name ) {
+				_.each( rowData, function( cellData ) {
 					var input, _cell = new ChildView( {
 						tagName	: 'td',
 						parent	: _row
 					} );
-					input = self.initializeInputWrap( cellData, name );
+					input = self.initializeInputWrap( cellData, setting.name );
 					input.$parent = _cell.$el;
 				} );
 			} );
@@ -578,8 +579,8 @@
 				settings: { title:'', items:options.editor.main }
 			});
 
-			_.each( options.editor.sidebar, function( setting, name ){
-				_.extend( setting, { name: name });
+			_.each( options.editor.sidebar, function( setting ){
+				_.extend( setting, { name: setting.name });
 
 				var inputgroup = new InputGroup({
 					controller: self,
