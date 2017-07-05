@@ -48,25 +48,28 @@ class Editors {
 				'default'		=> 'div',
 				'priority'		=> 5,
 			),
+		);
+		$editor += self::menu_settings();
 
+		$editor += array(
 			'fluid'			=> array(
 				'title' 		=> __('Fluid', 'wp-gridbuilder'),
 				'type' 			=> 'checkbox',
 				'description'	=> __('If checked the container content will adapt to the screen width', 'wp-gridbuilder'),
-				'priority' 		=> 20,
+				'priority' 		=> 35,
 			),
 			'fullscreen'	=> array(
 				'title'			=> __('Fullscreen', 'repeatmobile-admin'),
 				'description'	=> __('If checked the container will be at least one viewport high.', 'repeatmobile-admin'),
 				'type'			=> 'checkbox',
-				'priority'		=> 30,
+				'priority'		=> 40,
 			),
 	
 		);
 		return apply_filters( 'gridbuilder_container_editor', $editor );
 	}
 
-	
+
 
 	public static function row() {
 		$ret = array(
@@ -108,6 +111,7 @@ class Editors {
 				'priority'		=> 0,
 			),
 		);
+		$editor += self::menu_settings();
 		return apply_filters( 'gridbuilder_row_editor', $editor );
 	}
 
@@ -245,6 +249,39 @@ class Editors {
 			),
 		);
 		return apply_filters( 'gridbuilder_status_settings', $settings );
+	}
+
+	/**
+	 *	menu item settings
+	 */
+	private static function menu_settings() {
+		$settings = array(
+			'sep1' 			=> array(
+				'type'			=> 'separator',
+				'priority'		=> 10,
+			),
+			'menu_link'		=> array(
+				'title'			=> __( 'Create menu entry', 'wp-gridbuilder'),
+				'type'			=> 'checkbox',
+				'priority'		=> 15,
+			),
+			'menu_title'	=> array(
+				'title'			=> __( 'Menu-Title', 'wp-gridbuilder'),
+				'type'			=> 'text',
+				'priority'		=> 20,
+			),
+			'menu_parent'	=> array(
+				'title'			=> __( 'Parent Menu', 'wp-gridbuilder'),
+				'type'			=> 'text',
+				'priority'		=> 25,
+				'description'	=> __('', 'wp-gridbuilder'),
+			),
+			'sep2' 			=> array(
+				'type'			=> 'separator',
+				'priority'		=> 30,
+			),
+		);
+		return apply_filters( 'gridbuilder_menu_settings', $settings );
 	}
 
 
@@ -450,8 +487,16 @@ class Editors {
 	 */
 	private static function prioritySortEditor( $arr ) {
 		uasort( $arr, array( __CLASS__, 'prioritySort' ) );
-		return $arr;
+		array_walk( $arr, array( __CLASS__, 'maybe_add_name' ) );
+		return array_values( $arr );
 	}
+
+	private static function maybe_add_name( &$element, $key ) {
+		if ( ! isset( $element['name'] ) ) {
+			$element['name'] = $key;
+		}
+	}
+
 	/**
 	 *	Sort an array of arrays of assocs by key `priority`
 	 *

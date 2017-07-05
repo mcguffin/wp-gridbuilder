@@ -19,6 +19,9 @@ class Core extends Singleton {
 		register_uninstall_hook( GRIDBUILDER_FILE, array( __CLASS__ , 'uninstall' ) );
 		
 		add_filter( 'the_content', array( $this,'the_content' ) );
+
+		AnchorNav::instance();
+
 	}
 
 	/**
