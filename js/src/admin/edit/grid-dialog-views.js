@@ -533,6 +533,7 @@
 						tagName	: 'td',
 						parent	: _row
 					} );
+
 					input = self.initializeInputWrap( cellData, setting.name );
 					input.$parent = _cell.$el;
 				} );
@@ -628,6 +629,7 @@
 			_.each( this.inputgroups, function( group ) {
 				_.each( group.inputs, setModelVal );
 			});
+
 			this.model.set( updateModel );
 			return this;
 		},

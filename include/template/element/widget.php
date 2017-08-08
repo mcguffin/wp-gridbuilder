@@ -5,6 +5,7 @@ if ( ! defined('ABSPATH') )
 
 ?>
 	<script type="text/html" id="tmpl-grid-element-widget">
+		<div class="background"><div class="color"></div></div>
 		<#
 		var widget_class = unescape( data.model.get('widget_class') ),
 			widget_type = gridbuilder.options.widgets[ widget_class ],

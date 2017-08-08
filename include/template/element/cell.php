@@ -5,6 +5,7 @@ if ( ! defined('ABSPATH') )
 
 ?>
 	<script type="text/html" id="tmpl-grid-element-cell">
+		<div class="background"><div class="color"></div></div>
 		<div class="display-sizes">
 			<span class="display-offset"></span>
 			<span class="display-size"></span>

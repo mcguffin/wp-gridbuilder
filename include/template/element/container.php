@@ -5,6 +5,7 @@ if ( ! defined('ABSPATH') )
 
 ?>
 	<script type="text/html" id="tmpl-grid-element-container">
+		<div class="background"><div class="color"></div></div>
 		<div class="top sort-handle"></div>
 		<div class="bottom sort-handle"></div>
 		<a href="#" class="toggle-collapse dashicons dashicons-arrow-down"></a>

@@ -15,11 +15,13 @@
 	bottom:0;
 	right:0;
 	z-index:0;
+	position: relative;
+	overflow: hidden;
 	& ~ * {
 		z-index:1;
 	}
 	.background-attachment-fixed & {
-//		clip: rect(0, auto, auto, 0);
+		clip: rect(0, auto, auto, 0);
 	}
 	img {
 		.background-attachment-fixed & {

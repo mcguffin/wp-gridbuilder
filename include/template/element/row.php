@@ -5,6 +5,7 @@ if ( ! defined('ABSPATH') )
 
 ?>
 	<script type="text/html" id="tmpl-grid-element-row">
+		<div class="background"><div class="color"></div></div>
 		<div class="display-attributes">
 			<span class="display-id"></span>
 			<span class="display-class"></span>

@@ -167,6 +167,31 @@
 		},
 		updateDisplay: function() {
 			this.updateVisibilityClasses();
+			this.updateBackground();
+		},
+		updateBackground:function(){
+			var self = this,
+				bgImage = this.model.get('background_image'),
+				bgOpacity = this.model.get('background_opacity'),
+				bgColor = this.model.get('background_color'),
+				attachment, url;
+
+			if ( !! bgImage ) {
+				attachment = new wp.media.model.Attachment( { id: bgImage } );
+				attachment.once('change',function() {
+					if ( !! attachment.get('sizes') ) {
+						url = attachment.get('sizes').full.url;
+					} else {
+						url = attachment.get('icon');
+					}
+					self.$('>.background').css( { 'background-image' : "url('" + url + "')" } );
+				});
+				attachment.fetch();
+				console.log(attachment);
+			}
+			if ( !! bgColor ) {
+				this.$('> .background > .color').css( { 'background-color': bgColor, 'opacity': bgOpacity } );
+			}
 		},
 		setVisibility: function( visibility ) {
 			var gridView = this.controller.view,
