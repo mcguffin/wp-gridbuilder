@@ -340,7 +340,7 @@ class Editors {
 				'title' 		=> __('Image Size', 'wp-gridbuilder'),
 				'type' 			=> 'select',
 				'options' 		=> array(
-					'none'			=> __('Tiled Image', 'wp-gridbuilder'),
+//					'none'			=> __('Tiled Image', 'wp-gridbuilder'),
 					'contain'		=> __('Contain', 'wp-gridbuilder'),
 					'cover'			=> __('Cover', 'wp-gridbuilder'),
 					'fill'			=> __('Fill (scale unproportional)', 'wp-gridbuilder'),
@@ -349,7 +349,7 @@ class Editors {
 				),
 				'description'	=> __('How the background image is displayed.', 'wp-gridbuilder'),
 				'priority'		=> 20,
-				'default'		=> 'contain',
+				'default'		=> 'cover',
 			),
 			'background_attachment'	=> array(
 				'title'			=> __('Image Alignment', 'wp-gridbuilder'),
@@ -442,7 +442,7 @@ class Editors {
 			);
 
 			// visibility
-			$settings['grid_settings']['rows'][ 1 ][ 'visibility_' . $size ] = array(
+			$settings['grid_settings']['rows'][ 1 ][] = array(
 				'type'		=> 'radio',
 				'title'		=> false,
 				'default'	=> '',
@@ -451,24 +451,27 @@ class Editors {
 					'visible'	=> __( 'Visible', 'wp-gridbuilder' ),
 					'hidden'	=> __( 'Hidden', 'wp-gridbuilder' ),
 				),
+				'name'		=> 'visibility_' . $size,
 			);
 
 			// size
-			$settings['grid_settings']['rows'][ 2 ][ 'size_' . $size ] = array(
+			$settings['grid_settings']['rows'][ 2 ][] = array(
 				'type'	=> 'number',
 				'title'	=> false,
-				'min' => 1,
-				'max' => $sizes['columns'],
-				'step' => 1,
+				'min'	=> 1,
+				'max'	=> $sizes['columns'],
+				'step'	=> 1,
+				'name'	=> 'size_' . $size,
 			);
 
 			// offset
-			$settings['grid_settings']['rows'][ 3 ][ 'offset_' . $size ] = array(
+			$settings['grid_settings']['rows'][ 3 ][] = array(
 				'type'	=> 'number',
 				'title'	=> false,
-				'min' => 0,
-				'max' => $sizes['columns'] - 1,
-				'step' => 1,
+				'min'	=> 0,
+				'max'	=> $sizes['columns'] - 1,
+				'step'	=> 1,
+				'name'	=> 'offset_' . $size,
 			);
 		}	
 
