@@ -217,7 +217,7 @@ abstract class Element {
 			$styles[ 'background-image' ] = sprintf( 'url("%s")', $img_src );
 		}
 */
-		if ( $item[ 'background_color' ] ) {
+		if ( $item[ 'background_color' ] && ! $item[ 'background_image' ] ) {
 			$color = $this->mk_color( $item[ 'background_color' ], $item[ 'background_opacity' ] );
 			$styles[ 'background-color' ] = $color;
 		}
