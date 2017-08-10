@@ -38,6 +38,8 @@ class Admin extends Core\Singleton {
 
 		add_action( 'wp_ajax_gridbuilder-autosave', array( $this, 'ajax_autosave' ) );
 
+		add_action( 'wp_ajax_get_nav_menu_object', array( $this, 'ajax_get_nav_menu_object' ) );
+
 		add_option( 'gridbuilder_post_types', array('post','page') );
 	}
 
@@ -151,6 +153,9 @@ class Admin extends Core\Singleton {
 		}
 		die('');
 	}
+
+
+
 	private function get_widget_instance( $widget_class ) {
 		global $wp_widget_factory;
 		if ( class_exists( $widget_class ) && isset( $wp_widget_factory->widgets[ $widget_class ] ) ) {
@@ -158,6 +163,7 @@ class Admin extends Core\Singleton {
 		}
 		return null;
 	}
+	
 	/**
 	 *	Ajax: Get Widget form.
 	 *
@@ -165,6 +171,7 @@ class Admin extends Core\Singleton {
 	 */
 	public function ajax_autosave() {
 		if ( isset( $_POST[ 'nonce' ], $_POST[ 'post_id' ], $_POST[ 'grid_data' ] ) && wp_verify_nonce( $_POST[ 'nonce' ], $_REQUEST[ 'action' ] ) && current_user_can( 'edit_posts' ) ) {
+			header( 'Content-Type: application/json' );
 			// check get post
 			$post_id = intval( $_POST[ 'post_id' ] );
 			if ( ! $post = get_post( intval( $_POST[ 'post_id' ] ) ) ) {
@@ -196,6 +203,20 @@ class Admin extends Core\Singleton {
 			) );
 			die('');
 		}
+	}
+
+	/**
+	 *	Ajax: Get Widget form.
+	 *
+	 *	@action wp_ajax_get_nav_menu_object
+	 */
+	public function ajax_get_nav_menu_object() {
+		if ( isset( $_POST['nav_menu'] ) && ( $nav_menu_id = intval( $_POST[ 'nav_menu' ] ) ) && current_user_can( 'edit_posts' ) ) {
+			header( 'Content-Type: application/json' );
+			$obj = wp_get_nav_menu_object( $nav_menu_id );
+			wp_send_json_success( $obj );
+		}
+		wp_send_json_error('no param');
 	}
 
 	/**

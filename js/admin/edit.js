@@ -3486,7 +3486,6 @@
 				bgOpacity = this.model.get('background_opacity'),
 				bgColor = this.model.get('background_color'),
 				attachment, url;
-
 			if ( !! bgImage ) {
 				attachment = new wp.media.model.Attachment( { id: bgImage } );
 				attachment.once('change',function() {
@@ -3498,10 +3497,17 @@
 					self.$('>.background').css( { 'background-image' : "url('" + url + "')" } );
 				});
 				attachment.fetch();
-				console.log(attachment);
 			}
 			if ( !! bgColor ) {
-				this.$('> .background > .color').css( { 'background-color': bgColor, 'opacity': bgOpacity } );
+
+				//*
+				// Must be set with short delay on widgets. Why?
+				setTimeout(function(){
+					self.$('> .background > .color').css( { 'background-color': bgColor, 'opacity': bgOpacity } );
+				},10);
+				/*/
+				self.$('> .background > .color').css( { 'background-color': bgColor, 'opacity': bgOpacity } );
+				//*/
 			}
 		},
 		setVisibility: function( visibility ) {
