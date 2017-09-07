@@ -1,26 +1,14 @@
 <?php
 
 namespace WPGridbuilder\Admin;
+use WPGridbuilder\Core;
 
+class Tools extends Core\Singleton {
 
-class Tools {
-	private static $_instance = null;
-	
 	private $tool_page_name = 'gridbuilder-management';
 	private $last_error = null;
 	private $last_success_message = null;
 	
-	/**
-	 * Getting a singleton.
-	 *
-	 * @return object single instance of GridbuilderAdmin
-	 */
-	public static function instance() {
-		if ( is_null( self::$_instance ) )
-			self::$_instance = new self();
-		return self::$_instance;
-	}
-
 	/**
 	 * Private constructor
 	 */
@@ -113,7 +101,7 @@ class Tools {
 						$contents = file_get_contents( $upload['file'] );
 						if ( ! empty( $contents ) ) {
 							$template_data = json_decode( $contents, true );
-							if ( isset( $template_data['templates'] ) ) {
+							if ( is_array( $template_data ) && isset( $template_data['templates'] ) ) {
 								foreach ( $types as $type ) {
 									$option_name = "gridbuilder_{$type}_templates";
 									if ( $override == 'delete' ) {
@@ -146,11 +134,11 @@ class Tools {
 								$this->last_success_message = implode( ' ', $msg );
 							} else {
 								// error
-								$this->last_error = new WP_Error( 'gridbuilder-import', __( 'Invalid import File', 'wp-gridbuilder' ) );
+								$this->last_error = new \WP_Error( 'gridbuilder-import', __( 'Invalid import File', 'wp-gridbuilder' ) );
 							}
 						} else {
 							// error
-							$this->last_error = new WP_Error( 'gridbuilder-import', __( 'Empty Import File', 'wp-gridbuilder' ) );
+							$this->last_error = new \WP_Error( 'gridbuilder-import', __( 'Empty Import File', 'wp-gridbuilder' ) );
 						}
 						unlink($upload['file']);
 						if ( is_wp_error( $this->last_error ) ) {
@@ -159,6 +147,16 @@ class Tools {
 							add_action( 'admin_notices', array( $this, 'admin_notices__success' ) );
 						}
 						break;
+					case 'gridbuilder-theme-sync':
+						if ( $count_result = Templates::instance()->fetch_from_theme() ) {
+							$this->last_success_message = sprintf( _n( '%d Template updated', '%d Templates updated', $count_result, 'wp-gridbuilder' ), $count_result );
+							add_action( 'admin_notices', array( $this, 'admin_notices__success' ) );
+						} else {
+							$this->last_error = new \WP_Error( 'gridbuilder-theme-sync', __( 'No Templates Synchronized', 'wp-gridbuilder' ) );
+							add_action( 'admin_notices', array( $this, 'admin_notices__error' ) );
+						}
+						
+						break;
 					case 'gridbuilder-template-export':
 						$export = array(
 							'meta'	=> array(
@@ -166,15 +164,9 @@ class Tools {
 								'origin'	=> get_bloginfo( 'url' ),
 								'date'		=> strftime('%Y-%m-%d %H:%M:%S'),
 							),
-							'templates'	=> array(),
 						);
-						foreach ( $types as $type ) {
-							$opt = get_option( "gridbuilder_{$type}_templates" );
-							if ( empty( $opt ) ) {
-								$opt = array();
-							}
-							$export['templates'][ $type ] = $opt;
-						}
+						$export = Templates::instance()->add_templates( $export );
+
 						$content = json_encode( $export );
 						$filename = sprintf( 'wp-gridbuilder-export-%s.json', strftime('%Y-%m-%d-%H-%M-%S') );
 						header('Content-Description: File Transfer');
@@ -202,8 +194,11 @@ class Tools {
 		foreach ( array( 'container', 'row', 'cell', 'widget' ) as $type ) {
 			$count_templates += count( get_option( "gridbuilder_{$type}_templates" ) );
 		}
+
+		$theme_sync_result = Templates::instance()->get_fetch_from_theme_results();
+
 		?><div class="wrap">
-			<h2><?php _e( 'GridBuilder Import / Export' , 'wp-gridbuilder' ); ?></h2>
+			<h2><?php _e( 'GridBuilder Tools' , 'wp-gridbuilder' ); ?></h2>
 			<form method="post" enctype="multipart/form-data">
 				<?php if ( $count_templates ) { ?>
 				<div class="card">
@@ -216,7 +211,7 @@ class Tools {
 				</div>
 				<?php } ?>
 				<div class="card">
-					<h3><?php _e( 'Import Object Templates' , 'wp-gridbuilder' ); ?></h3>
+					<h3><?php _e( 'Import Templates' , 'wp-gridbuilder' ); ?></h3>
 					<?php wp_nonce_field( 'gridbuilder-template-import','gridbuilder-template-import-nonce' ); ?>
 					<p class="description"><?php 
 						_e( 'Import a set of predefined grid object like containers, rows, cells or widgets.', 'wp-gridbuilder' );
@@ -251,6 +246,26 @@ class Tools {
 					</p>
 				</div>
 			</form>
+			<?php
+
+			if ( ! empty( $theme_sync_result ) ) {
+				?>
+				<form method="post">
+					<div class="card">
+						<h3><?php _e( 'Fetch from Theme' , 'wp-gridbuilder' ); ?></h3>
+						<p class="description"><?php 
+							_e( 'This import Templates from your Theme. Existing templates will be kept.', 'wp-gridbuilder' );
+						?></p>
+						<?php wp_nonce_field( 'gridbuilder-theme-sync','gridbuilder-theme-sync-nonce' ); ?>
+						<p>
+							<button class="button-primary" name="action" value="gridbuilder-theme-sync" type="submit"><?php _e('Fetch','wp-gridbuilder') ?></button>
+						</p>
+					</div>
+				</form>
+				<?php
+			}
+
+			?>
 			<form method="post">
 				<div class="card">
 					<h3><?php _e( 'Migrate Domain' , 'wp-gridbuilder' ); ?></h3>
@@ -273,6 +288,7 @@ class Tools {
 					</p>
 				</div>
 			</form>
+
 		</div><?php
 	}
 

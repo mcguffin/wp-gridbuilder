@@ -8,7 +8,7 @@ use WPGridbuilder\Settings;
 
 
 class Templates extends Core\Singleton {
-
+	private $template_theme_path;
 
 	protected function __construct() {
 
@@ -21,24 +21,24 @@ class Templates extends Core\Singleton {
 		add_action( 'wp_ajax_gridbuilder-update-template', array( &$this, 'ajax_save_template' ) );
 		add_action( 'wp_ajax_gridbuilder-delete-template', array( &$this, 'ajax_delete_template' ) );
 
-		add_filter( 'gridbuilder_edit_script_options', array( $this, 'script_options' ) );
+		add_filter( 'gridbuilder_edit_script_options', array( $this, 'append_templates' ) );
 		add_filter( 'gridbuilder_edit_script_l10n', array( $this, 'script_l10n' ) );
+
+		$this->template_theme_path = get_stylesheet_directory() . '/wp-gridbuilder';
+		if ( ! file_exists( $this->template_theme_path ) ) {
+			$this->template_theme_path = false;
+		}
 	}
 
 	/**
 	 *	@filter gridbuilder_edit_script_options
 	 */
-	public function script_options( $script_options ) {
+	public function append_templates( $array ) {
 
-				// element templates
-		$script_options[ 'templates' ] = array(
-			'container'		=> Settings\Templates::container(),
-			'row'			=> Settings\Templates::row(),
-			'cell'			=> Settings\Templates::cell(),
-			'widget'		=> Settings\Templates::widget(),
-		);
+		// element templates
+		$array[ 'templates' ] = $this->get_templates();
 
-		return $script_options;
+		return $array;
 	}
 	
 	/**
@@ -104,6 +104,7 @@ class Templates extends Core\Singleton {
 				$templates = get_option( "gridbuilder_{$type}_templates" );
 
 				$template['name'] = sanitize_text_field( $template['name'] );
+				$template['_updated'] = time();
 
 				// use unique slug if create
 				if ( $_REQUEST[ 'action' ] == 'gridbuilder-create-template' && isset( $templates[ $template['slug'] ] ) ) {
@@ -135,28 +136,113 @@ class Templates extends Core\Singleton {
 	}
 
 	private function save_to_theme( $slug, $template_data ) {
-		$tpl_path = get_stylesheet_directory() . '/wp-gridbuilder';
-		if ( ! file_exists( $tpl_path ) ) {
+
+		if ( ! $this->template_theme_path ) {
 			return;
 		}
 
-		$template_data['_updated'] = time();
-
-		$save_path = $tpl_path . '/' . $template_data[ 'type' ] . '/';
+		$save_path = $this->template_theme_path . '/' . $template_data[ 'type' ] . '/';
 		wp_mkdir_p( $save_path );
 		$save_data = json_encode( $template_data, JSON_PRETTY_PRINT );
 		file_put_contents($save_path . $slug . '.json', $save_data);
 	}
 
 	private function delete_from_theme( $slug, $type ) {
-		$tpl_path = get_stylesheet_directory() . '/wp-gridbuilder';
-		if ( ! file_exists( $tpl_path ) ) {
+
+		if ( ! $this->template_theme_path ) {
 			return;
 		}
-		$file = $tpl_path . '/' . $type . '/' . $slug . '.json';
+
+		$file = $this->template_theme_path . '/' . $type . '/' . $slug . '.json';
 
 		if ( file_exists( $file ) ) {
 			unlink( $file );
 		}
+	}
+	
+	public function fetch_from_theme() {
+		$to_sync = $this->get_fetch_from_theme_results();
+		$tpl = $this->get_templates();
+		$theme_tpl = $this->get_templates_from_theme();
+		$count_result = 0;
+
+		$to_sync = array_intersect_key( $to_sync, array( 'container' => 0, 'row'=> 0, 'cell' => 0, 'widget' => 0 ) );
+
+		foreach ( $to_sync as $type => $sync ) {
+			if ( $sync === true ) {
+				$tpl[ $type ] = $theme_tpl[ $type ];
+				$count_result += count( $theme_tpl );
+				continue;
+			} else {
+				foreach ( array_keys( $sync ) as $slug ) {
+					$tpl[ $type ][ $slug ] = $theme_tpl[ $type ][ $slug ];
+					$count_result++;
+				}
+			}
+			update_option( "gridbuilder_{$type}_templates", $tpl[ $type ] );
+		}
+		return $count_result;
+	}
+	
+	public function get_fetch_from_theme_results() {
+		$sync_result = array('_total' => 0 );
+		$tpl = $this->get_templates();
+		$theme_tpl = $this->get_templates_from_theme();
+
+		foreach ( $theme_tpl as $type => $templates ) {
+			if ( ! isset( $tpl[$type] ) ) {
+				$sync_result[$type] = true;
+				$sync_result['_total'] += count($templates);
+				continue;
+			}
+			$sync_result[$type] = array();
+
+			foreach ( $templates as $slug => $template ) {
+
+				if ( ! isset( $tpl[ $type ][ $slug ] ) ) {
+
+					$sync_result[$type][ $slug ] = true;
+					$sync_result['_total']++;
+				} else if ( ! isset( $tpl[ $type ][ $slug ]['_updated'] ) || $tpl[ $type ][ $slug ]['_updated'] < $template['_updated'] ) {
+					$sync_result[$type][ $slug ] = true;
+					$sync_result['_total']++;
+				}
+			}
+			if ( empty( $sync_result[$type] ) ) {
+				unset( $sync_result[$type] );
+			}
+		}
+
+		return array_filter($sync_result);
+	}
+	
+	private function get_templates_from_theme() {
+
+		$templates = array();
+
+		if ( ! $this->template_theme_path ) {
+			return $templates;
+		}
+
+		foreach ( array( 'container','row','cell','widget' ) as $type ) {
+			$lookup_path = $this->template_theme_path . '/' . $type . '/';
+			$files = glob( $lookup_path . '*.json' );
+			$templates[ $type ] = array();
+			foreach ( $files as $file ) {
+				$template = json_decode( file_get_contents( $file ), true );
+				if ( is_array( $template ) && isset( $template[ 'slug' ] ) ) {
+					$templates[ $type ][ $template[ 'slug' ] ] = $template;
+				}
+			}
+		}
+		return $templates;
+	}
+	private function get_templates() {
+		return array(
+			'container'		=> Settings\Templates::container(),
+			'row'			=> Settings\Templates::row(),
+			'cell'			=> Settings\Templates::cell(),
+			'widget'		=> Settings\Templates::widget(),
+		);
 	}
 }

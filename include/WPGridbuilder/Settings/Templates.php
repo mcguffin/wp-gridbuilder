@@ -9,19 +9,35 @@ namespace WPGridbuilder\Settings;
 class Templates {
 
 	public static function container() {
-		return apply_filters( 'gridbuilder_container_templates', get_option( 'gridbuilder_container_templates', (object) array() ) );
+		$templates = apply_filters( 'gridbuilder_container_templates', get_option( 'gridbuilder_container_templates', (object) array() ) );
+		$templates = self::keep_string_keys( $templates );
+		return $templates;
 	}
 
 	public static function row() {
-		return apply_filters( 'gridbuilder_row_templates', get_option( 'gridbuilder_row_templates', (object) array() ) );
+		$templates = apply_filters( 'gridbuilder_row_templates', get_option( 'gridbuilder_row_templates', (object) array() ) );
+		$templates = self::keep_string_keys( $templates );
+		return $templates;
 	}
 
 	public static function cell() {
-		return apply_filters( 'gridbuilder_cell_templates', get_option( 'gridbuilder_cell_templates', (object) array() ) );
+		$templates = apply_filters( 'gridbuilder_cell_templates', get_option( 'gridbuilder_cell_templates', (object) array() ) );
+		$templates = self::keep_string_keys( $templates );
+		return $templates;
 	}
 
 	public static function widget() {
-		return apply_filters( 'gridbuilder_widget_templates', get_option( 'gridbuilder_widget_templates', (object) array() ) );
+		$templates = apply_filters( 'gridbuilder_widget_templates', get_option( 'gridbuilder_widget_templates', (object) array() ) );
+		$templates = self::keep_string_keys( $templates );
+		return $templates;
+	}
+	private static function keep_string_keys($arr) {
+		foreach ($arr as $key => $value) {
+			if (is_int($key)) {
+				unset($arr[$key]);
+			}
+		}
+		return $arr;
 	}
 
 }
