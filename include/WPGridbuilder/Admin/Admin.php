@@ -8,9 +8,9 @@ use WPGridbuilder\Settings;
 
 
 class Admin extends Core\Singleton {
-	
+
 	private $tool_page_name = 'gridbuilder-management';
-	
+
 
 	/**
 	 * Private constructor
@@ -41,8 +41,19 @@ class Admin extends Core\Singleton {
 		add_action( 'wp_ajax_get_nav_menu_object', array( $this, 'ajax_get_nav_menu_object' ) );
 
 		add_option( 'gridbuilder_post_types', array('post','page') );
+
+		add_action( 'admin_print_styles', array( $this, 'admin_print_styles' ), 11 );
+
 	}
 
+	/**
+	 *	@action admin_print_styles
+	 */
+	public function admin_print_styles() {
+		if ( get_current_screen()->base === 'post') {
+			wp_dequeue_style( apply_filters( 'black-studio-tinymce-widget-style', 'black-studio-tinymce-widget' ) );
+		}
+	}
 
 	/**
 	 *	Admin init
@@ -63,7 +74,7 @@ class Admin extends Core\Singleton {
 		set_user_setting( 'gridbuilder_features_locks', isset( $_POST['gridbuilder_features_locks'] ) );
 //		set_user_setting( 'gridbuilder_features_autosave', isset( $_POST['gridbuilder_features_autosave'] ) );
 	}
-	
+
 	/**
 	 *	Output User Profile Editor HTML
 	 *
@@ -73,7 +84,7 @@ class Admin extends Core\Singleton {
 		?><table class="form-table">
 			<tbody>
 				<tr class="gridbuilder-user-features-locks">
-					<th scope="row"><?php 
+					<th scope="row"><?php
 						_e( 'Gridbuilder Locks', 'wp-gridbuilder' );
 					?></th>
 					<td>
@@ -83,7 +94,7 @@ class Admin extends Core\Singleton {
 							<input name="gridbuilder_features_locks" type="checkbox" id="gridbuilder-features-locks" value="1" <?php checked( get_user_setting( 'gridbuilder_features_locks', false ) ) ?>>
 								<?php _e( 'Enable Element locking', 'wp-gridbuilder' ) ?>
 							</label>
-							<p class="description"><?php 
+							<p class="description"><?php
 								_e( 'If checked you can lock certain elements and properties of a page layout.', 'wp-gridbuilder' );
 							?></p>
 						</fieldset>
@@ -91,7 +102,7 @@ class Admin extends Core\Singleton {
 				</tr>
 <?php /*
 				<tr class="gridbuilder-user-features-autosave">
-					<th scope="row"><?php 
+					<th scope="row"><?php
 						_e( 'Gridbuilder Autosave', 'wp-gridbuilder' );
 					?></th>
 					<td>
@@ -101,7 +112,7 @@ class Admin extends Core\Singleton {
 							<input name="gridbuilder_features_autosave" type="checkbox" id="gridbuilder-features-autosave" value="1" <?php checked( get_user_setting( 'gridbuilder_features_autosave', false ) ) ?>>
 								<?php _e( 'Save Gridbuilder settings autmatically', 'wp-gridbuilder' ) ?>
 							</label>
-							<p class="description"><?php 
+							<p class="description"><?php
 								_e( 'If checked your Grid settings will be saved after each editing.', 'wp-gridbuilder' );
 							?></p>
 						</fieldset>
@@ -137,14 +148,14 @@ class Admin extends Core\Singleton {
 			} else {
 				// error due to non-existing widget
 				echo '<div id="gridbuilder-error-widget" class="widget">';
-				printf( '<p class="description">%s</p>', 
-					sprintf( __( 'Widget “%s” is unavailable. This is what you entered.', 'wp-gridbuilder' ), sanitize_text_field( $widget_class ) ) 
+				printf( '<p class="description">%s</p>',
+					sprintf( __( 'Widget “%s” is unavailable. This is what you entered.', 'wp-gridbuilder' ), sanitize_text_field( $widget_class ) )
 				);
-				
+
 				foreach ( $instance as $key => $value ) {
 					$k = sanitize_key($key);
-					printf( "<label for=\"gridbuilder_error_widget-%s\"><strong>%s</strong></label>: <textarea class=\"widefat code\" id=\"gridbuilder_error_widget-%s\" name=\"gridbuilder_error_widget[%s]\" readonly>%s</textarea>\n\n", 
-						$k, $k, $k, $k, 
+					printf( "<label for=\"gridbuilder_error_widget-%s\"><strong>%s</strong></label>: <textarea class=\"widefat code\" id=\"gridbuilder_error_widget-%s\" name=\"gridbuilder_error_widget[%s]\" readonly>%s</textarea>\n\n",
+						$k, $k, $k, $k,
 						esc_textarea($value)
 					);
 				}
@@ -163,7 +174,7 @@ class Admin extends Core\Singleton {
 		}
 		return null;
 	}
-	
+
 	/**
 	 *	Ajax: Get Widget form.
 	 *
@@ -264,7 +275,7 @@ class Admin extends Core\Singleton {
 		}
 		return $value;
 	}
-	
+
 	/**
 	 *	Get current post type
 	 *
@@ -276,7 +287,7 @@ class Admin extends Core\Singleton {
 			$post_id = intval( $_REQUEST[ 'post' ] );
 		}
 		$post_type = get_post_type( $post_id );
-		
+
 		if ( ! $post_type && isset( $_REQUEST[ 'post_type' ] ) ) {
 			$post_type = $_REQUEST[ 'post_type' ];
 		}
@@ -285,7 +296,7 @@ class Admin extends Core\Singleton {
 		}
 		return false;
 	}
-	
+
 	/**
 	 *	Check if pagebuilder is enabled for post type
 	 *
@@ -314,7 +325,7 @@ class Admin extends Core\Singleton {
 
 		$this->call_widgets_method( 'enqueue_admin_scripts' );
 	}
-	
+
 	private function call_widgets_method( $method_name ) {
 		$widget_types = Settings\Widgets::types();
 		foreach ( array_keys( $widget_types ) as $widget_class ) {
@@ -342,49 +353,49 @@ class Admin extends Core\Singleton {
 				$script_id = 'gridbuilder-base';
 
 				wp_register_script( 'sortable',
-					plugins_url( 'js/src/Sortable/Sortable.js' , GRIDBUILDER_FILE ), 
-					array(), 
+					plugins_url( 'js/src/Sortable/Sortable.js' , GRIDBUILDER_FILE ),
+					array(),
 				$version );
 
 				wp_register_script( 'jquery-sortable',
-					plugins_url( 'js/src/Sortable/jquery.binding.js' , GRIDBUILDER_FILE ), 
-					array( 'jquery', 'sortable' ), 
+					plugins_url( 'js/src/Sortable/jquery.binding.js' , GRIDBUILDER_FILE ),
+					array( 'jquery', 'sortable' ),
 				$version );
 
 				wp_register_script( 'jquery-serialize-structure',
-					plugins_url( 'js/src/mcguffin/jquery.serializeStructure.js' , GRIDBUILDER_FILE ), 
-					array( 'jquery' ), 
+					plugins_url( 'js/src/mcguffin/jquery.serializeStructure.js' , GRIDBUILDER_FILE ),
+					array( 'jquery' ),
 				$version );
 
-				wp_register_script( $script_id, 
-					plugins_url( 'js/src/admin/edit/grid-base.js' , GRIDBUILDER_FILE ), 
-					array( 'wp-backbone', 'media-widgets' ), 
+				wp_register_script( $script_id,
+					plugins_url( 'js/src/admin/edit/grid-base.js' , GRIDBUILDER_FILE ),
+					array( 'wp-backbone', 'media-widgets' ),
 				$version );
 
-				wp_register_script( 'gridbuilder-model', 
-					plugins_url( 'js/src/admin/edit/grid-model.js' , GRIDBUILDER_FILE ), 
-					array( $script_id ), 
+				wp_register_script( 'gridbuilder-model',
+					plugins_url( 'js/src/admin/edit/grid-model.js' , GRIDBUILDER_FILE ),
+					array( $script_id ),
 				$version );
 
 
-				wp_register_script( 'gridbuilder-ui', 
-					plugins_url( 'js/src/admin/edit/grid-ui.js' , GRIDBUILDER_FILE ), 
-					array( 'gridbuilder-model'), 
+				wp_register_script( 'gridbuilder-ui',
+					plugins_url( 'js/src/admin/edit/grid-ui.js' , GRIDBUILDER_FILE ),
+					array( 'gridbuilder-model'),
 				$version );
 
-				wp_register_script( 'gridbuilder-dialog-views', 
-					plugins_url( 'js/src/admin/edit/grid-dialog-views.js' , GRIDBUILDER_FILE ), 
-					array( 'wp-color-picker', 'gridbuilder-model','gridbuilder-ui','jquery-serialize-structure' ), 
+				wp_register_script( 'gridbuilder-dialog-views',
+					plugins_url( 'js/src/admin/edit/grid-dialog-views.js' , GRIDBUILDER_FILE ),
+					array( 'wp-color-picker', 'gridbuilder-model','gridbuilder-ui','jquery-serialize-structure' ),
 				$version );
 
-				wp_register_script( 'gridbuilder-element', 
-					plugins_url( 'js/src/admin/edit/grid-element.js' , GRIDBUILDER_FILE ), 
-					array( 'gridbuilder-model','gridbuilder-dialog-views','jquery-sortable'), 
+				wp_register_script( 'gridbuilder-element',
+					plugins_url( 'js/src/admin/edit/grid-element.js' , GRIDBUILDER_FILE ),
+					array( 'gridbuilder-model','gridbuilder-dialog-views','jquery-sortable'),
 				$version );
 
-				wp_register_script( 'gridbuilder-admin', 
-					plugins_url( 'js/src/admin/edit.js' , GRIDBUILDER_FILE ), 
-					array( 'gridbuilder-element' ), 
+				wp_register_script( 'gridbuilder-admin',
+					plugins_url( 'js/src/admin/edit.js' , GRIDBUILDER_FILE ),
+					array( 'gridbuilder-element' ),
 				$version );
 
 			} else {
@@ -401,7 +412,7 @@ class Admin extends Core\Singleton {
 				'EditText'			=> __( 'Edit Text',  'wp-gridbuilder' ),
 				'Done'				=> __( 'Done',  'wp-gridbuilder' ),
 				'Delete'			=> __( 'Delete',  'wp-gridbuilder' ),
-			
+
 				'Grid'				=> __( 'Grid',  'wp-gridbuilder' ),
 				'Container'			=> __( 'Container',  'wp-gridbuilder' ),
 				'Row'				=> __( 'Row',  'wp-gridbuilder' ),
@@ -415,7 +426,7 @@ class Admin extends Core\Singleton {
 
 				'WidgetTypes'		=> __( 'Widget Types',  'wp-gridbuilder' ),
 				'SelectWidget'		=> __( 'Select Widget',  'wp-gridbuilder' ),
-				
+
 				'unkonwnWidget'		=> __( 'Unknown Widget:',  'wp-gridbuilder' ),
 			);
 
@@ -439,7 +450,7 @@ class Admin extends Core\Singleton {
 				'widgets'			=> Settings\Widgets::types(),
 				'screensizes'		=> Settings\Core::screen_sizes(),
 				'default_widget'	=> apply_filters( 'gridbuilder_default_widget', 'WP_Widget_Text'),
-				'default_widget_content_property'	
+				'default_widget_content_property'
 									=> apply_filters( 'gridbuilder_default_widget_content_property', 'description'),
 				'features'			=> array(
 					// manage templates
@@ -466,7 +477,7 @@ class Admin extends Core\Singleton {
 	function print_media_templates() {
 		if ( $this->is_enabled_for_post_type() ) {
 			$rp = GRIDBUILDER_DIRECTORY . 'include' . DIRECTORY_SEPARATOR . '/template/{,*/,*/*/,*/*/*/}*.php';
-			foreach ( glob( $rp, GLOB_BRACE ) as $template_file ) {	
+			foreach ( glob( $rp, GLOB_BRACE ) as $template_file ) {
 				include $template_file;
 			}
 			$this->call_widgets_method( 'render_control_template_scripts' );
@@ -474,4 +485,3 @@ class Admin extends Core\Singleton {
 	}
 
 }
-

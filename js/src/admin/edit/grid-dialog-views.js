@@ -1,9 +1,9 @@
 (function( $, grid ){
 	var Dialog, InputWrap, InputGroup, TemplatesList, ActiveInput, ParentView, ChildView,
-		Grid		= grid.view.Grid, 
-		Container	= grid.view.Container, 
-		Row			= grid.view.Row, 
-		Cell		= grid.view.Cell, 
+		Grid		= grid.view.Grid,
+		Container	= grid.view.Container,
+		Row			= grid.view.Row,
+		Cell		= grid.view.Cell,
 		Widget		= grid.view.Widget,
 		options		= gridbuilder.options,
 		features	= gridbuilder.options.features,
@@ -48,7 +48,7 @@
 								button: { text: l10n.Done, close: true }
 							});
 							frame.on( 'select', function(){
-								var attachment = frame.state().get('selection').first().attributes, 
+								var attachment = frame.state().get('selection').first().attributes,
 									url;
 								self.setValue( attachment.id );
 							});
@@ -89,7 +89,7 @@
 					this.$('.thumbnail').html( '' );
 					if ( !!value ) {
 						this.$('[name="media_id"]').val( value );
-						var attachment = new wp.media.model.Attachment({id:value}), 
+						var attachment = new wp.media.model.Attachment({id:value}),
 							self = this;
 						attachment.once('change',function() {
 							var _filename, url
@@ -106,12 +106,12 @@
 							_filename = new wp.media.View( { tagName:'span', className: 'filename' } );
 							_filename.$el.text( attachment.get('title') );
 
-							self.$('.thumbnail').append( 
+							self.$('.thumbnail').append(
 
-								$('<img />').attr('src',url), 
+								$('<img />').attr('src',url),
 
-								new wp.media.view.Button({ 
-									text:l10n.RemoveMedia, 
+								new wp.media.view.Button({
+									text:l10n.RemoveMedia,
 									click: function(){
 										self.setValue(null);
 									}
@@ -190,7 +190,7 @@
 	inputs.widget_instance = wp.media.View.extend( {
 		tagName: 'div',
 		className: 'widget-instance widget-inside',
-		
+
 		initialize: function( ) {
 			wp.media.View.prototype.initialize.apply(this,arguments);
 			this.$form = $('<form />');
@@ -217,7 +217,7 @@
 					self.$form.html('').append( self.$widget );
 					self.prepareMCE();
 					wp.mediaWidgets.handleWidgetAdded( {}, self.$el.parent() );
-					wp.textWidgets.handleWidgetAdded( {}, self.$el.parent() );
+					!! wp.textWidgets && wp.textWidgets.handleWidgetAdded( {}, self.$el.parent() );
 //					$(document).trigger( 'widget-added', [ self.$widget ] ); // necessary for tinymce widget
 				},
 				data: {
@@ -230,7 +230,7 @@
 			return this;
 		},
 		hasMCE: function(){
-			return this.getMCE().length > 0;			
+			return this.getMCE().length > 0;
 		},
 		getMCE: function( sel ) {
 			var $textareas = this.$( '.mce-tinymce + textarea, .quicktags-toolbar + textarea' ),
@@ -271,7 +271,7 @@
 			if ( wp.mediaWidgets.widgetControls[ widgetId ] ) {
 				delete( wp.mediaWidgets.widgetControls[ widgetId ] );
 			}
-			if ( wp.textWidgets.widgetControls[ widgetId ] ) {
+			if ( !! wp.textWidgets && wp.textWidgets.widgetControls[ widgetId ] ) {
 				delete( wp.textWidgets.widgetControls[ widgetId ] );
 			}
 
@@ -281,7 +281,7 @@
 				tinymce.remove( ed );
 			});
 
-			
+
 			this.resetMCE();
 			return this;
 		},
@@ -290,7 +290,7 @@
 			var self = this,
 				modal = this.$el.closest('.grid-ui-modal').get(0);
 			this._prevMCE = {};
-			
+
 			if ( ! modal ) {
 				return;
 			}
@@ -317,7 +317,7 @@
 				var style = this.getEl().style;
 				style.zIndex = mceZIndex + 0xFFFF + 0XFFFF;
 			}
-			
+
 			// wplink
 			if ( !! tinymce.ui.WPLinkPreview ) {
 				this._prevMCE.wpLinkRenderHtml = tinymce.ui.WPLinkPreview.prototype.renderHtml;
@@ -338,7 +338,7 @@
 	} );
 
 	ActiveInput =  Backbone.View.extend({
-		tagName:'input', 
+		tagName:'input',
 		attributes:{
 			type: 'text',
 		},
@@ -370,17 +370,17 @@
 
 			this.options.templates.each( function( template, k ) {
 				var li = new Backbone.View( { tagName:'li' } ),
-					del = new wp.media.view.Button( { 
+					del = new wp.media.view.Button( {
 						model:template,
-						text: '', 
-						classes: ['delete','dashicons','dashicons-dismiss'], 
+						text: '',
+						classes: ['delete','dashicons','dashicons-dismiss'],
 						click: function( ) {
 							this.options.model.destroy();
 							return false;
-						} 
+						}
 					}),
-					title = new ActiveInput( { 
-						tagName:'input', 
+					title = new ActiveInput( {
+						tagName:'input',
 						property: 'name',
 						model: template,
 						attributes: {
@@ -390,13 +390,13 @@
 					});
 				li.render().$el.append( title.render().$el, del.render().$el );
 				self.$('.templates').append( li.$el );
-				
+
 				li.listenTo( template, 'destroy', function(){
 					this.$el.remove();
 				});
-				
+
 				title.listenTo( title, 'keyup', function(){
-					
+
 				});
 			});
 			return this;
@@ -433,7 +433,7 @@
 		render: function() {
 			var self = this;
 			wp.media.View.prototype.render.apply(this,arguments);
-			
+
 			if ( ! this.input ) {
 				return this;
 			}
@@ -442,9 +442,9 @@
 			this.$('.input').append( this.input.$el );
 			this.$el.addClass('input-type-'+this.options.settings.type );
 			this.$el.addClass('input-'+this.options.settings.name );
-			
+
 			this.setLock( this.options.locked );
-			
+
 			if ( this.options.settings.attr ) {
 				_.each( this.options.settings.attr, function( value, attr ) {
 					var prevAttr = self.$el.attr( attr ),
@@ -498,8 +498,8 @@
 		},
 		initializeInputWrap: function( setting ) {
 			var value, input = false, self = this;
-			_.extend( setting, { 
-				name: setting.name, 
+			_.extend( setting, {
+				name: setting.name,
 				lock: features.locks && ['label', 'separator'].indexOf( setting.type ) === -1
 			});
 
@@ -540,7 +540,7 @@
 			} );
 			self.inputs.push( _matrix );
 		},
-		render: function() {	
+		render: function() {
 			wp.media.View.prototype.render.apply(this,arguments);
 
 			var self = this;
@@ -573,7 +573,7 @@
 		initialize: function( options ) {
 			var self = this;
 			grid.view.ui.Dialog.prototype.initialize.apply(this,arguments);
-		
+
 			// setup input groups
 			this.inputgroups = [];
 			this.editor = new InputGroup({
@@ -599,21 +599,21 @@
 			grid.view.ui.Dialog.prototype.render.apply(this,arguments);
 
 			var self = this;
-			
+
 			// render input fields
 			_.each(this.inputgroups, function( inputgroup ){
 				inputgroup.render();
 				self.$('.grid-dialog-sidebar').append( inputgroup.$el );
 			});
-			
+
 			this.$('.grid-dialog-content').append( this.editor.render().$el );
-			
+
 			return this;
 		},
 		applyChanges: function() {
 			var self 		= this,
 				updateModel	= {};
-			function setModelVal( input ) {	
+			function setModelVal( input ) {
 				if ( !! input.options.settings && !!input.options.settings.name ) {
 					var prop = input.options.settings.name;
 					if ( isNaN( parseInt(prop) ) ) {
@@ -662,7 +662,7 @@
 
 			_.each( [ 'Container', 'Row', 'Cell', 'Widget' ], function( type ) {
 
-				self.templateLists[ type.toLowerCase() ] = new TemplatesList( { 
+				self.templateLists[ type.toLowerCase() ] = new TemplatesList( {
 					title: l10n[ type ] + ' ' + l10n.Templates,
 					templates: grid.templates[ type.toLowerCase() ]
 				} );
@@ -694,14 +694,14 @@
 
 			grid.view.ui.Dialog.prototype.initialize.apply(this,arguments);
 			// should be buttons!
-			this.selectWidget = new InputWrap( { 
+			this.selectWidget = new InputWrap( {
 				model: this.model,
 				settings: {
 					type:'radio',
 					name: 'widget_class',
 					title: l10n.WidgetTypes,
 					options: options.widgets
-				} 
+				}
 			} );
 			this.okayBtn.$el.hide();
 		},
