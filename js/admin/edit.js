@@ -2805,6 +2805,8 @@
 					self.$widget = $(data);
 					self.$form.html('').append( self.$widget );
 					self.prepareMCE();
+					console.log(data,self.$el)
+					self.$el.parent().addClass('open');
 					wp.mediaWidgets.handleWidgetAdded( {}, self.$el.parent() );
 					!! wp.textWidgets && wp.textWidgets.handleWidgetAdded( {}, self.$el.parent() );
 //					$(document).trigger( 'widget-added', [ self.$widget ] ); // necessary for tinymce widget
