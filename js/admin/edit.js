@@ -4105,13 +4105,13 @@
 	};
 })(jQuery,window.grid);
 (function($,grid) {
-	var l10n			= gridbuilder.l10n, 
+	var l10n			= gridbuilder.l10n,
 		features		= gridbuilder.options.features,
 		default_widget	= gridbuilder.options.default_widget,
 		default_widget_content_property = gridbuilder.options.default_widget_content_property,
 		gridController, toggleGridEditor,
 		element		= grid.view.element;
-	
+
 	$(document)
 		.ready(function() {
 
@@ -4227,11 +4227,13 @@
 		})
 		.on('paste', function(e) {
 			var gridEl = grid.view.element,
-				sel = gridController.getSelected(),
+				sel = null,
 				dataStr = e.originalEvent.clipboardData.getData( 'application/json' ),
-				data, editor,				
+				data, editor,
 				itemClass, parent, after;
-
+			if ( gridController ) {
+				sel = gridController.getSelected();
+			}
 			if ( ! sel || $('body').is('.grid-modal-open') ) {
 				return;
 			}
