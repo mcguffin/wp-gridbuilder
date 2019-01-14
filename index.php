@@ -2,11 +2,12 @@
 
 /*
 Plugin Name: WP GridBuilder
-Plugin URI: http://wordpress.org/
-Description: Enter description here.
+Plugin URI: https:/github.com/mcguffin/wp-gridbuilder
+Github Plugin URI: mcguffin/wp-gridbuilder
+Description: Another Gridbuilder for WordPress using bootstrap 3
 Author: Jörn Lund
 Version: 0.1.4
-Author URI:
+Author URI: https:/github.com/mcguffin
 License: GPL3
 
 Text Domain: wp-gridbuilder
