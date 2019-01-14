@@ -1,6 +1,6 @@
 var gulp = require('gulp');
-var concat = require('gulp-concat');  
-var uglify = require('gulp-uglify');  
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 //var sass = require('gulp-ruby-sass');
 var nodeSass = require('node-sass');
@@ -44,7 +44,7 @@ var sassOptions = {
 	stopOnError: true,
 	functions: {
 		'base64Encode($string)': function($string) {
-			var buffer = new Buffer( $string.getValue() );
+			var buffer = Buffer.from( $string.getValue() );
 			return nodeSass.types.String( buffer.toString('base64') );
 		}
 	}
@@ -72,12 +72,12 @@ gulp.task( 'js:tools', function(){
 		.pipe( gulp.dest( './js/admin/' ) );
 } );
 
-gulp.task( 'scss:admin:dev', function() { 
+gulp.task( 'scss:admin:dev', function() {
     return gulp.src( files.scss.admin )
 		.pipe(sourcemaps.init())
-        .pipe( 
+        .pipe(
         	sass( sassOptions )
-        	.on('error', sass.logError) 
+        	.on('error', sass.logError)
         )
         .pipe( sourcemaps.write() )
         .pipe( gulp.dest('./css/admin'));
@@ -86,21 +86,17 @@ gulp.task( 'scss:admin:dev', function() {
 gulp.task( 'scss:frontend:dev', function() {
     return gulp.src( files.scss.frontend )
 		.pipe(sourcemaps.init())
-        .pipe( 
+        .pipe(
         	sass( sassOptions )
-        	.on('error', sass.logError) 
+        	.on('error', sass.logError)
         )
         .pipe( sourcemaps.write() )
         .pipe( gulp.dest('./css'));
 });
 
 gulp.task('watch',function(){
-	gulp.watch('js/src/**/*.js', [ 
-		'js:tools', 
-		'js:edit' 
-	] );
-	gulp.watch('scss/**/*.scss', [ 'scss:admin:dev', 'scss:frontend:dev' ] );
+	gulp.watch('js/src/**/*.js', gulp.parallel( 'js:tools', 'js:edit' ) );
+	gulp.watch('scss/**/*.scss', gulp.parallel( 'scss:admin:dev', 'scss:frontend:dev' ) );
 });
 
-gulp.task('default', [ 'js:tools', 'js:edit', 'scss:admin:dev', 'scss:frontend:dev', 'watch' ] );
-
+gulp.task('default', gulp.series( 'js:tools', 'js:edit', 'scss:admin:dev', 'scss:frontend:dev', 'watch' ) );
