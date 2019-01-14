@@ -1,7 +1,7 @@
 (function( $, grid ) {
 
 	var Prompt, Dialog, Modal, Toolbar,
-		
+
 		l10n		= gridbuilder.l10n,
 		options		= gridbuilder.options,
 		features	= gridbuilder.options.features;
@@ -35,7 +35,7 @@
 			this.$('[type="text"]').focus().select();
 			return this;
 		},
-		close: function() {	
+		close: function() {
 			this.$el.remove();
 			return this;
 		},
@@ -99,7 +99,7 @@
 	Dialog = grid.view.ui.Dialog = wp.media.View.extend({
 		initialize: function( options ) {
 			var self = this;
-			
+
 			this.model		= options.model;
 			this.controller	= options.controller;
 
@@ -112,7 +112,7 @@
 			wp.media.View.prototype.render.apply( this, arguments );
 
 			this.$('.grid-dialog-title').text( this.options.title );
-			
+
 			// render button
 			this.okayBtn.render();
 			this.$('.grid-dialog-toolbar').append( this.okayBtn.$el );
@@ -134,7 +134,7 @@
 
 
 			'click .set-visibility [type="radio"]':	'setVisible',
-			
+
 			'click button.add-item':				'addItem',
 			'change select.add-item':				'addTemplateItem',
 /*
@@ -247,7 +247,7 @@
 					is_unlocked	= features.locks || ! item.model.get( 'locked' ),
 					is_parent_unlocked
 								=  features.locks || ! ( item.parent() && item.parent().model.get( 'locked' ) ),
-				
+
 					closest_grid 		= item.closest( grid.view.element.Grid ),
 					closest_container	= item.closest( grid.view.element.Container ),
 					closest_row			= item.closest( grid.view.element.Row ),
@@ -262,7 +262,7 @@
 
 				can_create_template		= ! item_is_grid;
 				can_update_template		= ! item_is_grid && !!item.model.get( 'template' );
-				
+
 				can_add_container	= features.locks || ! closest_grid.model.get( 'locked' );
 				can_add_row			= !! closest_container && ( features.locks || ! closest_container.model.get( 'locked' ) );
 				can_add_cell		= !! closest_row && ( features.locks || ! closest_row.model.get( 'locked' ) );
@@ -271,7 +271,7 @@
 
 				this.$('.item-action.lock').prop( 'checked', !! item.model.get( 'locked' ) );
 
-				this.$('[name="set-visibility"]').each(function( i, el ) { 
+				this.$('[name="set-visibility"]').each(function( i, el ) {
 					var $this = $(this);
 					$this.prop( 'checked', $this.val() == item_visibility );
 				});
@@ -293,7 +293,7 @@
 
 			this.$('[name="set-visibility"]').prop( 'disabled', ! can_visible );
 		},
-		
+
 		setupViewswitcher: function() {
 			var self = this;
 			_.each( options.screensizes.sizes, function( sizeOptions, size ) {
@@ -303,12 +303,12 @@
 				self.$('.viewswitcher').append( html );
 			});
 		},
-		
+
 		setupTemplateSelects: function(  ) {
 			this.$('select.add-item[data-add-item]').each(function(){
 				var $self = $(this),
 					type = $self.attr('data-add-item');
-				// remove previous 
+				// remove previous
 				$(this).find('[value!=""]').remove();
 				grid.templates[type].each(function(el,i) {
 					var tplData = grid.templates[type].get( el.id ).toJSON();
@@ -453,11 +453,11 @@
 		bindEvents: function() {
 			var self = this;
 
-			$(document).on( 'click', function() { 
+			$(document).on( 'click', function() {
 				self.checkSelected.apply(self,arguments);
 			});
 			$(document).on( 'keydown', this.preventBackspaceNav );
-			
+
 			this.toolbar.on( 'edit', this.editItem, this );
 			this.toolbar.on( 'clone', this.cloneItem, this );
 			this.toolbar.on( 'delete', this.deleteItem, this );
@@ -479,7 +479,7 @@
 
 		},
 		preventBackspaceNav: function( e ) {
-			var el = event.srcElement || event.target;
+			var el = e.srcElement || e.target;
 			if ( $( el ).is( ":input" ) || $( el ).is( "[contenteditable]" ) ) {
 				return;
 			}
@@ -523,16 +523,16 @@
 
 			return this;
 		},
-		
+
 		/**
 		 *	Managing items
 		 */
 		addContainer:function( ) {
 			var template = arguments.length ? grid.templates.get( 'container', arguments[0] ) : false,
 				val = template ? template.get('data') : { type: 'container' };
-			
+
 			this._addItem( grid.view.element.Container, this.grid, val );
-			
+
 			return false;
 		},
 		addRow: function( e ) {
@@ -569,7 +569,7 @@
 				if ( this.selectWidgetModal === null ) {
 					this.selectWidgetModal = new wp.media.view.Modal( { controller: this } ),
 
-					dialog = new grid.view.SelectWidgetDialog( { 
+					dialog = new grid.view.SelectWidgetDialog( {
 									controller: this,
 									model: model,
 									title: l10n.SelectWidget
@@ -618,14 +618,14 @@
 
 			if ( !!after ) {
 				item.render().$el.insertAfter( after.$el );
-				$collection.trigger('sort'); 
+				$collection.trigger('sort');
 			} else {
 				$collection.append( item.render().$el );
 			}
 
 			// add to model
 			parent.model.items.add( itemModel );
-			
+
 			this.grid.initSortables();
 			this.grid.hasChanged();
 
@@ -683,7 +683,7 @@
 			}
 			this.toolbar.update();
 		},
-		
+
 		editItem: function( e ) {
 			e && e.preventDefault();
 
@@ -695,7 +695,7 @@
 				current		= this.getSelected(),
 				next		= this.getNextItem( current ),
 				prev		= this.getPrevItem( current ),
-				modal		= new Modal( { 
+				modal		= new Modal( {
 					controller: this,
 					next: !! next,
 					prev: !! prev,
@@ -706,25 +706,25 @@
 //			title = [];
 
 			while ( !! currentTitle && ! currentTitle.is( grid.view.element.Grid ) ) {
-				titleSegment = currentTitle.getTitle(); 
+				titleSegment = currentTitle.getTitle();
 				title.unshift( titleSegment );
 				currentTitle = currentTitle.parent();
 			}
 //			console.log(currentTitle.is);return;
-			dialog		= new grid.view.EditDialog( { 
+			dialog		= new grid.view.EditDialog( {
 				title: title.join( ' › ' ),
-				controller: this , 
-				model: current.model, 
+				controller: this ,
+				model: current.model,
 				item: current,
-			//	settings: settings, 
-				editor: editor 
+			//	settings: settings,
+				editor: editor
 			} );
 
 			dialog.on( 'done', function(){
 				self.grid.hasChanged();
 				modal.close();
 			}, modal );
-			
+
 			modal
 				.on('close',function( e ) {
 					dialog.dismiss();
@@ -776,7 +776,7 @@
 // 			current.model.set( 'locked', $(e.target).is( ':checked' ) );
 // 			e.preventDefault();
 // 		},
-		
+
 		setVisible: function( visibility ) {
 			var current = this.getSelected(),
 				prop = 'visibility_' + this.toolbar.whichView();
@@ -810,7 +810,7 @@
 				template.set( 'slug', slug );
 				template.set( 'type', type );
 				template.set( 'data', current.model.toJSON() );
-			
+
 
 				// save json
 				template.once('sync', function() {
