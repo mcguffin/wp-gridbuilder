@@ -5,8 +5,8 @@ Plugin Name: WP GridBuilder
 Plugin URI: http://wordpress.org/
 Description: Enter description here.
 Author: Jörn Lund
-Version: 0.1.4
-Author URI: 
+Version: 0.1.3
+Author URI:
 License: GPL3
 
 Text Domain: wp-gridbuilder
@@ -16,7 +16,7 @@ Domain Path: /languages/
 /*  Copyright 2016  Jörn Lund
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as 
+    it under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -56,4 +56,3 @@ if ( is_admin() || defined( 'DOING_AJAX' ) ) {
 		require_once $compat_file;
 	}
 }
-
