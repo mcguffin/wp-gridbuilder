@@ -1,6 +1,6 @@
 <?php
 
-if ( ! defined('ABSPATH') ) 
+if ( ! defined('ABSPATH') )
 	die();
 
 ?>
@@ -58,6 +58,24 @@ if ( ! defined('ABSPATH') )
 				case 'wp_widget_tag_cloud':
 					// should display taxonomy name
 					break;
+				default:
+
+					var evt = $.Event('gridbuilder:widget:render',{
+						model:data.model,
+						info_attr:{},
+					});
+
+					$(document).trigger( evt );
+
+					$.each(evt.info_attr,function( attr, val ) {
+						if ( ! val ) {
+							return;
+						}
+						var clean = val.toString().replace(/<\/?[^>]+(>|$)/g, "");
+						info_attr += ' '+attr+'="' + clean +'"';
+					});
+
+					break;
 			}
 		})(jQuery);
 		#>
@@ -84,7 +102,7 @@ if ( ! defined('ABSPATH') )
 				} else {
 					print( gridbuilder.l10n.unkonwnWidget );
 				}
-			
+
 			#></div>
 		</div>
 	</script>
