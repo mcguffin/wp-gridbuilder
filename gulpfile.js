@@ -15,24 +15,24 @@ function logError(){
 var files = {
 	scss : {
 		admin : [
-			'scss/admin/edit.scss',
+			'./src/scss/admin/edit.scss',
 //			'scss/admin/tools.scss',
 		],
 		frontend: [
-			'scss/frontend/frontend.scss',
-			'scss/frontend/frontend-bootstrap.scss'
+			'./src/scss/frontend/frontend.scss',
+			'./src/scss/frontend/frontend-bootstrap.scss'
 		],
 	},
 	js : [
-		'./js/src/Sortable/Sortable.js',
-		'./js/src/Sortable/jquery.binding.js',
-		'./js/src/mcguffin/jquery.serializeStructure.js',
-		'./js/src/admin/edit/grid-base.js',
-		'./js/src/admin/edit/grid-model.js',
-		'./js/src/admin/edit/grid-ui.js',
-		'./js/src/admin/edit/grid-dialog-views.js',
-		'./js/src/admin/edit/grid-element.js',
-		'./js/src/admin/edit.js'
+		'./src/js/Sortable/Sortable.js',
+		'./src/js/Sortable/jquery.binding.js',
+		'./src/js/mcguffin/jquery.serializeStructure.js',
+		'./src/js/admin/edit/grid-base.js',
+		'./src/js/admin/edit/grid-model.js',
+		'./src/js/admin/edit/grid-ui.js',
+		'./src/js/admin/edit/grid-dialog-views.js',
+		'./src/js/admin/edit/grid-element.js',
+		'./src/js/admin/edit.js'
 	],
 };
 
@@ -63,7 +63,7 @@ gulp.task( 'js:edit', function(){
 } );
 
 gulp.task( 'js:tools', function(){
-	return gulp.src( './js/src/admin/tools.js' )
+	return gulp.src( './src/js/admin/tools.js' )
 		.pipe( sourcemaps.init() )
 		.pipe( gulp.dest( './js/admin/' ) )
 		.pipe( uglify() )
@@ -95,8 +95,8 @@ gulp.task( 'scss:frontend:dev', function() {
 });
 
 gulp.task('watch',function(){
-	gulp.watch('js/src/**/*.js', gulp.parallel( 'js:tools', 'js:edit' ) );
-	gulp.watch('scss/**/*.scss', gulp.parallel( 'scss:admin:dev', 'scss:frontend:dev' ) );
+	gulp.watch('./src/js/**/*.js', gulp.parallel( 'js:tools', 'js:edit' ) );
+	gulp.watch('./src/scss/**/*.scss', gulp.parallel( 'scss:admin:dev', 'scss:frontend:dev' ) );
 });
 
 gulp.task('default', gulp.series( 'js:tools', 'js:edit', 'scss:admin:dev', 'scss:frontend:dev', 'watch' ) );
