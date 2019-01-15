@@ -4,7 +4,7 @@
 namespace WPGridbuilder\Settings;
 
 class Editors {
-	
+
 	public static function container() {
 		$ret = array(
 			'main'		=> self::prioritySortEditor( self::container_main() ),
@@ -30,7 +30,7 @@ class Editors {
 				'title'			=> __( 'Background','wp-gridbuilder' ),
 				'description'	=> '',
 				'items'			=> self::background_settings(),
-			), 
+			),
 		);
 		return apply_filters( 'gridbuilder_container_settings', $settings );
 	}
@@ -60,11 +60,16 @@ class Editors {
 			),
 			'fullscreen'	=> array(
 				'title'			=> __('Fullscreen', 'repeatmobile-admin'),
-				'description'	=> __('If checked the container will be at least one viewport high.', 'repeatmobile-admin'),
-				'type'			=> 'checkbox',
+				'description'	=> __('Select height of this container.', 'repeatmobile-admin'),
+				'type'			=> 'select',
+				'options'		=> array(
+					''				=> __('- None -','wp-gridbuilder'),
+					'fullscreen'	=> __('1 &times; Viewport Height','wp-gridbuilder'),
+					'fullscreen-2x'	=> __('2 &times; Viewport Height','wp-gridbuilder'),
+				),
 				'priority'		=> 40,
 			),
-	
+
 		);
 		return apply_filters( 'gridbuilder_container_editor', $editor );
 	}
@@ -97,7 +102,7 @@ class Editors {
 				'title'			=> __( 'Background','wp-gridbuilder' ),
 				'description'	=> '',
 				'items'			=> self::background_settings(),
-			), 
+			),
 		);
 		return apply_filters( 'gridbuilder_row_settings', $settings );
 	}
@@ -143,7 +148,7 @@ class Editors {
 				'title'			=> __( 'Background','wp-gridbuilder' ),
 				'description'	=> '',
 				'items'			=> self::background_settings(),
-			), 
+			),
 		);
 		return apply_filters( 'gridbuilder_cell_settings', $settings );
 	}
@@ -185,7 +190,7 @@ class Editors {
 				'title'			=> __( 'Background','wp-gridbuilder' ),
 				'description'	=> '',
 				'items'			=> self::background_settings(),
-			), 
+			),
 			'widget'		=> array(
 				'title'			=> __( 'Widget','wp-gridbuilder' ),
 				'description'	=> '',
@@ -210,7 +215,7 @@ class Editors {
 						'type' => 'text',
 						'priority' => 10,
 					),
-				
+
 				),
 			),
 		);
@@ -231,9 +236,9 @@ class Editors {
 
 
 
-	//	--------------------------------------------- 
+	//	---------------------------------------------
 	//	Atomic settings
-	//	--------------------------------------------- 
+	//	---------------------------------------------
 
 	/**
 	 *	HTML Element attribtues id, class, style
@@ -473,7 +478,7 @@ class Editors {
 				'step'	=> 1,
 				'name'	=> 'offset_' . $size,
 			);
-		}	
+		}
 
 		return apply_filters( 'gridbuilder_grid_settings', $settings );
 
@@ -523,5 +528,5 @@ class Editors {
 		return $a['priority'] - $b['priority'];
 	}
 
-	
+
 }

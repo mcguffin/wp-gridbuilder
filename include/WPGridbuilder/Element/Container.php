@@ -61,6 +61,7 @@ class Container extends Element {
 			'fluid'			=> false,
 			'tagname'		=> 'div',
 			'fullscreen'	=> false,
+			'fullscreen-2x'	=> false,
 		);
 	}
 
