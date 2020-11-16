@@ -238,7 +238,11 @@ abstract class Element {
 		$output .= apply_filters( 'gridbuilder_before_background_elements', '', $item );
 		if ( $item['background_image'] /*&& $item['background_attachment'] !== 'fixed'*/ ) {
 			// attach image
-			$output .= wp_get_attachment_image( $item['background_image'], 'large' );
+			$output .= apply_filters(
+				'gridbuilder_background_image',
+				wp_get_attachment_image( $item['background_image'], 'large' ),
+				$item
+			);
 		}
 
 
