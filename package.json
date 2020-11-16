@@ -1,6 +1,6 @@
 {
   "name": "wp-gridbuilder",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Gridbulder Plugin for Wordpress.",
   "main": "js/admin/edit.min.js",
   "scripts": {
@@ -34,6 +34,7 @@
     ],
     "type": "plugin",
     "build": {
+      "versionedFiles": null,
       "prebuild": [
         "wp i18n make-pot . languages/wp-gridbuilder.pot --domain=wp-gridbuilder --exclude=tmp"
       ],
