@@ -19,7 +19,7 @@ class Admin extends Core\Singleton {
 		add_action( 'admin_init' , array( $this , 'admin_init' ) );
 		add_action( "admin_init" , array( $this , 'register_assets' ) );
 
-		/*
+		//*
 		add_action( 'load-page.php', array( &$this, 'enqueue_grid_assets' ) );
 		add_action( 'load-post.php', array( &$this, 'enqueue_grid_assets' ) );
 		add_action( 'load-post-new.php', array( &$this, 'enqueue_grid_assets' ) );
