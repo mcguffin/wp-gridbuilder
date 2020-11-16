@@ -3,7 +3,6 @@ var concat = require('gulp-concat');
 var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 //var sass = require('gulp-ruby-sass');
-var nodeSass = require('node-sass');
 
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
@@ -44,8 +43,11 @@ var sassOptions = {
 	stopOnError: true,
 	functions: {
 		'base64Encode($string)': function($string) {
-			var buffer = Buffer.from( $string.getValue() );
-			return nodeSass.types.String( buffer.toString('base64') );
+			
+			let s = Buffer.from($string.getValue()).toString('base64')
+			let ss = new $string.constructor
+			ss.setValue(s)
+			return ss
 		}
 	}
 
@@ -94,9 +96,29 @@ gulp.task( 'scss:frontend:dev', function() {
         .pipe( gulp.dest('./css'));
 });
 
+gulp.task( 'scss:admin', function() {
+    return gulp.src( files.scss.admin )
+        .pipe(
+        	sass( sassOptions )
+        	.on('error', sass.logError)
+        )
+        .pipe( gulp.dest('./css/admin'));
+});
+
+gulp.task( 'scss:frontend', function() {
+    return gulp.src( files.scss.frontend )
+        .pipe(
+        	sass( sassOptions )
+        	.on('error', sass.logError)
+        )
+        .pipe( gulp.dest('./css'));
+});
+
 gulp.task('watch',function(){
 	gulp.watch('./src/js/**/*.js', gulp.parallel( 'js:tools', 'js:edit' ) );
 	gulp.watch('./src/scss/**/*.scss', gulp.parallel( 'scss:admin:dev', 'scss:frontend:dev' ) );
 });
+
+gulp.task('build', gulp.series( 'js:tools', 'js:edit', 'scss:admin:dev', 'scss:frontend:dev' ) );
 
 gulp.task('default', gulp.series( 'js:tools', 'js:edit', 'scss:admin:dev', 'scss:frontend:dev', 'watch' ) );
