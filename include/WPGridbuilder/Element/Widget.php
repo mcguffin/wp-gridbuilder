@@ -9,13 +9,14 @@ class Widget extends Element {
 
 	public function render_content() {
 
+		$output = '';
+
 		if ( ! $this->grid_data[ 'active' ] ) {
 			return $output;
 		}
 
 		global $wp_widget_factory;
 
-		$output = '';
 
 		$widget_class	= rawurldecode( $this->grid_data['widget_class'] );
 
