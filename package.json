@@ -1,6 +1,6 @@
 {
   "name": "wp-gridbuilder",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Gridbuilder Plugin for Wordpress.",
   "main": "js/admin/edit.min.js",
   "scripts": {
