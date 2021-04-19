@@ -9,7 +9,10 @@
 	padding: 0;
 	border: 1px solid transparent;
 	background: none;
-	color: #666;
+	.wp-core-ui &.button-link {
+		color: #666;
+		text-decoration: none;		
+	}
 	z-index: 1000;
 	cursor: pointer;
 	outline: none;
@@ -142,6 +145,7 @@
 		@include clearfix();
 	}	
 }
+
 .input-wrap {
 	margin-bottom:20px;
 

@@ -11,20 +11,20 @@ if ( ! defined('ABSPATH') )
 					<!-- container -->
 					<button data-add-item="container" class="add-item add-container btn small button-secondary"><?php _e('Add Container','wp-gridbuilder') ?></button>
 					<select data-add-item="container" class="add-item add-container btn small">
-						<option value=""><?php _e( '▼', 'wp-gridbuilder' ) ?></option>
+						<option value=""><?php _e( '', 'wp-gridbuilder' ) ?></option>
 					</select>
 					<!-- container -->
 					<button data-add-item="row" class="add-item add-row btn small button-secondary"><?php _e('Add Row','wp-gridbuilder') ?></button>
 					<select data-add-item="row" class="add-item add-row btn small">
-						<option value=""><?php _e( '▼', 'wp-gridbuilder' ) ?></option>
+						<option value=""><?php _e( '', 'wp-gridbuilder' ) ?></option>
 					</select>
 					<button data-add-item="cell" class="add-item add-cell btn small button-secondary"><?php _e('Add Cell','wp-gridbuilder') ?></button>
 					<select data-add-item="cell" class="add-item add-cell btn small">
-						<option value=""><?php _e( '▼', 'wp-gridbuilder' ) ?></option>
+						<option value=""><?php _e( '', 'wp-gridbuilder' ) ?></option>
 					</select>
 					<button data-add-item="widget" class="add-item add-widget btn small button-secondary"><?php _e('Add Widget','wp-gridbuilder') ?></button>
 					<select data-add-item="widget" class="add-item add-widget btn small">
-						<option value=""><?php _e( '▼', 'wp-gridbuilder' ) ?></option>
+						<option value=""><?php _e( '', 'wp-gridbuilder' ) ?></option>
 					</select>
 				</div>
 			</div>
