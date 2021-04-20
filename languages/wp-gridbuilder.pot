@@ -1,15 +1,15 @@
-# Copyright (C) 2020 Jörn Lund
+# Copyright (C) 2021 Jörn Lund
 # This file is distributed under the same license as the WP GridBuilder plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: WP GridBuilder 0.1.10\n"
+"Project-Id-Version: WP GridBuilder 0.1.11\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wp-gridbuilder\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2020-11-18T17:09:14+00:00\n"
+"POT-Creation-Date: 2021-04-20T09:08:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.4.0\n"
 "X-Domain: wp-gridbuilder\n"
@@ -49,13 +49,6 @@ msgstr ""
 
 #: include/template/ui/toolbar.php:12
 msgid "Add Container"
-msgstr ""
-
-#: include/template/ui/toolbar.php:14
-#: include/template/ui/toolbar.php:19
-#: include/template/ui/toolbar.php:23
-#: include/template/ui/toolbar.php:27
-msgid "▼"
 msgstr ""
 
 #: include/template/ui/toolbar.php:17

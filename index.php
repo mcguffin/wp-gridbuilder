@@ -6,7 +6,7 @@ Plugin URI: https:/github.com/mcguffin/wp-gridbuilder
 Github Plugin URI: mcguffin/wp-gridbuilder
 Description: Another Gridbuilder for WordPress using bootstrap 3
 Author: Jörn Lund
-Version: 0.1.10
+Version: 0.1.11
 Author URI: https:/github.com/mcguffin
 License: GPL3
 
