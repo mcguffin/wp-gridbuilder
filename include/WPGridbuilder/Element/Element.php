@@ -194,13 +194,6 @@ abstract class Element {
 		}
 		return $classes;
 	}
-/*
-			'background_size'					=> '',
-			'background_attachment'				=> '',
-			'background_position_horizontal'	=> '',
-			'background_position_vertical'		=> '',
-
-*/
 
 	/**
 	 *	Return background styles
@@ -240,20 +233,10 @@ abstract class Element {
 			// attach image
 			$output .= apply_filters(
 				'gridbuilder_background_image',
-				wp_get_attachment_image( $item['background_image'], 'large' ),
+				wp_get_attachment_image( $item['background_image'], $item['background_image_size'] ),
 				$item
 			);
 		}
-
-
-/*
-image
--------
-video
--------
-color overlay
-*/
-
 
 		if ( $item['background_video'] ) {
 			if ( $item[ 'background_video' ] ) {
@@ -328,6 +311,10 @@ color overlay
 				if ( is_array( $value ) ) {
 					switch ( $key ) {
 						case 'class':
+							$value = array_filter( $value );
+							$value = array_unique( $value );
+							$value = array_map( 'trim', $value );
+							$value = array_map( 'sanitize_html_class', $value );
 							$value = $this->implode_assoc( array_values( $value ), '', ' ' );
 							break;
 						case 'style':
