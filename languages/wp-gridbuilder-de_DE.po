@@ -2,15 +2,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP GridBuilder\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-16 12:33+0100\n"
-"PO-Revision-Date: 2016-07-16 12:51+0100\n"
+"POT-Creation-Date: 2017-02-20 18:33+0100\n"
+"PO-Revision-Date: 2017-02-20 18:36+0100\n"
 "Last-Translator: Jörn Lund <joern@podpirate.org>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Poedit 1.8.1\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
@@ -19,465 +19,533 @@ msgstr ""
 "X-Poedit-Basepath: ../\n"
 "X-Textdomain-Support: yes\n"
 "X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: node_modules\n"
 
-#: include/admin-api.php:22
-msgid "ID"
-msgstr "ID"
+#: include/WPGridbuilder/Admin/Admin.php:72
+#: include/WPGridbuilder/Admin/Admin.php:76
+msgid "Gridbuilder Locks"
+msgstr "Sperrungen"
 
-#: include/admin-api.php:24
-msgid "A custom ID."
-msgstr "Eine ID"
+#: include/WPGridbuilder/Admin/Admin.php:79
+msgid "Enable Element locking"
+msgstr "Sperrungen aktivieren"
 
-#: include/admin-api.php:28
-msgid "Classname"
-msgstr "CSS-Klasse"
+#: include/WPGridbuilder/Admin/Admin.php:82
+msgid ""
+"If checked you can lock certain elements and properties of a page layout."
+msgstr ""
+"Wenn ausgewählt kannst Du einzelne Elemente und Eigenschaften von der "
+"Bearbeitung ausschließen."
 
-#: include/admin-api.php:30
-msgid "A CSS classname"
-msgstr "Eine oder mehrere CSS-Klassen"
+#: include/WPGridbuilder/Admin/Admin.php:114
+#, php-format
+msgid "Widget “%s” is unavailable. This is what you entered."
+msgstr "Widget “%s” ist nicht verfügbar. Das hier hast Du eingatragen:"
 
-#: include/admin-api.php:34
-msgid "Custom CSS"
-msgstr "Eigenes CSS"
-
-#: include/admin-api.php:44
-msgid "Background Color"
-msgstr "Hintergrundfarbe"
-
-#: include/admin-api.php:50
-msgid "Background Color Opacity"
-msgstr "Deckkraft Hinterg.-Farbe"
-
-#: include/admin-api.php:59
-msgid "Background Image"
-msgstr "Hintergrundbild"
-
-#: include/admin-api.php:65
-msgid "Background Image Alignment"
-msgstr "Ausrichtung Hinterg.-Bild"
-
-#: include/admin-api.php:68
-msgid "Tiled Image"
-msgstr "Gekacheltes Bild"
-
-#: include/admin-api.php:69
-msgid "Centered, with original size"
-msgstr "Zentriert in Originalgröße"
-
-#: include/admin-api.php:70
-msgid "Cover"
-msgstr "Ausfüllen"
-
-#: include/admin-api.php:71
-msgid "Fixed"
-msgstr "Fixiert"
-
-#: include/admin-api.php:75
-msgid "How the background image is displayed."
-msgstr "Wie das Hintergrundbild angezeigt wird"
-
-#: include/admin-api.php:80
-msgid "Background Video"
-msgstr "Hintergrund-Video"
-
-#: include/admin-api.php:92 include/admin-api.php:108
-#: include/admin-api.php:124 include/admin-api.php:140
-msgid "Attributes"
-msgstr "Attribute"
-
-#: include/admin-api.php:97 include/admin-api.php:113
-#: include/admin-api.php:129 include/admin-api.php:145
-msgid "Background"
-msgstr "Hintergrund"
-
-#: include/admin-api.php:150 include/class-GridbuilderAdmin.php:281
-msgid "Widget"
-msgstr "Widget"
-
-#: include/admin-api.php:154
-msgid "Before Widget"
-msgstr "Vor dem Widget"
-
-#: include/admin-api.php:159
-msgid "After Widget"
-msgstr "Nach dem Widget"
-
-#: include/admin-api.php:164
-msgid "Before Title"
-msgstr "Vor dem Titel"
-
-#: include/admin-api.php:169
-msgid "After Title"
-msgstr "Nach dem Titel"
-
-#: include/admin-api.php:185
-msgid "Container Tag"
-msgstr "Container HTML-Tag"
-
-#: include/admin-api.php:188
-msgid "Div"
-msgstr "Div"
-
-#: include/admin-api.php:189
-msgid "Section"
-msgstr "Section"
-
-#: include/admin-api.php:190
-msgid "Article"
-msgstr "Article"
-
-#: include/admin-api.php:197
-msgid "Fluid"
-msgstr "Fluid"
-
-#: include/admin-api.php:199
-msgid "If checked the container content will adapt to the screen width"
-msgstr "Wenn ausgewählt passt sich der Container der Bilschirmbreite an"
-
-#: include/admin-api.php:212
-msgid "Cell size desktop"
-msgstr "Zellengröße (Desktop)"
-
-#: include/admin-api.php:220
-msgid "Cell size tablet landscape"
-msgstr "Zellengröße (Tablet Querformat)"
-
-#: include/admin-api.php:228
-msgid "Cell size tablet portrait"
-msgstr "Zellengröße (Tablet Hochformat)"
-
-#: include/admin-api.php:236
-msgid "Cell size phone"
-msgstr "Zellengröße (Smartphone)"
-
-#: include/admin-api.php:245
-msgid "Cell offset desktop"
-msgstr "Zellenversatz (Desktop)"
-
-#: include/admin-api.php:253
-msgid "Cell offset tablet landscape"
-msgstr "Zellenversatz (Tablet Querformat)"
-
-#: include/admin-api.php:261
-msgid "Cell offset tablet portrait"
-msgstr "Zellenversatz (Tablet Hochformat)"
-
-#: include/admin-api.php:269
-msgid "Cell offset phone"
-msgstr "Zellenversatz (Smartphone)"
-
-#: include/api.php:12
-msgid "Smartphone"
-msgstr "Smartphone"
-
-#: include/api.php:16
-msgid "Tablet"
-msgstr "Tablet"
-
-#: include/api.php:20
-msgid "Tablet (landscape)"
-msgstr "Tablet (Querformat)"
-
-#: include/api.php:24
-msgid "Desktop"
-msgstr "Desktop"
-
-#: include/class-GridbuilderAdmin.php:270 include/template/grid-view.php:56
+#: include/WPGridbuilder/Admin/Admin.php:288
+#: include/template/ui/toolbar.php:57
 msgid "Edit"
-msgstr "Bearb."
+msgstr "Bearbeiten"
 
-#: include/class-GridbuilderAdmin.php:272
+#: include/WPGridbuilder/Admin/Admin.php:290
 msgid "Edit Grid"
-msgstr "Raster bearb."
+msgstr "Raster bearbeiten"
 
-#: include/class-GridbuilderAdmin.php:273
+#: include/WPGridbuilder/Admin/Admin.php:291
 msgid "Edit Text"
-msgstr "Text bearb."
+msgstr "Text bearbeiten"
 
-#: include/class-GridbuilderAdmin.php:274
+#: include/WPGridbuilder/Admin/Admin.php:292
 msgid "Done"
 msgstr "Fertig"
 
-#: include/class-GridbuilderAdmin.php:275 include/template/grid-view.php:58
+#: include/WPGridbuilder/Admin/Admin.php:293
+#: include/template/ui/toolbar.php:59
 msgid "Delete"
 msgstr "Löschen"
 
-#: include/class-GridbuilderAdmin.php:277
+#: include/WPGridbuilder/Admin/Admin.php:295
 msgid "Grid"
 msgstr "Raster"
 
-#: include/class-GridbuilderAdmin.php:278
+#: include/WPGridbuilder/Admin/Admin.php:296
 msgid "Container"
 msgstr "Container"
 
-#: include/class-GridbuilderAdmin.php:279
+#: include/WPGridbuilder/Admin/Admin.php:297
 msgid "Row"
-msgstr "Zeile"
+msgstr "Reihe"
 
-#: include/class-GridbuilderAdmin.php:280
+#: include/WPGridbuilder/Admin/Admin.php:298
 msgid "Cell"
 msgstr "Zelle"
 
-#: include/class-GridbuilderAdmin.php:283
+#: include/WPGridbuilder/Admin/Admin.php:299
+#: include/WPGridbuilder/Settings/Editors.php:166
+msgid "Widget"
+msgstr "Widget"
+
+#: include/WPGridbuilder/Admin/Admin.php:301
 msgid "Edit Container"
-msgstr "Container bearb."
+msgstr "Container bearbeiten"
 
-#: include/class-GridbuilderAdmin.php:284
+#: include/WPGridbuilder/Admin/Admin.php:302
 msgid "Edit Row"
-msgstr "Zeile bearb."
+msgstr "Reihe bearbeiten"
 
-#: include/class-GridbuilderAdmin.php:285
+#: include/WPGridbuilder/Admin/Admin.php:303
 msgid "Edit Cell"
-msgstr "Zelle bearb."
+msgstr "Zelle bearbeiten"
 
-#: include/class-GridbuilderAdmin.php:286
+#: include/WPGridbuilder/Admin/Admin.php:304
 msgid "Edit Widget"
-msgstr "Widget bearb."
+msgstr "Wiget bearbeiten"
 
-#: include/class-GridbuilderAdmin.php:288
-msgid "Template"
-msgstr "Vorlage"
-
-#: include/class-GridbuilderAdmin.php:289
-msgid "Templates"
-msgstr "Vorlagen"
-
-#: include/class-GridbuilderAdmin.php:291 include/template/grid-view.php:36
-msgid "Manage Templates"
-msgstr "Vorlagen verwalten"
-
-#: include/class-GridbuilderAdmin.php:292
-msgid "Template Name"
-msgstr "Name der Vorlage"
-
-#: include/class-GridbuilderAdmin.php:294
-msgid "The Template will be available at blahblah..."
-msgstr ""
-
-#: include/class-GridbuilderAdmin.php:296
+#: include/WPGridbuilder/Admin/Admin.php:306
 msgid "Widget Types"
 msgstr "Widget Typen"
 
-#: include/class-GridbuilderAdmin.php:297
+#: include/WPGridbuilder/Admin/Admin.php:307
 msgid "Select Widget"
-msgstr "Wähle ein Widget"
+msgstr "Wiget auswählen"
 
-#: include/class-GridbuilderSettings.php:43
-#: include/class-GridbuilderSettings.php:54
+#: include/WPGridbuilder/Admin/Admin.php:309
+msgid "Unknown Widget:"
+msgstr "Unbekanntes Widget:"
+
+#: include/WPGridbuilder/Admin/Settings.php:45
+#: include/WPGridbuilder/Admin/Settings.php:56
 msgid "GridBuilder Options"
-msgstr "GridBuilder Einstellungen"
+msgstr "Gridbuilder Einstellungen"
 
-#: include/class-GridbuilderSettings.php:43
-#: include/class-GridbuilderTools.php:38
+#: include/WPGridbuilder/Admin/Settings.php:45
+#: include/WPGridbuilder/Admin/Tools.php:37
 msgid "GridBuilder"
 msgstr "GridBuilder"
 
-#: include/class-GridbuilderSettings.php:51
+#: include/WPGridbuilder/Admin/Settings.php:53
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: include/class-GridbuilderSettings.php:60
+#: include/WPGridbuilder/Admin/Settings.php:62
 msgid "Save Settings"
-msgstr "Einstellungen speichern"
+msgstr "Einstellunge speichern"
 
-#: include/class-GridbuilderSettings.php:88
+#: include/WPGridbuilder/Admin/Settings.php:83
 msgid "Enqueue Bootstrap CSS and JS"
-msgstr "Twitter Bootstrap CSS und JS im Frontend laden"
+msgstr "Bootstrap CSS und JS laden"
 
-#: include/class-GridbuilderTools.php:38
+#: include/WPGridbuilder/Admin/Templates.php:49
+msgid "Template"
+msgstr "Vorlage"
+
+#: include/WPGridbuilder/Admin/Templates.php:50
+msgid "Templates"
+msgstr "Vorlagen"
+
+#: include/WPGridbuilder/Admin/Templates.php:52
+#: include/template/ui/toolbar.php:36
+msgid "Manage Templates"
+msgstr "Vorlagen verwalten"
+
+#: include/WPGridbuilder/Admin/Templates.php:53
+msgid "Template Name"
+msgstr "Name"
+
+#: include/WPGridbuilder/Admin/Templates.php:55
+msgid "The Template will be available at blahblah..."
+msgstr ""
+
+#: include/WPGridbuilder/Admin/Tools.php:37
 msgid "WP GridBuilder"
 msgstr "WP GridBuilder"
 
-#: include/class-GridbuilderTools.php:54
+#: include/WPGridbuilder/Admin/Tools.php:53
 msgid "Done!"
 msgstr "Fertig!"
 
-#: include/class-GridbuilderTools.php:101
+#: include/WPGridbuilder/Admin/Tools.php:100
 #, php-format
 msgid "%d Page updated"
 msgid_plural "%d Pages updated"
 msgstr[0] "%d Seite aktualisiert"
 msgstr[1] "%d Seiten aktualisiert"
 
-#: include/class-GridbuilderTools.php:142
+#: include/WPGridbuilder/Admin/Tools.php:141
 #, php-format
 msgid "One template added."
 msgid_plural "%d templates added."
 msgstr[0] "Eine Vorlage hinzugefügt."
 msgstr[1] "%d Vorlagen hinzugefügt."
 
-#: include/class-GridbuilderTools.php:145
+#: include/WPGridbuilder/Admin/Tools.php:144
 #, php-format
 msgid "One template updated."
 msgid_plural "%d templates updated."
 msgstr[0] "Eine Vorlage aktualisiert."
 msgstr[1] "%d Vorlagen aktualisiert."
 
-#: include/class-GridbuilderTools.php:150
+#: include/WPGridbuilder/Admin/Tools.php:149
 msgid "Invalid import File"
-msgstr "Ungüllte Import-Datei"
+msgstr "Ungültige Importdatei"
 
-#: include/class-GridbuilderTools.php:154
+#: include/WPGridbuilder/Admin/Tools.php:153
 msgid "Empty Import File"
-msgstr "Leere Import-Datei"
+msgstr "Leere Importdate"
 
-#: include/class-GridbuilderTools.php:191
+#: include/WPGridbuilder/Admin/Tools.php:190
 msgid "Insufficient permission."
-msgstr "Unzureichende Berechtigung."
+msgstr "Unzureichende Berechtigungen."
 
-#: include/class-GridbuilderTools.php:205
+#: include/WPGridbuilder/Admin/Tools.php:206
 msgid "GridBuilder Import / Export"
 msgstr "GridBuilder Import / Export"
 
-#: include/class-GridbuilderTools.php:209
+#: include/WPGridbuilder/Admin/Tools.php:210
 msgid "Export Templates"
-msgstr "Vorlagen exportieren"
+msgstr "Vorlagen Exportieren"
 
-#: include/class-GridbuilderTools.php:210
+#: include/WPGridbuilder/Admin/Tools.php:211
 msgid "Hit the export Button to download your Grid object templates."
 msgstr ""
-"Klicke auf den Export-Button um Deine Rasterobjekt-Vorlagen "
-"herunterzuladen."
+"Klicke den Export-Button um Deine Layout-Raster-Objekte herunterzuladen."
 
-#: include/class-GridbuilderTools.php:213
+#: include/WPGridbuilder/Admin/Tools.php:214
 msgid "Export"
-msgstr "Exportieren"
+msgstr "Export"
 
-#: include/class-GridbuilderTools.php:218
+#: include/WPGridbuilder/Admin/Tools.php:219
 msgid "Import Object Templates"
-msgstr "Rasterobjekt-Vorlagen importieren"
+msgstr "Objekt-Vorlage importieren"
 
-#: include/class-GridbuilderTools.php:221
+#: include/WPGridbuilder/Admin/Tools.php:222
 msgid ""
 "Import a set of predefined grid object like containers, rows, cells or "
 "widgets."
 msgstr ""
-"Importiere einen Satz von vordefinierten Rasterobjekten wie Container, "
-"Zeilen, Zellen oder Widgets."
 
-#: include/class-GridbuilderTools.php:224
+#: include/WPGridbuilder/Admin/Tools.php:225
 msgid ""
 "If you enable the checkbox below your current template settings will be "
 "deleted first."
 msgstr ""
-"Bei ausgewählter Checkbox werden Deine Rasterobjekt-Vorlagen vorher "
-"gelöscht."
 
-#: include/class-GridbuilderTools.php:230
+#: include/WPGridbuilder/Admin/Tools.php:231
 msgid "Existing templates:"
-msgstr "Bestehende Vorlagen"
+msgstr ""
 
-#: include/class-GridbuilderTools.php:233
+#: include/WPGridbuilder/Admin/Tools.php:234
 msgid "Keep"
-msgstr "Bahalten"
+msgstr "Behalten"
 
-#: include/class-GridbuilderTools.php:236
+#: include/WPGridbuilder/Admin/Tools.php:237
 msgid "Update"
 msgstr "Aktualisieren"
 
-#: include/class-GridbuilderTools.php:239
+#: include/WPGridbuilder/Admin/Tools.php:240
 msgid "Delete first"
-msgstr "Vorher löschen"
+msgstr "Zuerst löschen"
 
-#: include/class-GridbuilderTools.php:244
+#: include/WPGridbuilder/Admin/Tools.php:245
 msgid "Select File"
-msgstr "Datei auswählen …"
+msgstr "Datei auswählen"
 
-#: include/class-GridbuilderTools.php:249
+#: include/WPGridbuilder/Admin/Tools.php:250
 msgid "Import"
-msgstr "Importieren"
+msgstr "Import"
 
-#: include/class-GridbuilderTools.php:255
+#: include/WPGridbuilder/Admin/Tools.php:256
 msgid "Migrate Domain"
 msgstr "Domain migrieren"
 
-#: include/class-GridbuilderTools.php:257
+#: include/WPGridbuilder/Admin/Tools.php:258
 msgid "This will change all Links and image sources to the new domain name."
 msgstr ""
-"Dadurch werden alle Links und Bilder auf den neuen Domainnamen umgestellt."
 
-#: include/class-GridbuilderTools.php:259
+#: include/WPGridbuilder/Admin/Tools.php:260
 msgid "Use this tool after changing the site URL."
 msgstr ""
-"Neutze dieses Werkzeug, nachdem Du die WordPress-Adresse geändert hast."
 
-#: include/class-GridbuilderTools.php:262
+#: include/WPGridbuilder/Admin/Tools.php:263
 msgid "From Domain"
-msgstr "Von Domain"
+msgstr ""
 
-#: include/class-GridbuilderTools.php:266
+#: include/WPGridbuilder/Admin/Tools.php:267
 msgid "To domain"
-msgstr "Zu Domain"
+msgstr ""
 
-#: include/class-GridbuilderTools.php:271
+#: include/WPGridbuilder/Admin/Tools.php:272
 msgid "Migrate"
-msgstr "Migrieren"
+msgstr ""
 
-#: include/template/grid-dialog.php:32
-msgid "Cancel"
-msgstr "Abbrechen"
+#: include/WPGridbuilder/Settings/Core.php:21
+msgid "Smartphone"
+msgstr ""
 
-#: include/template/grid-dialog.php:33
-msgid "Okay"
-msgstr "Okay"
+#: include/WPGridbuilder/Settings/Core.php:25
+msgid "Tablet"
+msgstr ""
 
-#: include/template/grid-view.php:13
-msgid "Add Container"
-msgstr "Neuer Container"
+#: include/WPGridbuilder/Settings/Core.php:29
+msgid "Tablet (landscape)"
+msgstr ""
 
-#: include/template/grid-view.php:15 include/template/grid-view.php:20
-#: include/template/grid-view.php:24 include/template/grid-view.php:28
-msgid "▼"
-msgstr "▼"
+#: include/WPGridbuilder/Settings/Core.php:33
+msgid "Desktop"
+msgstr ""
 
-#: include/template/grid-view.php:18
-msgid "Add Row"
-msgstr "Neue Zeile"
+#: include/WPGridbuilder/Settings/Editors.php:20
+#: include/WPGridbuilder/Settings/Editors.php:79
+#: include/WPGridbuilder/Settings/Editors.php:119
+#: include/WPGridbuilder/Settings/Editors.php:156
+msgid "Attributes"
+msgstr ""
 
-#: include/template/grid-view.php:22
-msgid "Add Cell"
-msgstr "Neue Zelle"
+#: include/WPGridbuilder/Settings/Editors.php:25
+#: include/WPGridbuilder/Settings/Editors.php:84
+#: include/WPGridbuilder/Settings/Editors.php:124
+#: include/WPGridbuilder/Settings/Editors.php:161
+msgid "Background"
+msgstr ""
 
-#: include/template/grid-view.php:26
-msgid "Add Widget"
-msgstr "Neues Widget"
+#: include/WPGridbuilder/Settings/Editors.php:36
+msgid "Container Tag"
+msgstr ""
 
-#: include/template/grid-view.php:34
-msgid "Create Template"
-msgstr "Vorlage erstellen"
+#: include/WPGridbuilder/Settings/Editors.php:39
+msgid "Div"
+msgstr ""
 
-#: include/template/grid-view.php:35
-msgid "Update Template"
-msgstr "Vorlage aktual."
+#: include/WPGridbuilder/Settings/Editors.php:40
+msgid "Section"
+msgstr ""
 
-#: include/template/grid-view.php:44
-msgid "Visibility:"
-msgstr "Sichtbarkeit:"
+#: include/WPGridbuilder/Settings/Editors.php:41
+msgid "Article"
+msgstr ""
 
-#: include/template/grid-view.php:47
+#: include/WPGridbuilder/Settings/Editors.php:48
+msgid "Fluid"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:50
+msgid "If checked the container content will adapt to the screen width"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:54
+#: include/WPGridbuilder/Settings/Editors.php:95
+#: include/WPGridbuilder/Settings/Editors.php:135
+msgid "Fullscreen"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:55
+#: include/WPGridbuilder/Settings/Editors.php:96
+#: include/WPGridbuilder/Settings/Editors.php:136
+msgid "If checked the container will be at least one viewport high."
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:170
+msgid "Before Widget"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:175
+msgid "After Widget"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:180
+msgid "Before Title"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:185
+msgid "After Title"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:220
+msgid "ID"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:222
+msgid "A custom ID."
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:226
+msgid "Classname"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:228
+msgid "A CSS classname"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:232
+msgid "Custom CSS"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:246
+msgid "Color"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:252
+msgid "Color Opacity"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:260
+msgid "Image"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:266
+msgid "Image Size"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:269
+msgid "Tiled Image"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:270
+msgid "Contain"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:271
+msgid "Cover"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:272
+msgid "Fill (scale unproportional)"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:276
+#: include/WPGridbuilder/Settings/Editors.php:289
+msgid "How the background image is displayed."
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:281
+msgid "Image Alignment"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:284
+msgid "Scroll"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:285
+msgid "Fixed"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:294
+msgid "Horizontal Position"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:297
+msgid "Left"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:298
+#: include/WPGridbuilder/Settings/Editors.php:309
+msgid "Center"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:299
+msgid "Right"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:305
+msgid "Vertical Position"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:308
+msgid "Top"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:310
+msgid "Bottom"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:316
+msgid "Background Video"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:344
+msgid "Visibility"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:350
+msgid "Size"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:356
+msgid "Offset"
+msgstr ""
+
+#: include/WPGridbuilder/Settings/Editors.php:376
+#: include/template/ui/toolbar.php:48
 msgid "Default"
-msgstr "Standard"
+msgstr ""
 
-#: include/template/grid-view.php:50
+#: include/WPGridbuilder/Settings/Editors.php:377
+#: include/template/ui/toolbar.php:51
 msgid "Visible"
-msgstr "Sichtbar"
+msgstr ""
 
-#: include/template/grid-view.php:53
+#: include/WPGridbuilder/Settings/Editors.php:378
+#: include/template/ui/toolbar.php:54
 msgid "Hidden"
-msgstr "Versteckt"
+msgstr ""
 
-#: include/template/grid-view.php:57
-msgid "Clone"
-msgstr "Duplizieren"
-
-#: include/template/grid-view.php:72 include/template/grid-view.php:73
-msgid "Next"
-msgstr "Nächster"
-
-#: include/template/grid-view.php:74
-msgid "Close"
-msgstr "Schließen"
-
-#: include/template/input.php:85
+#: include/template/ui/input/media.php:9
 msgid "Select Media"
-msgstr "Wähle Media-Datei"
+msgstr ""
+
+#: include/template/ui/modal.php:3
+msgid "Previous"
+msgstr ""
+
+#: include/template/ui/modal.php:4
+msgid "Next"
+msgstr ""
+
+#: include/template/ui/modal.php:5
+msgid "Close"
+msgstr ""
+
+#: include/template/ui/prompt.php:17
+msgid "Cancel"
+msgstr ""
+
+#: include/template/ui/prompt.php:18
+msgid "Okay"
+msgstr ""
+
+#: include/template/ui/toolbar.php:12
+msgid "Add Container"
+msgstr ""
+
+#: include/template/ui/toolbar.php:14 include/template/ui/toolbar.php:19
+#: include/template/ui/toolbar.php:23 include/template/ui/toolbar.php:27
+msgid "▼"
+msgstr ""
+
+#: include/template/ui/toolbar.php:17
+msgid "Add Row"
+msgstr ""
+
+#: include/template/ui/toolbar.php:21
+msgid "Add Cell"
+msgstr ""
+
+#: include/template/ui/toolbar.php:25
+msgid "Add Widget"
+msgstr ""
+
+#: include/template/ui/toolbar.php:34
+msgid "Create Template"
+msgstr ""
+
+#: include/template/ui/toolbar.php:35
+msgid "Update Template"
+msgstr ""
+
+#: include/template/ui/toolbar.php:45
+msgid "Visibility:"
+msgstr ""
+
+#: include/template/ui/toolbar.php:58
+msgid "Clone"
+msgstr ""

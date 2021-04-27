@@ -1,0 +1,33 @@
+// .media-modal .mce-panel {
+// 	z-index:1000101 !important;
+// }
+// #wp-link-wrap,
+// .mce-menu,
+// .mce-popover,
+// .mce-tooltip,
+// .mce-notification,
+// .mce-inline-toolbar-grp {
+// 	z-index:1000102 !important;
+// }
+
+
+.grid-modal-open {
+	.mce-tooltip {
+		z-index:160100 !important;
+	}
+	.mce-container {
+		z-index:160201 !important;
+		& + #mce-modal-block {
+			z-index:160200 !important;
+		}
+	}
+// 	div.mce-inline-toolbar-grp {
+// 		z-index:160100;
+// 	}
+	#wp-link-backdrop {
+		z-index:160300 !important;
+	}
+	#wp-link-wrap {
+		z-index:160301 !important;
+	}
+}

@@ -1,0 +1,52 @@
+{
+  "name": "wp-gridbuilder",
+  "version": "0.1.11",
+  "description": "Gridbuilder Plugin for Wordpress.",
+  "main": "js/admin/edit.min.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcguffin/wp-gridbuilder.git"
+  },
+  "author": "Jörn Lund",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mcguffin/wp-gridbuilder/issues"
+  },
+  "homepage": "https://github.com/mcguffin/wp-gridbuilder#readme",
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^3.0.0",
+    "gulp-sourcemaps": "^1.9.1",
+    "gulp-uglify": "^2.0.0",
+    "gulp-util": "^3.0.8",
+    "minimatch": "^3.0.2"
+  },
+  "wporg": {
+    "steps": [
+      "build",
+      "git",
+      "github"
+    ],
+    "type": "plugin",
+    "build": {
+      "versionedFiles": null,
+      "prebuild": [
+        "wp i18n make-pot . languages/wp-gridbuilder.pot --domain=wp-gridbuilder --exclude=tmp"
+      ],
+      "build": []
+    },
+    "git": {
+      "host": "github.com",
+      "user": "mcguffin"
+    },
+    "wporg": {
+      "assets": ".wporg",
+      "svn_user": "podpirate"
+    }
+  }
+}
