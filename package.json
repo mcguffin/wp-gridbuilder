@@ -24,7 +24,7 @@
     "gulp-sourcemaps": "^1.9.1",
     "gulp-uglify": "^2.0.0",
     "gulp-util": "^3.0.8",
-    "minimatch": "^3.0.2"
+    "minimatch": "^3.0.5"
   },
   "wporg": {
     "steps": [
