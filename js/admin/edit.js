@@ -4052,10 +4052,10 @@
 					.on( 'add', function( e ) {
 						var collection = $(this).data('model'),
 							view = $(this).data('view'),
-							itemView = $( e.originalEvent.item ).data( 'view' );
+							itemView = $( e.target ).data( 'view' );
 
 						// update model
- 						collection.add( $(e.originalEvent.item).data('model'), { silent: true } );
+						collection.add( $(e.target).data('model'), { silent: true } );
  						collection.trigger('update');
 
 						// update view
@@ -4064,7 +4064,7 @@
 					} )
 					.on( 'remove', function( e ) {
 						var collection = $(this).data('model');
- 						collection.remove( $(e.originalEvent.item).data('model'), { silent: true } );
+						collection.remove( $(e.target).data('model'), { silent: true } );
  						collection.trigger('update');
 						e.stopPropagation();
 					} )

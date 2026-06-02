@@ -14,8 +14,8 @@ if ( ! defined('ABSPATH') )
 					</div>
 					<# if ( !! data.message ) { #><div class="grid-prompt-message"><p class="description">{{{ data.message }}}</p></div><# } #>
 					<div class="grid-prompt-toolbar">
-						<button class="btn-cancel button-secondary"><?php _e('Cancel','wp-gridbuilder'); ?></button>
-						<button class="btn-confirm button-primary"><?php _e('Okay','wp-gridbuilder'); ?></button>
+						<button type="button" class="btn-cancel button-secondary"><?php _e('Cancel','wp-gridbuilder'); ?></button>
+						<button type="button" class="btn-confirm button-primary"><?php _e('Okay','wp-gridbuilder'); ?></button>
 					</div>
 				</div>
 			</div>

@@ -1,0 +1,9 @@
+{
+  "id": "https://github.com/mcguffin/wp-gridbuilder/raw/master/.wp-release-info.json",
+  "slug": "wp-gridbuilder",
+  "version": "0.1.12",
+  "url": "https:/github.com/mcguffin/wp-gridbuilder",
+  "package": "https://github.com/mcguffin/wp-gridbuilder/releases/download/0.1.12/wp-gridbuilder.zip",
+  "tested": "5.6",
+  "requires_php": "5.6"
+}
